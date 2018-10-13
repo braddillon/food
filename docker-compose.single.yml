@@ -1,0 +1,58 @@
+version: '3'
+
+services:
+  food_db:
+    image: postgres
+    container_name: food_db
+    restart: always
+    env_file:
+      - ./food.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db:/var/lib/postgresql/data/
+
+  food-backend:
+    build: './backend'
+    container_name: food_backend
+    working_dir: /app
+    env_file:
+      - ./food.env
+    command: >
+      sh -c "python manage.py collectstatic --noinput
+      && cp -Rf /app/static/* /static
+      && python manage.py migrate
+      && python manage.py init_admin 
+      && gunicorn -w 5 --bind 0.0.0.0:8000 app.wsgi:application"
+    expose:
+      - "8000"
+    volumes:
+      - ./www/static/:/static
+      - ./backend/foodrest:/app/
+    depends_on:
+      - food_db
+
+  food_frontend:
+    build: './frontend'
+    container_name: food_frontend
+    command: >
+      sh -c "npm run build
+      && cp -Rf /app/build/* /www"
+    volumes:
+       - ./www:/www
+    depends_on:
+      - food-backend
+
+  nginx:
+    image: nginx:latest
+    container_name: food_nginx
+    ports:
+      - "80:80"
+    volumes:
+      - ./nginx:/etc/nginx
+      - ./www:/app
+    env_file:
+      - ./food.env
+    depends_on:
+      - food_frontend
+    command: /bin/bash -c "envsubst '$$PRODUCTION_HOSTNAME' < /etc/nginx/conf.d/site.template > /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"
