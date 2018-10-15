@@ -3,6 +3,8 @@ db
 #src
 docker-compose.yml
 
+#food.env
+
 
 
 # Byte-compiled / optimized / DLL files
