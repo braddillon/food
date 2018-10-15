@@ -23,7 +23,7 @@ services:
       && cp -Rf /app/static/* /static
       && python manage.py migrate
       && python manage.py init_admin 
-      && gunicorn --bind 0.0.0.0:8000 app.wsgi:application"
+      && gunicorn -w 5 --bind 0.0.0.0:8000 app.wsgi:application"
 #      && tail -F /dev/null"
 #      && python manage.py runserver 0.0.0.0:8000"
     expose:
