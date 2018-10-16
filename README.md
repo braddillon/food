@@ -20,12 +20,12 @@ This ensures the db is setup and ready before django tries to migrate
 docker-compose run --rm probe
 
 ## Pull up rest of docker file
-docker-compose up nginx
+docker-compose up
 
 ## Load initial mock data
 cp mockData.sql ./db/  
 docker exec -it food_db_dev /bin/bash  
-psql -U username -d password < /var/lib/postgresql/data/mockData.sql  
+psql -U username -d dbname < /var/lib/postgresql/data/mockData.sql  
 
 ## Other notes
 In the dev environment:
