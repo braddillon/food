@@ -16,7 +16,7 @@ Edit food.env with your environment variables.
 Ignore exampleLetsEncrypt.env unless you are using the docker-compose.multi.yml  
 
 ## Probe the db
-This ensures the db is setup and ready before django tries to migrate
+This ensures the db is setup and ready before django tries to migrate  
 ```docker-compose run --rm probe```
 
 ## Pull up rest of docker file
