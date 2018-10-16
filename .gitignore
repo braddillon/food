@@ -3,7 +3,8 @@ db
 #src
 docker-compose.yml
 
-#food.env
+food.env
+letsEncrypt.env
 
 
 

@@ -1,6 +1,14 @@
 version: '3'
 
 services:
+  probe:
+    image: trolleksii/ansible_db_probe
+    depends_on:
+      - food_db
+    environment:
+      - PROBE_HOST=food_db
+      - PROBE_PORT=5432
+
   food_db:
     image: postgres
     container_name: food_db

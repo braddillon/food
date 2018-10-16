@@ -15,12 +15,12 @@ Edit food.env with your environment variables.
 
 Ignore exampleLetsEncrypt.env unless you are using the docker-compose.multi.yml  
 
-## Start the db first
-On first initialization run, djando sometimes runs into problems because the DB isn't initialized yet.
-docker-compose up -d food_db
+## Probe the db
+This ensures the db is setup and ready before django tries to migrate
+docker-compose run --rm probe
 
 ## Pull up rest of docker file
-docker-compose up
+docker-compose up nginx
 
 ## Load initial mock data
 cp mockData.sql ./db/  
