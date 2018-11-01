@@ -56,13 +56,13 @@ class EditFood extends Component {
             init = {
                 foodName: f.food,
                 staple: f.staple,
-                foodTypeId: f.foodtype,
+                foodTypeId: String(f.foodtype),
                 sectionFortinos: '27',
                 sectionLongos: '19'
             };
             if (f.sections !== undefined) {
                 Object.keys(f.sections).forEach(function(key) {
-                    init['section' + stores[key].name] = f.sections[key];
+                    init['section' + stores[key].name] = String(f.sections[key]);
                 });
             }
             return (

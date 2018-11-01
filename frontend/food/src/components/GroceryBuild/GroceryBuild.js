@@ -7,6 +7,7 @@ import Categories from './Panel_Categories.js';
 import FilterButton from './FilterButton.js';
 import SideGroceryList from './SideGroceryList.js';
 import FoodAddItem from '../Food/AddFood.js';
+import Grid from '@material-ui/core/Grid';
 
 import {
     groceryAddListMoveNext,
@@ -20,7 +21,7 @@ import {
     matchGroceryItem
 } from '../../actions/actions';
 
-import { getFoodTypes } from '../../actions/food';
+import { getFoodTypes, resetGroceryBuildFilter } from '../../actions/food';
 
 var buttonHeaderStyle = {
     marginBottom: '1em',
@@ -49,6 +50,7 @@ class GroceryBuildList extends Component {
                         setPrevSearchTerm={this.props.setPrevSearchTerm}
                         matchGroceryItem={this.props.matchGroceryItem}
                         groceryAddList={this.props.groceryAddList}
+                        setFilter={this.props.setFilter}
                     />
                 );
             case 'categories':
@@ -58,29 +60,19 @@ class GroceryBuildList extends Component {
                         buildOptions={this.props.groceryBuildOptions}
                         foodOptions={this.props.foodOptions}
                         setFoodTypeCurrent={this.props.setFoodTypeCurrent}
-                        groceryPopulateAddList={
-                            this.props.groceryPopulateAddList
-                        }
+                        groceryPopulateAddList={this.props.groceryPopulateAddList}
                         groceryAddList={this.props.groceryAddList}
                     />
                 );
             case 'addFood':
-                return <FoodAddItem addToGrocery={true} />;
+                return <FoodAddItem addToGrocery={true} history={this.props.history} />;
             default:
-                return (
-                    <Generic
-                        type={filter}
-                        groceryAddList={this.props.groceryAddList}
-                        addGroceryItem={this.addGroceryItem}
-                    />
-                );
+                return <Generic type={filter} groceryAddList={this.props.groceryAddList} addGroceryItem={this.addGroceryItem} />;
         }
     }
 
     moveView(forward) {
-        let ind = this.state.views.indexOf(
-            this.props.groceryBuildOptions.filter
-        );
+        let ind = this.state.views.indexOf(this.props.groceryBuildOptions.filter);
         let newFilter = '';
         if (forward === true) {
             if (ind === this.state.views.length - 1) {
@@ -118,7 +110,7 @@ class GroceryBuildList extends Component {
             }
         }
 
-        this.props.setFoodTypeCurrent(newCat);
+        this.props.setFoodTypeCurrent(String(newCat));
         this.props.groceryPopulateAddList('categories');
     }
 
@@ -135,10 +127,7 @@ class GroceryBuildList extends Component {
             case 39:
                 event.preventDefault();
                 if (event.ctrlKey === true) this.moveView(true);
-                else if (
-                    event.altKey === true &&
-                    this.props.groceryBuildOptions.filter === 'categories'
-                ) {
+                else if (event.altKey === true && this.props.groceryBuildOptions.filter === 'categories') {
                     this.moveCategory(true);
                 } else {
                     this.props.groceryAddListAddActive();
@@ -147,10 +136,7 @@ class GroceryBuildList extends Component {
             case 37:
                 event.preventDefault();
                 if (event.ctrlKey === true) this.moveView(false);
-                else if (
-                    event.altKey === true &&
-                    this.props.groceryBuildOptions.filter === 'categories'
-                ) {
+                else if (event.altKey === true && this.props.groceryBuildOptions.filter === 'categories') {
                     this.moveCategory(false);
                 }
                 break;
@@ -185,8 +171,8 @@ class GroceryBuildList extends Component {
     render() {
         const { filter } = this.props.groceryBuildOptions;
         return (
-            <div>
-                <div className="col-md-6">
+            <Grid container spacing={24}>
+                <Grid item sm={12} md={6}>
                     <div style={buttonHeaderStyle}>
                         <FilterButton filter={filter} name="Search" />
                         <FilterButton filter={filter} name="Staples" />
@@ -194,11 +180,11 @@ class GroceryBuildList extends Component {
                     </div>
                     {this.buildView()}
                     <br />
-                </div>
-                <div className="col-md-6">
+                </Grid>
+                <Grid item sm={12} md={6}>
                     <SideGroceryList />
-                </div>
-            </div>
+                </Grid>
+            </Grid>
         );
     }
 }
@@ -220,7 +206,8 @@ const mapDispatchToProps = {
     getFoodTypes,
     addGroceryItem,
     setPrevSearchTerm,
-    matchGroceryItem
+    matchGroceryItem,
+    resetGroceryBuildFilter
 };
 
 const GroceryBuildListContainer = connect(

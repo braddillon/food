@@ -17,9 +17,11 @@ const Header = () => (
                     <span className="icon-bar" />
                     <span className="icon-bar" />
                 </button>
-                <a className="navbar-brand" href="#">
+                {/* <a className="navbar-brand" href="#">
                     Food
-                </a>
+                </a> */}
+                <Link className="navbar-brand" to={'/'}>Food</Link>
+
             </div>
 
             <div

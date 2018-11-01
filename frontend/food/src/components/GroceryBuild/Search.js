@@ -1,6 +1,27 @@
 import React, { Component } from 'react';
 
 import GroceryAddList from './AddList.js';
+import TextField from '@material-ui/core/TextField';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+
+const styles = theme => ({
+    textField: {
+      marginLeft: 0,
+      marginRight: 0,
+      height: 35,
+    },
+    buttonGroup: {
+        display: 'flex',
+        justifyContent: 'flex-end',
+        alignItems: 'center',
+    },
+    // button: {
+    //     // justifyContent: 'flex-end',
+    //     // flex: 2
+    //     //float: 'right',
+    // }
+  });
 
 class GroceryBuildSearch extends Component {
     constructor(props) {
@@ -25,35 +46,35 @@ class GroceryBuildSearch extends Component {
     }
 
     render() {
+        const { classes } = this.props;
+
         return (
             <div>
                 <form onSubmit={this.onSubmit}>
-                    <input
-                        autoFocus
-                        autoComplete="off"
-                        id="txtSearchItem"
-                        className="form-control"
-                        value={this.state.value}
-                        onChange={e => {
-                            this.setState({ value: e.target.value });
-                        }}
-                    />
-                </form>
+                <TextField
+          id="txtSearchItem"
+          className={classes.textField}
+          autoComplete="off"
+          label=""
+          placeholder=""
+          fullWidth
+          margin="normal"
+          variant="outlined"
+          value={this.state.value}
+          onChange={e => {
+              this.setState({ value: e.target.value });
+          }}
+        />
+        </form>
                 <GroceryAddList clearPrevSearch={this.clearPrevSearch} groceryAddList={this.props.groceryAddList} addGroceryItem={this.props.addGroceryItem}/>
                 {this.state.prevSearch !== '' ? (
-                    <button className="btn btn-danger pull-right">Adhoc</button>
-                ) : (
-                    <div />
-                )}
-                {this.state.prevSearch !== '' ? (
-                    <button
-                        className="btn btn-danger pull-right"
-                        onClick={() => {
-                            this.props.setFilter('addFood');
-                        }}
-                    >
-                        Add {this.state.prevSearch}
-                    </button>
+                    <div className={classes.buttonGroup}>
+                    <Button variant="contained" color="primary" onClick={() => {
+                        this.props.setFilter('addFood');
+                    }}>
+                    Add Food
+                  </Button>
+                  </div>
                 ) : (
                     <div />
                 )}
@@ -62,4 +83,4 @@ class GroceryBuildSearch extends Component {
     }
 }
 
-export default GroceryBuildSearch;
+export default withStyles(styles)(GroceryBuildSearch);

@@ -241,46 +241,78 @@ export const groceryAddListMovePrev = () => {
 
 export const groceryAddListAddActive = () => {
     return function(dispatch) {
-        let groceryAddList = store.getState().groceryAddList;
-        let active = 0;
+        //let groceryAddList = store.getState().groceryAddList;
+        const activeItem= store.getState().groceryAddList.find(item => item.active);
 
-        for (var i = 0; i < groceryAddList.length; i++) {
-            if (groceryAddList[i].active === true) {
-                active = i;
+        axios
+            .post(
+                `${ROOT_URL}/groceryCreate`,
+                { food: activeItem.id, deferred: false },
+                {
+                    headers: {
+                        Authorization:
+                            'JWT ' + localStorage.getItem('token')
+                    }
+                }
+            )
+            .then(() => {
+                dispatch({
+                    type: GROCERY_ADDLIST_OVERRIDE_ITEM,
+                    payload: {
+                        ...activeItem,
+                        'visible': false
+                    }
+                });
 
-                axios
-                    .post(
-                        `${ROOT_URL}/groceryCreate`,
-                        { food: groceryAddList[i].id, deferred: false },
-                        {
-                            headers: {
-                                Authorization:
-                                    'JWT ' + localStorage.getItem('token')
-                            }
-                        }
-                    )
-                    .then(() => {
-                        dispatch({
-                            type: GROCERY_ADDLIST_OVERRIDE_ITEM,
-                            payload: {
-                                ...groceryAddList[active],
-                                'visible': false
-                            }
-                        });
+                dispatch({
+                    type: ADD_GROCERY,
+                    payload: {
+                        id: activeItem.id,
+                        name: activeItem.name,
+                        deferred: false
+                    }
+                });
 
-                        dispatch({
-                            type: ADD_GROCERY,
-                            payload: {
-                                id: groceryAddList[active].id,
-                                name: groceryAddList[active].name,
-                                deferred: false
-                            }
-                        });
+                dispatch(groceryAddListMoveNext());
+            });
 
-                        dispatch(groceryAddListMoveNext());
-                    });
-            }
-        }
+        // for (var i = 0; i < groceryAddList.length; i++) {
+        //     if (groceryAddList[i].active === true) {
+        //         active = i;
+
+        //         axios
+        //             .post(
+        //                 `${ROOT_URL}/groceryCreate`,
+        //                 { food: groceryAddList[i].id, deferred: false },
+        //                 {
+        //                     headers: {
+        //                         Authorization:
+        //                             'JWT ' + localStorage.getItem('token')
+        //                     }
+        //                 }
+        //             )
+        //             .then(() => {
+        //                 dispatch({
+        //                     type: GROCERY_ADDLIST_OVERRIDE_ITEM,
+        //                     payload: {
+        //                         ...groceryAddList[active],
+        //                         'visible': false
+        //                     }
+        //                 });
+
+        //                 dispatch({
+        //                     type: ADD_GROCERY,
+        //                     payload: {
+        //                         id: groceryAddList[active].id,
+        //                         name: groceryAddList[active].name,
+        //                         deferred: false
+        //                     }
+        //                 });
+
+        //                 dispatch(groceryAddListMoveNext());
+        //             });
+        //     }
+        // }
     };
 };
 

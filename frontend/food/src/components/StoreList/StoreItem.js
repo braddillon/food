@@ -1,10 +1,38 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
+
+import FormControl from '@material-ui/core/FormControl';
+import FormControlLabel from '@material-ui/core/FormControlLabel';
+import Checkbox from '@material-ui/core/Checkbox';
+import CheckBoxOutlineBlankIcon from '@material-ui/icons/CheckBoxOutlineBlank';
+import CheckBoxIcon from '@material-ui/icons/CheckBox';
 
 import { setStoreListChecked } from '../../actions/actions';
 
-import classes from './StoreItem.module.css';
+const styles = theme => ({
+    root: {
+        display: 'flex'
+    },
+    formControl: {
+        margin: 1,
+        marginLeft: 10
+    },
+    formControlLabel: {
+        margin: 3
+    },
+    link: {
+        fontSize: 25
+    },
+    checkBox: {
+        padding: 0,
+        fontSize: 25
+    },
+    checkBoxSizeIcon: {
+        fontSize: 40
+    }
+});
 
 class StoreItem extends Component {
     constructor(props) {
@@ -23,30 +51,36 @@ class StoreItem extends Component {
     }
 
     render() {
+        const { classes } = this.props;
+
         let g = this.props.grocery;
-        let link = (<Link to={'/food/' + g.id}>{g.name}</Link>)
+        let link = (
+            <Link className={classes.link} to={'/food/' + g.id}>
+                {g.name}
+            </Link>
+        );
         if (this.props.locked) {
             link = g.name;
         }
 
         return (
-            <label
-                className={classes.container}
-                key={'label' + g.id}
-                htmlFor={'chkGroceryItem' + g.id}
-            >
-                {link}
-
-                <input
-                    type="checkbox"
-                    id={'chkGroceryItem' + g.id}
-                    key={'check' + g.id}
-                    checked={this.state.checked}
-                    onChange={this.onChangeCheckbox}
-                    disabled={this.props.locked}
+            <FormControl component="fieldset" className={classes.formControl}>
+                <FormControlLabel
+                    className={classes.formControlLabel}
+                    control={
+                        <Checkbox
+                            key={'check' + g.id}
+                            checked={this.state.checked}
+                            onChange={this.onChangeCheckbox}
+                            disabled={this.props.locked}
+                            className={classes.checkBox}
+                            icon={<CheckBoxOutlineBlankIcon className={classes.checkBoxSizeIcon} />}
+                            checkedIcon={<CheckBoxIcon className={classes.checkBoxSizeIcon} />}
+                        />
+                    }
+                    label={link}
                 />
-                <span className={classes.checkmark} />
-            </label>
+            </FormControl>
         );
     }
 }
@@ -59,4 +93,4 @@ const StoreItemContainer = connect(
     null,
     mapDispatchToProps
 )(StoreItem);
-export default StoreItemContainer;
+export default withStyles(styles)(StoreItemContainer);

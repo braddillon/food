@@ -1,47 +1,34 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-//import { getGroceryStores } from '../../actions/actions';
 import StoreItem from './StoreItem.js';
 import _ from 'lodash';
 
-import classes from './StoreSection.module.css';
+import { withStyles } from '@material-ui/core/styles';
+
+
+  const styles = theme => ({
+      root: {
+        display: 'flex',
+        flexDirection: 'column',
+      },
+    sectionName: {
+        fontWeight: "bold",
+        fontSize: "175%",
+        marginTop: "1em",
+    },
+});
+
 
 class StoreSection extends Component {
 
-
-    componentDidMount() {
-        //this.props.getGroceryStores();
-        // this.props.getFoodTypeDefaultSection();
-    }
-
-    //{_.map(foodTypes, (o, i) => <option key={i} value={i}>{o.name}</option>)}
-
-    // buildList() {
-    //     var result = ""
-    //     console.log(this.props)
-    //     if ("groceryStores" in this.props.groceryBuildOptions)
-    //         return (
-    //          _.map(this.props.groceryBuildOptions.groceryStores[5].sections, (section) => (
-    //              <ul>
-    //              <b>{section.sectionName}</b>
-
-    //              <li key="1">brad1</li>
-    //              <li key="2">brad2</li>
-    //              <li key="3">brad3</li>
-    //              </ul>
-    //         ))
-    //         )
-    //     else
-    //         return ("empty")
-    // }
-
     render() {
+        const { classes } = this.props;
+
         const myObject = this.props.groceries;
         const section = this.props.id;
         const storeId = this.props.storeId;
         let renderText = '';
-        // console.log(this.props.groceries);
 
         var filteredObject = Object.keys(myObject).reduce(function(r, e) {
             if (myObject[e].grocerySections[storeId] === section)
@@ -52,8 +39,8 @@ class StoreSection extends Component {
 
         if (!_.isEmpty(filteredObject)) {
             renderText = (
-                <div>
-                    <div className={classes.storeListSectionName}>
+                <div className={classes.root}>
+                    <div className={classes.sectionName}>
                         {this.props.name}
                     </div>
                     {_.map(sortedObjects, g => (
@@ -71,9 +58,5 @@ const mapStateToProps = (state) => ({
     groceries: state.groceries
 });
 
-// const mapDispatchToProps = {
-//   getGroceryStores,
-// };
-
 const StoreSectionContainer = connect(mapStateToProps, null)(StoreSection);
-export default StoreSectionContainer;
+export default withStyles(styles)(StoreSectionContainer);

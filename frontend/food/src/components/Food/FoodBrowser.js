@@ -1,29 +1,43 @@
 import React, { Component } from 'react';
-import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { withStyles } from '@material-ui/core/styles';
 
 import _ from 'lodash';
 import FoodSideBar from './FoodSideBar';
 import FoodBrowserItem from './FoodBrowserItem';
 
-import classes from './FoodBrowser.module.css';
+import Button from '@material-ui/core/Button';
+import FilterIcon from '@material-ui/icons/FilterList';
+import AddIcon from '@material-ui/icons/Add';
+import DeleteIcon from '@material-ui/icons/Delete';
+import StapleIcon from '@material-ui/icons/Grade';
+import IgnoreIcon from '@material-ui/icons/RemoveShoppingCart';
 
-import {
-    getFoodTypes,
-    foodListPopulate,
-    foodModifyAttribute,
-    foodDeleteItems
-} from '../../actions/food';
+//import classes from './FoodBrowser.module.css';
+
+const styles = theme => ({
+    foodBrowser: {
+        paddingTop: 20
+    },
+    button: {
+        backgroundColor: '#337ab7',
+        borderColor: '#337ab7',
+        color: '#fff',
+        margin: 5
+    },
+    iconButton: {
+        padding: 0,
+        marginLeft: 'auto',
+        marginRight: 5
+    }
+});
 
 class FoodBrowser extends Component {
-    constructor(props) {
-        super(props);
-
-        this.state = { checkBoxes: {}, food: this.props.food };
-
-        this.componentDidMount = this.componentDidMount.bind(this);
-        this.handleCheckChange = this.handleCheckChange.bind(this);
-    }
+    state = {
+        checkBoxes: {},
+        food: this.props.food,
+        filterDrawerOpen: false
+    };
 
     static getDerivedStateFromProps(props, state) {
         if (state.food !== props.food) {
@@ -34,15 +48,30 @@ class FoodBrowser extends Component {
 
             return {
                 food: props.food,
-                checkBoxes: peopleArray
+                checkBoxes: peopleArray,
+                filterDrawerOpen: false
             };
         }
         return null;
     }
 
-    componentDidMount() {
-        this.props.getFoodTypes();
-    }
+    toggleFilter = () => {
+        this.setState(prevState => ({
+            filterDrawerOpen: !prevState.filterDrawerOpen
+        }));
+    };
+
+    resetCheckBoxes = () => {
+        let chck = { ...this.state.checkBoxes };
+        chck = _.mapValues(chck, () => false);
+        this.setState({ checkBoxes: chck });
+    };
+
+    handleCheckChange = (id, checked) => {
+        this.setState({
+            checkBoxes: { ...this.state.checkBoxes, [id]: checked }
+        });
+    };
 
     onClickAdd = () => {
         console.log('ADD!');
@@ -59,12 +88,6 @@ class FoodBrowser extends Component {
 
     onClickMoveAisle = () => {
         console.log('MOVE AISLE!');
-    };
-
-    resetCheckBoxes = () => {
-        let chck = { ...this.state.checkBoxes };
-        chck = _.mapValues(chck, () => false);
-        this.setState({ checkBoxes: chck });
     };
 
     onClickStaple = () => {
@@ -85,85 +108,89 @@ class FoodBrowser extends Component {
         this.resetCheckBoxes();
     };
 
-    handleCheckChange(id, checked) {
-        this.setState({
-            checkBoxes: { ...this.state.checkBoxes, [id]: checked }
-        });
-    }
-
     render() {
+        const { classes } = this.props;
+
         return (
-            <div className={classes.Wrapper}>
-                <div className={classes.Sidebar}>
-                    <FoodSideBar
-                        foodTypes={this.props.foodOptions.foodTypes}
-                        foodListPopulate={this.props.foodListPopulate}
-                    />
+            <div>
+                <FoodSideBar
+                    open={this.state.filterDrawerOpen}
+                    closeSide={() => this.setState({ filterDrawerOpen: false })}
+                    foodTypes={this.props.foodOptions.foodTypes}
+                    foodListPopulate={this.props.foodListPopulate}
+                />
+
+                <div>
+                    <Link to={'/food/add'}>
+                        <Button
+                            variant="fab"
+                            color="secondary"
+                            aria-label="Add"
+                            className={classes.button}
+                            // onClick={() => {
+                            //     this.setState({ filterDrawerOpen: true });
+                            // }}
+                        >
+                            <AddIcon />
+                        </Button>
+                    </Link>
+
+                    <Button
+                        variant="fab"
+                        color="secondary"
+                        aria-label="Delete"
+                        className={classes.button}
+                        onClick={this.onClickDelete}
+                    >
+                        <DeleteIcon />
+                    </Button>
+                    <Button
+                        variant="fab"
+                        color="secondary"
+                        aria-label="Staple"
+                        className={classes.button}
+                        onClick={this.onClickStaple}
+                    >
+                        <StapleIcon />
+                    </Button>
+                    <Button
+                        variant="fab"
+                        color="secondary"
+                        aria-label="Ignore"
+                        className={classes.button}
+                        onClick={this.onClickIgnore}
+                    >
+                        <IgnoreIcon />
+                    </Button>
+
+                    <Button
+                        variant="fab"
+                        color="secondary"
+                        aria-label="Add"
+                        className={classes.button}
+                        onClick={() => {
+                            this.setState({ filterDrawerOpen: true });
+                        }}
+                    >
+                        <FilterIcon />
+                    </Button>
                 </div>
-
-                <div className={classes.main}>
-                    <div align="left">
-                        <Link to={'/food/add'}>
-                            <button
-                                className={classes.ActionButton}
-                                onClick={this.onClickAdd}
-                            >
-                                Add
-                            </button>
-                        </Link>
-
-                        <button
-                            className={classes.ActionButton}
-                            onClick={this.onClickDelete}
-                        >
-                            Delete
-                        </button>
-                        <button
-                            className={classes.ActionButton}
-                            onClick={this.onClickStaple}
-                        >
-                            Staple
-                        </button>
-                        <button
-                            className={classes.ActionButton}
-                            onClick={this.onClickIgnore}
-                        >
-                            Ignore
-                        </button>
-                    </div>
-                    <div className={classes.FoodBrowser}>
-                        {_.map(this.props.food, food => (
-                            <FoodBrowserItem
-                                name={food.name}
-                                id={food.id}
-                                key={'fbi' + food.id}
-                                value={this.state.checkBoxes[food.id]}
-                                staple={food.staple}
-                                ignore={food.ignore}
-                                checked={this.handleCheckChange}
-                            />
-                        ))}
-                    </div>
+                <div className={classes.foodBrowser}>
+                    {_.map(this.props.food, food => (
+                        <FoodBrowserItem
+                            name={food.name}
+                            id={food.id}
+                            key={'fbi' + food.id}
+                            value={this.state.checkBoxes[food.id]}
+                            staple={food.staple}
+                            ignore={food.ignore}
+                            checked={this.handleCheckChange}
+                        />
+                    ))}
                 </div>
             </div>
         );
     }
 }
 
-const mapStateToProps = state => ({
-    foodOptions: state.foodOptions,
-    food: state.food
-});
-
-const mapDispatchToProps = {
-    getFoodTypes,
-    foodListPopulate,
-    foodModifyAttribute,
-    foodDeleteItems
-};
-
-const FoodBrowserContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(FoodBrowser);
-export default FoodBrowserContainer;
+export default withStyles(styles)(FoodBrowser);

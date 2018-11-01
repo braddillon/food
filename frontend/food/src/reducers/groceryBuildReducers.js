@@ -46,7 +46,7 @@ export const groceryAddList = (state = [], action) => {
 export const groceryBuildOptions = (
     state = {
         filter: 'search',
-        foodTypeCurrent: 1,
+        foodTypeCurrent: '1',
         prevSearchTerm: '',
         addFoodDefaults: {}
     },

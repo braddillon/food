@@ -59,7 +59,6 @@ export const addFoodItem = (gItem, addToGrocery) => {
                             }
                         )
                         .then(response => {
-                            console.log('food default section success');
                             console.log(response);
                         })
                         .catch(err => {
@@ -90,6 +89,12 @@ export const addFoodItem = (gItem, addToGrocery) => {
             });
     };
 };
+
+export const resetGroceryBuildFilter = () => {
+    return function(dispatch) {
+        dispatch({ type: SET_FILTER, payload: 'search' });
+    }
+}
 
 export const updateFoodItem = gItem => {
     return function(dispatch) {

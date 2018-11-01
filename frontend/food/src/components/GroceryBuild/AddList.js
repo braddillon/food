@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
+import { withStyles } from '@material-ui/core/styles';
 
 import _ from 'lodash';
 
 import GroceryAddItem from './AddItem.js';
+
+
+const styles = theme => ({
+    listGroup: {
+        padding: 0
+    },
+});
+
 
 class GroceryAddList extends Component {
     renderList() {
@@ -19,9 +28,10 @@ class GroceryAddList extends Component {
     }
 
     render() {
+        const { classes } = this.props;
         return (
             <div>
-                <ul className="list-group">{this.renderList()}</ul>
+                <ul className={classes.listGroup}>{this.renderList()}</ul>
             </div>
         );
     }
@@ -38,4 +48,4 @@ class GroceryAddList extends Component {
 //     GroceryAddList
 // );
 
-export default GroceryAddList;
+export default withStyles(styles)(GroceryAddList);

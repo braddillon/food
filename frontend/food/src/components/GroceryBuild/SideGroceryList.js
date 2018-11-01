@@ -2,23 +2,18 @@ import React, { Component } from 'react';
 
 import { connect } from 'react-redux';
 import _ from 'lodash';
+import GroceryItem from './GroceryItem';
+import IconDelete from '@material-ui/icons/Delete';
+import IconButton from '@material-ui/core/IconButton';
 
-import {
-    groceryList_populate,
-    deleteGroceryItem,
-    deleteGroceryAll
-} from '../../actions/actions';
+import { groceryList_populate, deleteGroceryItem, deleteGroceryAll } from '../../actions/actions';
 
 class GroceryList extends Component {
-
-
     componentDidMount() {
         this.props.groceryList_populate();
     }
 
     onDeleteClick(id) {
-        //this.props.deleteTodo(id, () => {this.props.history.push('/')});
-        //brad
         this.props.deleteGroceryItem(id);
     }
 
@@ -32,39 +27,20 @@ class GroceryList extends Component {
             <div>
                 <h1>
                     Groceries
-                    <span
-                        className="btn btn-danger"
-                        onClick={this.onDeleteAll.bind(this)}
-                    >
-                        <span
-                            className="glyphicon glyphicon-trash"
-                            aria-hidden="true"
-                        />
-                    </span>
+                    <IconButton variant="fab" color="secondary" aria-label="Edit" onClick={this.onDeleteAll.bind(this)}>
+                        <IconDelete />
+                    </IconButton>
                 </h1>
 
-                <ul className="list-group">
-                    {_.map(sortedGroceries, g => (
-                        <li className="list-group-item" key={g.id}>
-                            {g.name}
-                            <span
-                                className="pull-right btn btn-xs btn-danger pull-xs-right"
-                                onClick={this.onDeleteClick.bind(this, g.id)}
-                            >
-                                <span
-                                    className="glyphicon glyphicon-trash"
-                                    aria-hidden="true"
-                                />
-                            </span>
-                        </li>
-                    ))}
-                </ul>
+                {_.map(sortedGroceries, g => (
+                    <GroceryItem item={g} key={g.id} onDelete={() => this.onDeleteClick(g.id)} />
+                ))}
             </div>
         );
     }
 }
 
-const mapStateToProps = (state) => ({
+const mapStateToProps = state => ({
     groceries: state.groceries
 });
 
@@ -74,8 +50,9 @@ const mapDispatchToProps = {
     deleteGroceryAll
 };
 
-const GroceryListContainer = connect(mapStateToProps, mapDispatchToProps)(
-    GroceryList
-);
+const GroceryListContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(GroceryList);
 
 export default GroceryListContainer;

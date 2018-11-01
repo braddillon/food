@@ -1,0 +1,8 @@
+POST http://192.168.1.60/api/foodGrocerySection HTTP/1.1
+Authorization: JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoxLCJ1c2VybmFtZSI6ImJyYWQiLCJleHAiOjE1NDEwNzE3ODAsImVtYWlsIjoiYnJhZEBicmFkLmNvbSJ9._n7p5DtN2VE726Hg8v2tr98IBGinI4uOYF8yGQ2NOF4
+content-type: application/json
+
+{
+    "food": "13",
+    "section": "27"
+}

@@ -1,53 +1,42 @@
 import React, { PureComponent } from 'react';
+import ListItem from '@material-ui/core/ListItem';
+import { withStyles } from '@material-ui/core/styles';
 
 // import { connect } from 'react-redux';
 
 // import { clearMatchGroceryList, addGroceryItem } from '../../actions/actions';
 
+const styles = theme => ({
+    listItem: {
+      backgroundColor: theme.palette.background.paper,
+      borderStyle: 'solid',
+      borderWidth: 1,
+      borderColor: '#ddd',
+      padding: 9,
+      paddingLeft: 15
+    },
+    active: {
+        backgroundColor: '#337ab7',
+        borderColor: '#337ab7',
+        color: '#fff'
+    },
+  });
+
 class GroceryAddItem extends PureComponent {
- 
 
-    // onClick(e) {
-    //     e.preventDefault();
-    //     if (!(this.props.item.id in this.props.groceries))
-    //         this.props.addGroceryItem(this.props.item);
-    //     // if(typeof this.props !== "undefined" && this.props.clearPrevSearch) {
-    //     //   this.props.clearPrevSearch();
-    //     //   this.props.clearMatchGroceryList()
-    //     // }
-    // }
-
-    onClick2 = (event) => {
+    onClick = (event) => {
         event.preventDefault();
         this.props.addGroceryItem(this.props.item);
-        //props.checked(props.id, event.target.checked)
     }
 
     render() {
-        const { item } = this.props;
-        //console.log(this.props);
+        const { item, classes } = this.props;
         return (
-            <li
-                className={'list-group-item ' + (item.active ? 'active' : '')}
-                key={item.id}
-                onClick={this.onClick2}
-            >
-                {item.name}
-            </li>
+            <ListItem key={item.id} className={classes.listItem + ' ' + (item.active ? classes.active : '')} onClick={this.onClick}>
+                    {item.name}
+                  </ListItem>
         );
     }
 }
 
-// const mapStateToProps = (state) => ({
-//     groceries: state.groceries
-// });
-
-// const mapDispatchToProps = {
-//     addGroceryItem
-// };
-
-// const GroceryAddItemContainer = connect(mapStateToProps, mapDispatchToProps)(
-//     GroceryAddItem
-// );
-
-export default GroceryAddItem;
+export default withStyles(styles)(GroceryAddItem);

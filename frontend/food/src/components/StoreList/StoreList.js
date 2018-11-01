@@ -7,12 +7,44 @@ import { groceryList_populate, deleteGroceryItem } from '../../actions/actions';
 import { getGroceryStores2 } from '../../actions/store';
 import StoreSection from './StoreSection.js';
 
-import classes from './StoreList.module.css';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+import Select from '@material-ui/core/Select';
+import FormControl from '@material-ui/core/FormControl';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
+
+//import classes from './StoreList.module.css';
+
+const styles = theme => ({
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120,
+        fullWidth: true,
+        display: 'flex',
+        wrap: 'nowrap',
+        marginBottom: 25
+    },
+    button: {
+        margin: 2,
+        textTransform: 'none'
+    },
+    locked: {
+        backgroundColor: 'red',
+        hover: {
+            backgroundColor: 'red'
+        }
+    },
+    storeList: {
+        textAlign: 'left',
+        marginLeft: '1em',
+    }
+});
 
 class StoreList extends Component {
     constructor(props) {
         super(props);
-        this.state = { 
+        this.state = {
             comboValue: 5,
             locked: false
         };
@@ -27,10 +59,7 @@ class StoreList extends Component {
     }
 
     deleteCheckedItems(e) {
-        let itemsToDelete = _.pickBy(this.props.groceries, function(
-            value,
-            key
-        ) {
+        let itemsToDelete = _.pickBy(this.props.groceries, function(value, key) {
             return value.checked === true;
         });
         let delItem = this.props.deleteGroceryItem;
@@ -46,60 +75,48 @@ class StoreList extends Component {
     buildList() {
         //var result = '';
         if (!_.isEmpty(this.props.stores))
-            return _.map(
-                this.props.stores[this.state.comboValue].sections,
-                section => (
-                    <StoreSection
-                        key={section.id}
-                        id={section.id}
-                        name={section.sectionName}
-                        storeId={this.state.comboValue}
-                        locked={this.state.locked}
-                    />
-                )
-            );
+            return _.map(this.props.stores[this.state.comboValue].sections, section => (
+                <StoreSection key={section.id} id={section.id} name={section.sectionName} storeId={this.state.comboValue} locked={this.state.locked} />
+            ));
         else return 'empty';
     }
 
     render() {
-        let lockedClasses = 'btn btn-primary';
+        const { classes } = this.props;
+
+        let lockedClasses = classes.button;
         if (this.state.locked) {
-            lockedClasses = "btn btn-danger";
+            lockedClasses = [classes.button, classes.locked].join(' ');
         }
 
         return (
             <div className={classes.storeList}>
-                <div className="form-group">
-                    <select
-                        className="form-control"
-                        id="sel1"
-                        onChange={this.comboChange}
+                <FormControl className={classes.formControl}>
+                    <InputLabel htmlFor="stores">Store:</InputLabel>
+                    <Select
                         value={this.state.comboValue}
+                        onChange={this.comboChange}
                         disabled={this.state.locked}
+                        inputProps={{
+                            name: 'stores',
+                            id: 'stores'
+                        }}
                     >
                         {_.map(this.props.stores, store => (
-                            <option key={store.id} value={store.id}>
+                            <MenuItem value={store.id} key={store.id}>
                                 {store.name}
-                            </option>
+                            </MenuItem>
                         ))}
-                    </select>
-                </div>
-                <button
-                    type="button"
-                    className="btn btn-primary"
-                    onClick={this.deleteCheckedItems}
-                    disabled={this.state.locked}
-                >
-                    Remove Item
-                </button>
-                <button
-                    type="button"
-                    className={lockedClasses}
-                    onClick={() => this.setState(prevState => ({ locked: !prevState.locked }))}
-                >
-                    Lock
-                </button>
+                    </Select>
+                </FormControl>
 
+                
+                <Button variant="contained" color="secondary" className={classes.button}  onClick={this.deleteCheckedItems} disabled={this.state.locked}>
+                    Remove Item
+                </Button>
+                <Button variant="contained" color="secondary" className={lockedClasses} onClick={() => this.setState(prevState => ({ locked: !prevState.locked }))}>
+                    Lock
+                </Button>
                 {this.buildList()}
             </div>
         );
@@ -118,7 +135,8 @@ const mapDispatchToProps = {
     deleteGroceryItem
 };
 
-const StoreListContainer = connect(mapStateToProps, mapDispatchToProps)(
-    StoreList
-);
-export default StoreListContainer;
+const StoreListContainer = connect(
+    mapStateToProps,
+    mapDispatchToProps
+)(StoreList);
+export default withStyles(styles)(StoreListContainer);

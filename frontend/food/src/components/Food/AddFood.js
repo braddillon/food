@@ -4,7 +4,7 @@ import FoodForm from './FoodForm.js';
 
 import { setFilter } from '../../actions/actions';
 import { getGroceryStores2 } from '../../actions/store';
-import { addFoodItem, getFoodTypes } from '../../actions/food';
+import { addFoodItem, getFoodTypes, resetGroceryBuildFilter } from '../../actions/food';
 
 class AddFood extends Component {
     constructor(props) {
@@ -20,20 +20,31 @@ class AddFood extends Component {
     handleSubmit(data) {
         if (data.button === 'submit') {
             this.props.addFoodItem(data, this.props.addToGrocery);
+        } else {
+            if (this.props.addToGrocery)
+                this.props.resetGroceryBuildFilter()
+            else
+                this.props.history.push('/foodBrowser/')
         }
     }
 
     render() {
+        let term = ""
+        if (this.props.addToGrocery) {
+            term = this.props.groceryBuildOptions.prevSearchTerm
+        }
         let init = {
             ...this.props.groceryBuildOptions.addFoodDefaults,
-            foodName: this.props.groceryBuildOptions.prevSearchTerm,
+            foodName: term,
             staple: false
         };
 
+        
+
         Object.keys(this.props.stores).forEach(key => {
-            init['section' + this.props.stores[key].name] = this.props.stores[
+            init['section' + this.props.stores[key].name] = String(this.props.stores[
                 key
-            ].defaultSection;
+            ].defaultSection);
         });
 
         return (
@@ -46,6 +57,7 @@ class AddFood extends Component {
                     foodTypes={this.props.foodOptions.foodTypes}
                     onSubmit={this.handleSubmit.bind(this)}
                 />
+                {/* <FoodForm2 foodTypes={this.props.foodOptions.foodTypes} /> */}
             </div>
         );
     }
@@ -62,7 +74,8 @@ const mapDispatchToProps = {
     getGroceryStores2,
     getFoodTypes,
     setFilter,
-    addFoodItem
+    addFoodItem,
+    resetGroceryBuildFilter
 };
 
 const AddFoodContainer = connect(mapStateToProps, mapDispatchToProps)(AddFood);

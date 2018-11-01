@@ -2,120 +2,154 @@ import React from 'react';
 import { Field, reduxForm } from 'redux-form';
 // import { setFilter, addFoodItem, setPrevSearchTerm } from '../../actions/actions';
 import _ from 'lodash';
-import classes from './FoodForm.module.css';
+import { withStyles } from '@material-ui/core/styles';
+import Button from '@material-ui/core/Button';
 
+import renderTextField from '../../components/formHelper/renderTextField';
+import renderCombobox from '../../components/formHelper/renderCombobox';
+import renderCheckbox from '../../components/formHelper/renderCheckbox';
+import InputLabel from '@material-ui/core/InputLabel';
+import MenuItem from '@material-ui/core/MenuItem';
+
+
+const styles = theme => ({
+    button: {
+        margin: 1,
+        marginTop: 10
+    },
+    checkField: {
+        padding: 0
+    },
+    label: {
+        fontWeight: 'bold',
+        fontSize: '1em',
+        paddingRight: 25,
+        paddingTop: 20,
+        flex: 1,
+    },
+    formGroup: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        padding: '.5em',
+        marginBottom: 10,
+        maxWidth: 500,
+    },
+    input: {
+        flex: 2,
+    }
+});
 
 let FoodForm2 = props => {
-    const { change, handleSubmit, submitting, buildOptions, foodTypes } = props;
+    const {
+        change,
+        handleSubmit,
+        submitting,
+        buildOptions,
+        classes
+    } = props;
 
     return (
         <form
-            className="form-horizontal form-top-spacing"
             onSubmit={handleSubmit}
         >
-            <div className="col-sm-10">
-                <div className="form-group">
-                    <label className="col-sm-2 control-label">Food</label>
-                    <div className="col-sm-10">
-                        <Field
-                            className="form-control"
-                            name="foodName"
-                            component="input"
-                            type="text"
-                        />
+                <div className={classes.formGroup}>
+                    <InputLabel className={classes.label}>Food</InputLabel>
+                    <div className={classes.input}>
+                    <Field
+                        name="foodName"
+                        label=""
+                        type="text"
+                        component={renderTextField}
+                    />
+                    </div>
+                </div>
+                <div className={classes.formGroup}>
+                    <InputLabel className={classes.label}>Type</InputLabel>
+                    <div className={classes.input}>
+                    <Field
+                        name="foodTypeId"
+                        label=""
+                        component={renderCombobox}
+                        fullWidth 
+                        onChange={(e,y) => {
+                            return Object.keys(props.stores).forEach(id => {
+                                change(
+                                    'section' + props.stores[id].name, 
+                                    String(
+                                        buildOptions.foodTypes[y]
+                                            .defaultSection[id].section
+                                    )
+                                );
+                            })
+                        }}
+                    >
+                        {Object.keys(props.foodTypes).map(key => (
+                            <MenuItem key={key} value={key}>
+                                {props.foodTypes[key].name}
+                            </MenuItem>
+                        ))}
+                    </Field>
                     </div>
                 </div>
 
-                <div className="form-group">
-                    <label className="col-sm-2 control-label">Type</label>
-                    <div className="col-sm-10">
+                <div className={classes.formGroup}>
+                    <InputLabel className={classes.label}>Staple</InputLabel>
+                    <div className={classes.input}>
+                    <Field
+                        name="staple"
+                        type="checkbox"
+                        component={renderCheckbox}
+                        className={classes.checkField}
+                    />
+                    </div>
+                </div>
+                {_.map(props.stores, stores => (
+                    <div key={'div' + stores.name} className={classes.formGroup}>
+                        <InputLabel className={classes.label}>
+                            {stores.name}
+                        </InputLabel>
+                        <div className={classes.input}>
                         <Field
-                            name="foodTypeId"
-                            component="select"
-                            className="form-control"
-                            onChange={e => {
-                                _.forOwn(props.stores, value => {
-                                    change(
-                                        'section' + value.name,
-                                        buildOptions.foodTypes[e.target.value]
-                                            .defaultSection[value.id].section
-                                    );
-                                });
-                            }}
+                            name={'section' + stores.name}
+                            component={renderCombobox}
+                            fullWidth 
                         >
-                            {_.map(foodTypes, foodType => (
-                                <option
-                                    value={parseInt(foodType.id, 10)}
-                                    key={parseInt(foodType.id, 10)}
+                            {Object.keys(stores.sections).map(id => (
+                                <MenuItem
+                                    key={stores.sections[id].sectionName + id}
+                                    value={id}
                                 >
-                                    {foodType.name}
-                                </option>
+                                    {stores.sections[id].sectionName}
+                                </MenuItem>
                             ))}
                         </Field>
-                    </div>
-                </div>
-
-                <div className="form-group">
-                    <label htmlFor="staple" className="col-sm-2 control-label">
-                        Staple
-                    </label>
-                    <div className="col-sm-1">
-                        <Field
-                            name="staple"
-                            id="staple"
-                            component="input"
-                            type="checkbox"
-                            className={classes.checkboxForm}
-                        />
-                    </div>
-                </div>
-
-                {_.map(props.stores, stores => (
-                    <div key={parseInt(stores.id, 10)} className="form-group">
-                        <label className="col-sm-2 control-label">
-                            {stores.name}
-                        </label>
-                        <div className="col-sm-10">
-                            <Field
-                                name={'section' + stores.name}
-                                component="select"
-                                className="form-control"
-                            >
-                                {_.map(stores.sections, section => (
-                                    <option
-                                        value={parseInt(section.id, 10)}
-                                        key={section.sectionName + section.id}
-                                    >
-                                        {section.sectionName}
-                                    </option>
-                                ))}
-                            </Field>
                         </div>
                     </div>
                 ))}
-
-                <div className="btn-toolbar pull-right">
-                    <button
-                        type="submit"
-                        className="btn btn-danger"
-                        disabled={submitting}
-                        onClick={handleSubmit(values =>
-                            props.onSubmit({ ...values, button: 'submit' })
-                        )}
-                    >
-                        Submit
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-danger"
-                        onClick={handleSubmit(values =>
-                            props.onSubmit({ ...values, button: 'cancel' })
-                        )}
-                    >
-                        Cancel
-                    </button>
+                <div className={classes.formGroup}>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                    disabled={submitting}
+                    onClick={handleSubmit(values =>
+                        props.onSubmit({ ...values, button: 'submit' })
+                    )}
+                >
+                    Submit
+                </Button>
+                <Button
+                    variant="contained"
+                    color="secondary"
+                    className={classes.button}
+                    onClick={handleSubmit(values =>
+                        props.onSubmit({ ...values, button: 'cancel' })
+                    )}
+                >
+                    Cancel
+                </Button>
                 </div>
-            </div>
         </form>
     );
 };
@@ -127,4 +161,4 @@ FoodForm2 = reduxForm({
     form: 'foodForm' // a unique identifier for this form
 })(FoodForm2);
 
-export default FoodForm2;
+export default withStyles(styles)(FoodForm2);
