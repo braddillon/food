@@ -50,6 +50,7 @@ urlpatterns = [
     url(r'^apidoc/', schema_view),
     url(r'^', include('food.urls', namespace='food')),
     url(r'^', include('grocery.urls', namespace='grocery')),
+    url(r'^', include('recipe.urls', namespace='recipe')),
     # url(r'^api-auth/login/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/auth/token/$', obtain_jwt_token),
     #url(r'^(?:.*)/?$', views.SPA_entry),

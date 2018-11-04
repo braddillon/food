@@ -5,6 +5,8 @@ import EditFood from './Food/EditFood.js';
 import AddFood from './Food/AddFood.js';
 import FoodBrowser from './Food/FoodBrowserContainer.js';
 import RequireAuth from './auth/require_auth';
+import RecipeGallery from '../Recipe/components/RecipeGallery';
+
 //import Signin from './auth/signin';
 import Signin from '../containers/Forms/Signin'
 import Signout from './auth/signout';
@@ -31,17 +33,8 @@ const theme = createMuiTheme({
     },
   });
 
-//   const theme = createMuiTheme({
-//     palette: {
-//       primary: blue,
-//       secondary: {
-//         main: '#f44336',
-//       },
-//     },
-//   });
-
+  
 class App extends Component {
-
     state = {
         mobileSideDrawerOpen: false,
     };
@@ -93,6 +86,7 @@ class App extends Component {
                     <Route path="/signin" component={Signin} />
                     <Route path="/signout" component={Signout} />
                     <Route path="/store" component={RequireAuth(StoreList)} />
+                    <Route path="/recipe" component={RequireAuth(RecipeGallery)} />
                     <Route
                         path="/foodBrowser"
                         component={RequireAuth(FoodBrowser)}

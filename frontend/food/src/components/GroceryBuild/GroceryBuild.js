@@ -172,7 +172,7 @@ class GroceryBuildList extends Component {
         const { filter } = this.props.groceryBuildOptions;
         return (
             <Grid container spacing={24}>
-                <Grid item sm={12} md={6}>
+                <Grid item xs={12} md={6}>
                     <div style={buttonHeaderStyle}>
                         <FilterButton filter={filter} name="Search" />
                         <FilterButton filter={filter} name="Staples" />
@@ -181,7 +181,7 @@ class GroceryBuildList extends Component {
                     {this.buildView()}
                     <br />
                 </Grid>
-                <Grid item sm={12} md={6}>
+                <Grid item xs={12} md={6}>
                     <SideGroceryList />
                 </Grid>
             </Grid>

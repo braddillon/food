@@ -12,7 +12,10 @@ import { withStyles } from '@material-ui/core/styles';
 const drawerWidth = 240;
 
 const styles = theme => ({
+    root: {
+    },
     drawerPaper: {
+        height: '100vh',
         width: drawerWidth,
         [theme.breakpoints.up('md')]: {
             position: 'relative'
@@ -41,6 +44,9 @@ const SideDrawer = props => {
                     <ListItem button component={Link} to="/foodBrowser/">
                         <ListItemText primary="Food Manager" />
                     </ListItem>
+                    <ListItem button component={Link} to="/recipe/">
+                        <ListItemText primary="Recipes" />
+                    </ListItem>
                 </List>
             </div>
         </div>
@@ -48,7 +54,7 @@ const SideDrawer = props => {
 
     if (props.authenticated) {
         return (
-            <div>
+            <div className={classes.root}>
                 <Hidden mdUp>
                     <Drawer
                         variant="temporary"
