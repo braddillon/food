@@ -54,9 +54,6 @@ class RecipeForm extends Component {
 
     render() {
         const { classes } = this.props;
-        console.log("recipeform");
-        console.log(this.props);
-        console.log(this.props.changeIngredientMatch);
 
         return (
             <form>
@@ -94,13 +91,17 @@ class RecipeForm extends Component {
                     <RecipeFormIngredient
                         ingredientText={this.state.ingredientText}
                         parsedIngredients={this.props.parsedIngredients}
+                        possibleIngredients={this.props.possibleIngredients}
                         onSet={text => this.setState({ ingredientText: text })}
                         onParse={() =>
                             this.props.parseIngredients(
                                 this.state.ingredientText
                             )}
                         onReset={this.props.resetIngredients}
-                        onChangeMatch={this.props.changeIngredientMatch} 
+                        onChangeMatch={this.props.changeIngredientMatch}
+                        onPickPossibleIngredients={this.props.onPickPossibleIngredients}
+                        onResetPossibleIngredients={this.props.onResetPossibleIngredients}
+                        onAdhocIngredientMatch={this.props.onAdhocIngredientMatch}
                     />
 
                     <div className={classes.inputGroup}>

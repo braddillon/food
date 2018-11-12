@@ -1,5 +1,4 @@
 import React from 'react';
-import PropTypes from 'prop-types';
 import { withStyles } from '@material-ui/core/styles';
 import blue from '@material-ui/core/colors/blue';
 
@@ -7,14 +6,13 @@ import Dialog from '@material-ui/core/Dialog';
 import Button from '@material-ui/core/Button';
 import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
-import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
-import Grid from '@material-ui/core/Grid';
 import TextField from '@material-ui/core/TextField';
+import Typography from '@material-ui/core/Typography';
+import List from '@material-ui/core/List';
+import ListItem from '@material-ui/core/ListItem';
+import ListItemText from '@material-ui/core/ListItemText';
 
-import InputLabel from '@material-ui/core/InputLabel';
-import Select from '@material-ui/core/Select';
-import MenuItem from '@material-ui/core/MenuItem';
 
 const styles = {
     avatar: {
@@ -35,7 +33,8 @@ const styles = {
 
 class IngredientPicker extends React.Component {
     state = {
-      open: true,
+      //open: true,
+      searchTerm: '',
     };
   
     handleClickOpen = () => {
@@ -47,7 +46,6 @@ class IngredientPicker extends React.Component {
     // };
   
     render() {
-        console.log("ingredientPicker");
       return (
         <div>
           <Dialog
@@ -68,11 +66,32 @@ class IngredientPicker extends React.Component {
                 label="Search"
                 type="text"
                 autoComplete="false"
+                value={this.state.searchTerm}
                 fullWidth
+                onChange={(e) => this.setState({searchTerm: e.target.value})}
               />
+              <List>
+              {this.props.possibleIngredients.map( (item) => (
+                <ListItem button key={'posIng' + item.id} onClick={() => {
+                  this.setState({searchTerm: ''})
+                  this.props.closePicker()
+                  this.props.onAdhocIngredientMatch(this.props.callerId, item.id, item.name)}
+                }><ListItemText primary={item.name} /></ListItem>  
+              ))}
+              </List>
+              
+
             </DialogContent>
             <DialogActions>
-              <Button onClick={this.props.closePicker} color="primary">
+<Button onClick={() => {this.props.onPickPossibleIngredients(this.state.searchTerm)}} color="primary">
+                Search
+              </Button>
+              <Button onClick={() => {
+                this.setState({searchTerm: ''})
+                this.props.closePicker()
+
+              }}
+              color="primary">
                 Cancel
               </Button>
               {/* <Button onClick={this.handleClose} color="primary">

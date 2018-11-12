@@ -29,9 +29,8 @@ const styles = theme => ({
 
 const IngredientMatcherItem = (props) => {
     const { classes } = props;
-    // console.log(props);
 
-    let selector = (<Button variant="contained" color="secondary" size="small" className={classes.matchButton} onClick={props.togglePicker}>
+    let selector = (<Button variant="contained" color="secondary" size="small" className={classes.matchButton} onClick={() => props.openPicker(props.tmpId)}>
     Match
   </Button>)
 
@@ -44,7 +43,7 @@ const IngredientMatcherItem = (props) => {
         //onChangeMatch={this.props.changeIngredientMatch} 
         className={classes.comboBox}
       >
-        {Object.keys(props.potentialMatches).map( (item) => <MenuItem value={String(item)}>{props.potentialMatches[item]}</MenuItem>)}
+        {Object.keys(props.potentialMatches).map( (item) => <MenuItem key={item} value={String(item)}>{props.potentialMatches[item]}</MenuItem>)}
 
         {/* <MenuItem value="">
           <em>None</em>
