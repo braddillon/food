@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-// import _ from 'lodash';
+import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 
@@ -8,6 +8,7 @@ import InputLabel from '@material-ui/core/InputLabel';
 // import MenuItem from '@material-ui/core/MenuItem';
 
 import RecipeFormIngredient from './RecipeFormIngredient';
+import RecipeFormDirection from './RecipeFormDirection';
 
 const styles = theme => ({
     root: {
@@ -40,6 +41,21 @@ const styles = theme => ({
     },
     inputGroup: {
         marginBottom: 30
+    },
+    formControl: {
+        margin: theme.spacing.unit,
+        minWidth: 120,
+        maxWidth: 300
+    },
+    chips: {
+        display: 'flex',
+        flexWrap: 'wrap'
+    },
+    chip: {
+        margin: theme.spacing.unit / 4
+    },
+    textBox: {
+        minWidth: 500
     }
 });
 
@@ -52,8 +68,36 @@ class RecipeForm extends Component {
         source: ''
     };
 
+    resetForm = () => {
+        console.log('resetting form');
+        this.setState({
+            name: '',
+            tags: '',
+            ingredientText: '',
+            directionText: '',
+            source: ''
+        });
+    };
+
+    validateInputs = () => {
+        if (this.state.name === '') return false;
+
+        if (_.isEmpty(this.props.parsedIngredients)) return false;
+
+        if (_.isEmpty(this.props.parsedDirections)) return false;
+
+        // check each ingredient has a match
+        let missingIng = Object.keys(this.props.parsedIngredients).filter(
+            item => this.props.parsedIngredients[item].selection <= 0
+        );
+        if (missingIng.length > 0) return false;
+
+        return true;
+    };
+
     render() {
         const { classes } = this.props;
+        const submitDisabled = !this.validateInputs();
 
         return (
             <form>
@@ -64,7 +108,8 @@ class RecipeForm extends Component {
                             name="name"
                             value={this.state.name}
                             type="text"
-                            autoComplete="false"
+                            autoComplete="off"
+                            className={classes.textBox}
                             onChange={e =>
                                 this.setState({ name: e.target.value })
                             }
@@ -76,85 +121,84 @@ class RecipeForm extends Component {
                             name="tags"
                             value={this.state.tags}
                             type="text"
-                            autoComplete="false"
+                            autoComplete="off"
+                            className={classes.textBox}
                             onChange={e =>
                                 this.setState({ tags: e.target.value })
                             }
                         />
                     </div>
-                    {/* <div className={classes.inputGroup}>
-                        <InputLabel className={classes.label}>
-                            Ingredient Text
-                        </InputLabel>
-                        {ingred}
-                    </div> */}
-                    <RecipeFormIngredient
-                        ingredientText={this.state.ingredientText}
-                        parsedIngredients={this.props.parsedIngredients}
-                        possibleIngredients={this.props.possibleIngredients}
-                        onSet={text => this.setState({ ingredientText: text })}
-                        onParse={() =>
-                            this.props.parseIngredients(
-                                this.state.ingredientText
-                            )}
-                        onReset={this.props.resetIngredients}
-                        onChangeMatch={this.props.changeIngredientMatch}
-                        onPickPossibleIngredients={this.props.onPickPossibleIngredients}
-                        onResetPossibleIngredients={this.props.onResetPossibleIngredients}
-                        onAdhocIngredientMatch={this.props.onAdhocIngredientMatch}
-                    />
 
                     <div className={classes.inputGroup}>
                         <InputLabel className={classes.label}>
-                            Directions
-                        </InputLabel>
-                        <Button
-                            variant="contained"
-                            color="secondary"
-                            size="small"
-                            className={classes.button}
-                        >
-                            Parse
-                        </Button>
-                        <br />
-                        <TextField
-                            name="directionText"
-                            value={this.state.directionText}
-                            type="text"
-                            autoComplete="false"
-                            multiline
-                            fullWidth
-                            onChange={e =>
-                                this.setState({ directionText: e.target.value })
-                            }
-                        />
-                    </div>
-                    <div className={classes.inputGroup}>
-                        <InputLabel className={classes.label}>
-                            Source Link
+                            Source
                         </InputLabel>
                         <TextField
                             name="source"
                             value={this.state.source}
                             type="text"
                             autoComplete="false"
-                            fullWidth
+                            className={classes.textBox}
                             onChange={e =>
                                 this.setState({ source: e.target.value })
                             }
                         />
                     </div>
+
+                    <RecipeFormIngredient
+                        ingredientText={this.state.ingredientText}
+                        parsedIngredients={this.props.parsedIngredients}
+                        onSet={text => this.setState({ ingredientText: text })}
+                        onParse={() =>
+                            this.props.parseIngredients(
+                                this.state.ingredientText
+                            )
+                        }
+                        onReset={this.props.resetIngredients}
+                        sections={this.props.sections}
+                    />
+
+                    <RecipeFormDirection
+                        directionText={this.state.directionText}
+                        onSet={text => this.setState({ directionText: text })}
+                        parsedDirections={this.props.parsedDirections}
+                        onParse={() =>
+                            this.props.parseDirections(
+                                this.state.directionText,
+                                this.props.sections
+                            )
+                        }
+                        onChangeDirectionSection={
+                            this.props.onChangeDirectionSection
+                        }
+                        onReset={this.props.resetDirections}
+                        sections={this.props.sections}
+                    />
+
+                    
                     <div className={classes.formGroup}>
                         <Button
                             variant="contained"
                             color="secondary"
                             className={classes.button}
+                            disabled={submitDisabled}
+                            onClick={() =>
+                                this.props.onCreateNewRecipe(
+                                    this.state.name,
+                                    this.state.tags,
+                                    this.state.source,
+                                    this.props.parsedIngredients,
+                                    this.props.parsedDirections,
+                                    this.resetForm
+                                )
+                            }
                         >
                             Submit
                         </Button>
                         <Button
                             variant="contained"
                             color="secondary"
+                            autoComplete="off"
                             className={classes.button}
                         >
                             Cancel

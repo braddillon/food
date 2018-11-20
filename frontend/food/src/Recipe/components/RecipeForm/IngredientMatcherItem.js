@@ -1,66 +1,88 @@
 import React from 'react';
 import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
-import Button from '@material-ui/core/Button';
-import InputLabel from '@material-ui/core/InputLabel';
+import IconButton from '@material-ui/core/IconButton';
+import EditIcon from '@material-ui/icons/Edit';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
+
+import TableCell from '@material-ui/core/TableCell';
+import TableRow from '@material-ui/core/TableRow';
 
 const styles = theme => ({
     root: {
         marginBottom: 10,
-        display: 'flex',
+        display: 'flex'
     },
     matchButton: {
-      margin: theme.spacing.unit,
-      fontSize: 10,
-      padding: 1,
+        margin: theme.spacing.unit,
+        fontSize: 10,
+        padding: 1
     },
     label: {
         fontSize: '1em',
         paddingRight: 25,
-        paddingTop: 20,
-        flex: 1,
+        paddingLeft: 15,
+        paddingTop: 15
     },
-    comboxBox: {
-        flex: 2,
+    ingComboBox: {
+        minWidth: 200
+    },
+    catComboBox: {
+        minWidth: 50
+    },
+    cell: {
+        padding: 5
     }
-  });
+});
 
-const IngredientMatcherItem = (props) => {
+const IngredientMatcherItem = props => {
     const { classes } = props;
 
-    let selector = (<Button variant="contained" color="secondary" size="small" className={classes.matchButton} onClick={() => props.openPicker(props.tmpId)}>
-    Match
-  </Button>)
-
-    if (!_.isEmpty(props.potentialMatches)) {
-        selector = (
-        <Select
-        value={String(props.selection)}
-        onChange={(e) => props.onChangeMatch(props.tmpId, e.target.value)}
-
-        //onChangeMatch={this.props.changeIngredientMatch} 
-        className={classes.comboBox}
-      >
-        {Object.keys(props.potentialMatches).map( (item) => <MenuItem key={item} value={String(item)}>{props.potentialMatches[item]}</MenuItem>)}
-
-        {/* <MenuItem value="">
-          <em>None</em>
-        </MenuItem>
-        <MenuItem value={10}>Ten</MenuItem>
-        <MenuItem value={20}>Twenty</MenuItem>
-        <MenuItem value={30}>Thirty</MenuItem> */}
-      </Select>
-      )
-    }
-
     return (
-        <div className={classes.root}>
-        <InputLabel className={classes.label}>{props.name}</InputLabel>
-            
-            {selector}
-        </div>
+        <TableRow>
+            <TableCell className={classes.label}>{props.name}</TableCell>
+            <TableCell className={classes.cell}>
+                {!_.isEmpty(props.potentialMatches) ? (
+                    <Select
+                        value={String(props.selection)}
+                        onChange={e =>
+                            props.onChangeMatch(props.tmpId, e.target.value)
+                        }
+                        className={classes.ingComboBox}
+                    >
+                        {Object.keys(props.potentialMatches).map(item => (
+                            <MenuItem key={item} value={String(item)}>
+                                {props.potentialMatches[item]}
+                            </MenuItem>
+                        ))}
+                    </Select>
+                ) : null}
+
+                <IconButton
+                    color="primary"
+                    onClick={() => props.openPicker(props.tmpId)}
+                >
+                    <EditIcon />
+                </IconButton>
+            </TableCell>
+
+            <TableCell className={classes.cell}>
+                <Select
+                    value={String(props.section)}
+                    onChange={e =>
+                        props.onChangeSection(props.tmpId, e.target.value)
+                    }
+                    className={classes.catComboBox}
+                >
+                    {Object.keys(props.sections).map(item => (
+                        <MenuItem key={item} value={String(item)}>
+                            {props.sections[item].name}
+                        </MenuItem>
+                    ))}
+                </Select>
+            </TableCell>
+        </TableRow>
     );
 };
 

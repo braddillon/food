@@ -39,7 +39,7 @@ class FoodFormContainer extends Component {
     if (this.props.errorMessage) {
       return (
         <Paper style={{ padding: 10, marginTop: 10, backgroundColor: "red" }}>
-          <Typography variant="title" className={classes.errorMessage}>
+          <Typography variant="h6" className={classes.errorMessage}>
             Oooops! {errorMessage}
           </Typography>
         </Paper>
@@ -54,7 +54,7 @@ class FoodFormContainer extends Component {
       <Grid container spacing={16} direction="row" justify="center" style={{ minHeight: "100vh" }}>
         <Grid item xs={10} md={3} lg={2}>
           <Paper className={classes.paper}>
-            <Typography variant="display1" color="primary" className={classes.title}>
+            <Typography variant="h4" color="primary" className={classes.title}>
               Add Food Item
             </Typography>
             <form onSubmit={handleSubmit(this.submitForm)}>

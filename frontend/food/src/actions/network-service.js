@@ -10,6 +10,13 @@ export default {
             },
             function(error) {
                 //catches if the session ended!
+                console.log("brad");
+                console.log(Object.keys(error));
+                console.log(error.config);
+                console.log(error.request);
+                console.log(error.response);
+
+                console.log("brad");
                 if (error.response.status === 401) {
                     localStorage.clear();
                     store.dispatch({ type: UNAUTH_USER });

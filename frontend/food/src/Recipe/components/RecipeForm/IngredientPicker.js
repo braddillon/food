@@ -8,7 +8,6 @@ import DialogActions from '@material-ui/core/DialogActions';
 import DialogContent from '@material-ui/core/DialogContent';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import TextField from '@material-ui/core/TextField';
-import Typography from '@material-ui/core/Typography';
 import List from '@material-ui/core/List';
 import ListItem from '@material-ui/core/ListItem';
 import ListItemText from '@material-ui/core/ListItemText';
@@ -40,25 +39,23 @@ class IngredientPicker extends React.Component {
     handleClickOpen = () => {
       this.setState({ open: true });
     };
-  
-    // handleClose = () => {
-    //   this.setState({ open: false });
-    // };
-  
+
+    catchReturn = (ev) => {
+      if (ev.key === 'Enter') {
+        ev.preventDefault();
+        this.props.onPickPossibleIngredients(this.state.searchTerm)
+      }
+    }
+
     render() {
       return (
         <div>
           <Dialog
             open={this.props.open}
-            // onClose={this.handleClose}
             aria-labelledby="form-dialog-title"
           >
             <DialogTitle id="form-dialog-title">Pick Ingredient</DialogTitle>
             <DialogContent>
-              {/* <DialogContentText>
-                To subscribe to this website, please enter your email address here. We will send
-                updates occasionally.
-              </DialogContentText> */}
               <TextField
                 autoFocus
                 margin="dense"
@@ -69,6 +66,7 @@ class IngredientPicker extends React.Component {
                 value={this.state.searchTerm}
                 fullWidth
                 onChange={(e) => this.setState({searchTerm: e.target.value})}
+                onKeyPress={this.catchReturn}
               />
               <List>
               {this.props.possibleIngredients.map( (item) => (
@@ -83,9 +81,6 @@ class IngredientPicker extends React.Component {
 
             </DialogContent>
             <DialogActions>
-<Button onClick={() => {this.props.onPickPossibleIngredients(this.state.searchTerm)}} color="primary">
-                Search
-              </Button>
               <Button onClick={() => {
                 this.setState({searchTerm: ''})
                 this.props.closePicker()
@@ -94,9 +89,6 @@ class IngredientPicker extends React.Component {
               color="primary">
                 Cancel
               </Button>
-              {/* <Button onClick={this.handleClose} color="primary">
-                Subscribe
-              </Button> */}
             </DialogActions>
           </Dialog>
         </div>

@@ -6,7 +6,8 @@ import Button from "@material-ui/core/Button";
 import InputLabel from "@material-ui/core/InputLabel";
 import TextField from "@material-ui/core/TextField";
 
-import IngredientMatcher from "./IngredientMatcher";
+// import IngredientMatcher from "./IngredientMatcher";
+import IngredientMatcherContainer from "../../containers/RecipeForm/IngredientMatcherContainer";
 
 const styles = theme => ({
   button: {
@@ -41,9 +42,9 @@ class RecipeFormIngredient extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.inputGroup}>
-        <InputLabel className={classes.label}>Ingredient Text</InputLabel>
         {_.isEmpty(this.props.parsedIngredients) ? (
           <Fragment>
+            <InputLabel className={classes.label}>Ingredient Text</InputLabel>
             <Button
               variant="contained"
               color="secondary"
@@ -64,28 +65,7 @@ class RecipeFormIngredient extends Component {
             />
           </Fragment>
         ) : (
-          <Fragment>
-            <Button
-              variant="contained"
-              color="secondary"
-              size="small"
-              className={classes.button}
-              onClick={() => {
-                this.props.onReset();
-              }}
-            >
-              Reset
-            </Button>
-            <br />
-            <IngredientMatcher
-              parsedIngredients={this.props.parsedIngredients}
-              possibleIngredients={this.props.possibleIngredients}
-              onChangeMatch={this.props.onChangeMatch}
-              onPickPossibleIngredients={this.props.onPickPossibleIngredients}
-              onResetPossibleIngredients={this.props.onResetPossibleIngredients}
-              onAdhocIngredientMatch={this.props.onAdhocIngredientMatch}
-            />
-          </Fragment>
+            <IngredientMatcherContainer />
         )}
       </div>
     );

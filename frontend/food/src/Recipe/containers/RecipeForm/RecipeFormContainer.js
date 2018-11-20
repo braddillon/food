@@ -6,25 +6,36 @@ import RecipeForm from "../../components/RecipeForm/RecipeForm";
 import {
   parseIngredients,
   resetIngredients,
+  parseDirections,
+  resetDirections,
   changeIngredientMatch,
   pickPossibleIngredients,
   resetPossibleIngredients,
   setAdhocIngredientMatch,
+  getRecipeSections,
+  changeDirectionSection,
+  createNewRecipe,
 } from "../../actions/actions";
 
 class RecipeFormContainer extends Component {
+
+  componentDidMount() {
+    this.props.getRecipeSections()
+  }
+
   render() {
     return (
       <div>
         <RecipeForm
-          parsedIngredients={this.props.parsedIngredients}
-          possibleIngredients={this.props.ingredientPicker}
-          changeIngredientMatch={this.props.changeIngredientMatch}
           parseIngredients={this.props.parseIngredients}
           resetIngredients={this.props.resetIngredients}
-          onPickPossibleIngredients={this.props.pickPossibleIngredients}
-          onResetPossibleIngredients={this.props.resetPossibleIngredients}
-          onAdhocIngredientMatch={this.props.setAdhocIngredientMatch}
+          parseDirections={this.props.parseDirections}
+          resetDirections={this.props.resetDirections}
+          sections={this.props.recipeOptions.sections}
+          parsedIngredients={this.props.parsedIngredients}         
+          parsedDirections={this.props.parsedDirections}   
+          onChangeDirectionSection={this.props.changeDirectionSection} 
+          onCreateNewRecipe={this.props.createNewRecipe}
         />
       </div>
     );
@@ -33,16 +44,23 @@ class RecipeFormContainer extends Component {
 
 const mapStateToProps = state => ({
   parsedIngredients: state.parsedIngredients,
-  ingredientPicker: state.ingredientPicker
+  parsedDirections: state.parsedDirections,
+  ingredientPicker: state.ingredientPicker,
+  recipeOptions: state.recipeOptions,
 });
 
 const mapDispatchToProps = {
   parseIngredients,
   resetIngredients,
+  parseDirections,
+  resetDirections,
   changeIngredientMatch,
   pickPossibleIngredients,
   resetPossibleIngredients,
   setAdhocIngredientMatch,
+  getRecipeSections,
+  changeDirectionSection,
+  createNewRecipe,
 };
 
 export default connect(

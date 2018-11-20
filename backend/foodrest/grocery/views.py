@@ -232,3 +232,7 @@ def groceryCreate(request):
         mySecs[sec.section.store.id] = sec.section.id
     
     return Response({'id': food.id, 'name': food.name, 'deferred': request.data['deferred'], 'foodtype': food.foodtype.id, 'grocerySections': mySecs})
+
+
+
+

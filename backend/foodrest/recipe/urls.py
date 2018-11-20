@@ -8,6 +8,8 @@ from . import views
 app_name = 'recipe'
 urlpatterns = [
     url(r'^api/parseIngredients$', views.parseIngredients, name='parseIngredients'),
+    url(r'^api/recipeSection$', views.recipeSectionList.as_view(), name='recipeSection'),
+    url(r'^api/recipeCreate$', views.recipeCreate, name='recipeCreate'),
 ]
 
 

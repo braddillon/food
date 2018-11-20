@@ -43,7 +43,7 @@ const Header = props => {
             <AppBar position="static">
                 <Toolbar>
                     {toolbarButton}
-                    <Typography variant="display2" color="inherit" className={classes.flex}>
+                    <Typography variant="h3" color="inherit" className={classes.flex}>
                         Food
                     </Typography>
                     {props.authenticated ? (

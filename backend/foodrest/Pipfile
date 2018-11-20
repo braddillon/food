@@ -13,6 +13,7 @@ Django = "*"
 psycopg2-binary = "*"
 django-cors-headers = "*"
 gunicorn = "*"
+django-taggit = "*"
 
 [dev-packages]
 
