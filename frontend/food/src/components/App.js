@@ -5,7 +5,10 @@ import EditFood from './Food/EditFood.js';
 import AddFood from './Food/AddFood.js';
 import FoodBrowser from './Food/FoodBrowserContainer.js';
 import RequireAuth from './auth/require_auth';
-import RecipeGallery from '../Recipe/components/RecipeGallery';
+// import RecipeGallery from '../Recipe/components/RecipeGallery';
+import RecipeForm from '../Recipe/containers/RecipeForm/RecipeFormContainer';
+import RecipeGallery from '../Recipe/containers/RecipeGallery/RecipeGalleryContainer';
+import RecipeViewer from '../Recipe/containers/RecipeViewer/RecipeViewerContainer';
 
 //import Signin from './auth/signin';
 import Signin from '../containers/Forms/Signin';
@@ -95,8 +98,16 @@ class App extends Component {
                                     component={RequireAuth(StoreList)}
                                 />
                                 <Route
-                                    path="/recipe"
+                                    path="/recipeCreate"
+                                    component={RequireAuth(RecipeForm)}
+                                />
+                                <Route
+                                    path="/recipeGallery"
                                     component={RequireAuth(RecipeGallery)}
+                                />
+                                <Route
+                                    path="/recipe/:_id"
+                                    component={RequireAuth(RecipeViewer)}
                                 />
                                 <Route
                                     path="/foodBrowser"

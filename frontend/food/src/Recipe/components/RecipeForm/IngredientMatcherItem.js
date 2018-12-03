@@ -3,6 +3,7 @@ import Select from '@material-ui/core/Select';
 import MenuItem from '@material-ui/core/MenuItem';
 import IconButton from '@material-ui/core/IconButton';
 import EditIcon from '@material-ui/icons/Edit';
+import AddIcon from '@material-ui/icons/AddCircleOutline';
 import { withStyles } from '@material-ui/core/styles';
 import _ from 'lodash';
 
@@ -65,6 +66,13 @@ const IngredientMatcherItem = props => {
                 >
                     <EditIcon />
                 </IconButton>
+                <IconButton
+                    color="primary"
+                    onClick={() => props.onFoodCreate(props.name, props.tmpId)}
+                >
+                    <AddIcon />
+                </IconButton>
+                
             </TableCell>
 
             <TableCell className={classes.cell}>

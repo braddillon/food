@@ -6,6 +6,7 @@ docker-compose.yml
 food.env
 letsEncrypt.env
 
+backend/foodrest/media/
 
 
 # Byte-compiled / optimized / DLL files

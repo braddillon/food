@@ -1,7 +1,11 @@
 import axios from "axios";
+import objectToFormData from "object-to-formdata"
 //import moment from 'moment';
 //import { store } from '../store.js';
-//import { push } from 'connected-react-router';
+import { push } from 'connected-react-router';
+
+
+import { resetRecipeForm } from './recipeFormActions'
 
 import { ROOT_URL } from "../../actions/actions";
 import {
@@ -16,6 +20,9 @@ import {
   RECIPE_CHANGE_DIRECTION_SECTION,
   RECIPE_PARSE_DIRECTIONS,
   RECIPE_RESET_DIRECTIONS,
+  RECIPE_GET_LIST,
+  RECIPE_DETAIL,
+  RECIPE_RESET,
 } from "./types";
 
 axios.defaults.xsrfHeaderName = "X-CSRFTOKEN";
@@ -114,6 +121,9 @@ export const changeDirectionSection = (tmpID, sectionId) => {
 
 export const setAdhocIngredientMatch = (tmpID, selectionId, name) => {
   return function(dispatch) {
+    console.log("setAdhocIngredient")
+    console.log(tmpID)
+    console.log(selectionId)
     dispatch({
       type: RECIPE_ADHOC_INGREDIENT_MATCH,
       payload: { tmpId: tmpID, selectionId: selectionId, name: name }
@@ -172,35 +182,152 @@ export const getRecipeSections = () => {
   };
 };
 
-export const createNewRecipe = (name, tags, source, ingredients, directions, onResetForm) => {
+// export const createNewRecipe = (name, tags, source, ingredients, directions, onResetForm) => {
+//   return function(dispatch) {
+//     axios
+//       .post(
+//         `${ROOT_URL}/recipeCreate`,
+//         {
+//           name: name,
+//           tags: tags,
+//           source: source,
+//           ingredients: ingredients,
+//           directions: directions,
+//         },
+//         {
+//           headers: {
+//             Authorization: "JWT " + localStorage.getItem("token")
+//           }
+//         }
+//       )
+//       .then(response => {
+//         if (response.data.status === "success")
+//           console.log("SUCCESS!!!!");
+//         else {
+//           console.log("FAIL");
+//         }
+
+//         dispatch({type: RECIPE_RESET_INGREDIENTS})
+//         dispatch({type: RECIPE_RESET_DIRECTIONS})
+//         onResetForm();
+//         console.log(response.data);
+//       });
+//   };
+// }
+
+export const getRecipeList = () => {
   return function(dispatch) {
+    axios
+      .get(`${ROOT_URL}/recipeList`, {
+        headers: {
+          Authorization: "JWT " + localStorage.getItem("token")
+        }
+      })
+      .then(response => {
+        dispatch({
+          type: RECIPE_GET_LIST,
+          payload: response.data
+        });
+      });
+  };
+};
+
+
+export const getRecipe = g => {
+  return function(dispatch) {
+    axios
+      .get(`${ROOT_URL}/recipe/${g}`, {
+        headers: {
+          Authorization: "JWT " + localStorage.getItem("token")
+        }
+      })
+      .then(response => {
+        dispatch({
+          type: RECIPE_DETAIL,
+          payload: response.data
+        });
+      });
+  };
+};
+
+export const recipeReset = () => {
+  return function(dispatch) {
+    dispatch({ type: RECIPE_RESET });
+  };
+};
+
+export const uploadRecipeImage = (file) => {
+  return function(dispatch) {
+    // axios
+    //   .post(
+    //     `${ROOT_URL}/api/upload/`,
+    //     {
+    //       ingText: ingredientText
+    //     },
+    //     {
+    //       headers: {
+    //         Authorization: "JWT " + localStorage.getItem("token")
+    //       }
+    //     }
+    //   )
+    //   .then(response => {
+    //     dispatch({
+    //       type: RECIPE_PARSE_INGREDIENTS,
+    //       payload: response.data
+    //     });
+    //   });
+    // let fileName = 'C:/Users/r3dh2t/Desktop/testImg2.jpg'
+    const formData = new FormData();
+    formData.append('file',file)
+    formData.append('remark','blah blah blah')
+    axios.post( `${ROOT_URL}/upload/`,
+      formData,
+      {
+        headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: "JWT " + localStorage.getItem("token")
+        }
+      }
+    ).then(function(){
+      console.log('SUCCESS!!');
+    })
+    .catch(function(){
+      console.log('FAILURE!!');
+    });
+
+  };
+};
+
+export const createNewRecipe = (name, tags, source, ingredients, directions, imgFile, onResetForm) => {
+  return function(dispatch) {
+
+    const formData = new FormData();
+    formData.append('file',imgFile)
+    formData.append('name',name)
+    formData.append('tags',tags)
+    formData.append('source',source)
+
+    let formData2 = objectToFormData(ingredients, {indices: false}, formData, 'ingredients')
+    let formData3 = objectToFormData(directions, {indices: false}, formData2, 'directions')
+
     axios
       .post(
         `${ROOT_URL}/recipeCreate`,
-        {
-          name: name,
-          tags: tags,
-          source: source,
-          ingredients: ingredients,
-          directions: directions,
-        },
+        formData3,
         {
           headers: {
+            'Content-Type': 'multipart/form-data',
             Authorization: "JWT " + localStorage.getItem("token")
           }
         }
       )
       .then(response => {
-        if (response.data.status === "success")
-          console.log("SUCCESS!!!!");
-        else {
-          console.log("FAIL");
-        }
-
-        dispatch({type: RECIPE_RESET_INGREDIENTS})
-        dispatch({type: RECIPE_RESET_DIRECTIONS})
-        onResetForm();
-        console.log(response.data);
-      });
+        if (response.data.status === "success") {
+          dispatch({type: RECIPE_RESET_INGREDIENTS})
+          dispatch({type: RECIPE_RESET_DIRECTIONS})
+          //onResetForm();
+          dispatch(resetRecipeForm());
+          dispatch(push('/recipeGallery'));
+      }});
   };
 }

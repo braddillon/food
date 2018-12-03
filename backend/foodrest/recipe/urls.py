@@ -10,6 +10,13 @@ urlpatterns = [
     url(r'^api/parseIngredients$', views.parseIngredients, name='parseIngredients'),
     url(r'^api/recipeSection$', views.recipeSectionList.as_view(), name='recipeSection'),
     url(r'^api/recipeCreate$', views.recipeCreate, name='recipeCreate'),
+    #url(r'^api/recipeList$', views.RecipeList.as_view(), name='recipeList'),
+    url(r'^api/recipeList$', views.RecipeList, name='recipeList'),
+    url(r'^api/ingredientList$', views.IngredientList.as_view(), name='ingredientList'),
+    url(r'^api/directionList$', views.DirectionList.as_view(), name='directionList'),
+    url(r'^api/recipe/(?P<id>\d+)$', views.RecipeDetail.as_view(), name='recipeDetail'),
+    url(r'^api/upload/$', views.FileView.as_view(), name='file-upload'),
+    # url(r'^upload/(?P<filename>[^/]+)$', FileUploadView.as_view())
 ]
 
 

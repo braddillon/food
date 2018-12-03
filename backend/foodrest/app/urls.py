@@ -20,10 +20,13 @@ from rest_framework import serializers, viewsets
 from patches import routers
 from rest_framework_jwt.views import obtain_jwt_token
 from rest_framework_swagger.views import get_swagger_view
+from django.views.static import serve
 
 from food.urls import router as food_router
 
+
 from food import views
+from . import settings
 
 # Serializers define the API representation.
 class UserSerializer(serializers.HyperlinkedModelSerializer):
@@ -53,5 +56,7 @@ urlpatterns = [
     url(r'^', include('recipe.urls', namespace='recipe')),
     # url(r'^api-auth/login/', include('rest_framework.urls', namespace='rest_framework')),
     url(r'^api/auth/token/$', obtain_jwt_token),
+    url(r'^media/(?P<path>.*)$', serve,{'document_root': settings.MEDIA_ROOT}),
+    url(r'^static/(?P<path>.*)$', serve,{'document_root': settings.STATIC_ROOT}),
     #url(r'^(?:.*)/?$', views.SPA_entry),
 ]

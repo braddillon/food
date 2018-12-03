@@ -6,6 +6,9 @@ import { push } from 'connected-react-router';
 import { ROOT_URL } from './actions';
 
 import { addGroceryItem } from './actions';
+import { disableRecipeFormAddMode } from '../Recipe/actions/recipeFormActions';
+import { setAdhocIngredientMatch } from '../Recipe/actions/actions';
+
 import {
     SET_FILTER,
     SET_FOODTYPES,
@@ -17,13 +20,16 @@ import {
 
 import _ from 'lodash';
 
+import {ADD_FOOD_FOODBROWSER, ADD_FOOD_GROCERY, ADD_FOOD_RECIPE } from '../components/Food/AddFood'
 
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 axios.defaults.xsrfCookieName = 'csrftoken';
 
 
-export const addFoodItem = (gItem, addToGrocery) => {
+export const addFoodItem = (gItem, addType) => {
     return function(dispatch) {
+        let myId = 0
+        let myName = ''
         axios
             .post(
                 `${ROOT_URL}/foodCreate`,
@@ -39,6 +45,8 @@ export const addFoodItem = (gItem, addToGrocery) => {
                 }
             )
             .then(response => {
+                myId=response.data.id
+                myName=response.data.name
                 var defaultSections = _.pickBy(gItem, function(value, key) {
                     return _.startsWith(key, 'section');
                 });
@@ -49,7 +57,7 @@ export const addFoodItem = (gItem, addToGrocery) => {
                             `${ROOT_URL}/foodGrocerySection`,
                             {
                                 food: parseInt(response.data.id, 10),
-                                section: value
+                                section: parseInt(value, 10)
                             },
                             {
                                 headers: {
@@ -66,7 +74,12 @@ export const addFoodItem = (gItem, addToGrocery) => {
                             console.log(err);
                         });
                 });
-                if (addToGrocery === true) {
+                console.log("addtype");
+                console.log(addType);
+                console.log(addType === ADD_FOOD_RECIPE);
+                console.log(myId);
+                console.log(myName);
+                if (addType === ADD_FOOD_GROCERY) {
                     dispatch(
                         addGroceryItem({
                             id: response.data.id,
@@ -76,9 +89,15 @@ export const addFoodItem = (gItem, addToGrocery) => {
                         })
                     );
                     dispatch({ type: SET_FILTER, payload: 'search' });
+                } else if (addType === ADD_FOOD_RECIPE) {
+                    console.log("RECIPE!")
+                    
+                    //let tmpId = { ...store.getState().recipeForm.addModeItemId };
+                    console.log(store.getState().recipeForm);
+                    dispatch(setAdhocIngredientMatch(store.getState().recipeForm.addModeItemId, myId, myName))
+                    dispatch(disableRecipeFormAddMode())
                 }
                 else {
-                    console.log("go to food browser");
                     dispatch(push('/foodBrowser'));
                 }
             })

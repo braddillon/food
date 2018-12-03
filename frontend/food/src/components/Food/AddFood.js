@@ -6,6 +6,11 @@ import { setFilter } from '../../actions/actions';
 import { getGroceryStores2 } from '../../actions/store';
 import { addFoodItem, getFoodTypes, resetGroceryBuildFilter } from '../../actions/food';
 
+
+export const ADD_FOOD_FOODBROWSER = 0;
+export const ADD_FOOD_GROCERY = 1;
+export const ADD_FOOD_RECIPE = 2;
+
 class AddFood extends Component {
     constructor(props) {
         super(props);
@@ -19,10 +24,12 @@ class AddFood extends Component {
 
     handleSubmit(data) {
         if (data.button === 'submit') {
-            this.props.addFoodItem(data, this.props.addToGrocery);
+            this.props.addFoodItem(data, this.props.addType);
         } else {
-            if (this.props.addToGrocery)
+            if (this.props.addType === ADD_FOOD_GROCERY)
                 this.props.resetGroceryBuildFilter()
+            else if (this.props.addType === ADD_FOOD_RECIPE)
+                this.props.onDisableAddMode()
             else
                 this.props.history.push('/foodBrowser/')
         }
@@ -30,9 +37,11 @@ class AddFood extends Component {
 
     render() {
         let term = ""
-        if (this.props.addToGrocery) {
+        if (this.props.addType == ADD_FOOD_GROCERY)
             term = this.props.groceryBuildOptions.prevSearchTerm
-        }
+        else if (this.props.addType == ADD_FOOD_RECIPE)
+            term = this.props.searchTerm
+
         let init = {
             ...this.props.groceryBuildOptions.addFoodDefaults,
             foodName: term,

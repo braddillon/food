@@ -74,6 +74,8 @@ const styles = theme => ({
 });
 
 class RecipeFormDirection extends Component {
+
+
     render() {
         const { classes, parsedDirections, sections } = this.props;
 

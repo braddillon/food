@@ -12,6 +12,10 @@ import {
   resetIngredients,
 } from "../../actions/actions"
 
+import { 
+  enableRecipeFormAddMode
+} from '../../actions/recipeFormActions'
+
 class IngredientMatcherContainer extends Component {
 
   render() {
@@ -27,7 +31,8 @@ class IngredientMatcherContainer extends Component {
           onAdhocIngredientMatch={this.props.setAdhocIngredientMatch}
           onChangeMatch={this.props.changeIngredientMatch}   
           onChangeSection={this.props.changeIngredientSection}  
-          onReset={this.props.resetIngredients}     
+          onReset={this.props.resetIngredients}    
+          onFoodCreate={this.props.enableRecipeFormAddMode} 
         />
       </div>
     );
@@ -47,6 +52,7 @@ const mapDispatchToProps = {
   resetPossibleIngredients,
   setAdhocIngredientMatch,
   resetIngredients,
+  enableRecipeFormAddMode,
 
 };
 

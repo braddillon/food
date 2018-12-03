@@ -21,6 +21,9 @@ import {
     matchGroceryItem
 } from '../../actions/actions';
 
+import { ADD_FOOD_GROCERY } from '../../components/Food/AddFood'
+
+
 import { getFoodTypes, resetGroceryBuildFilter } from '../../actions/food';
 
 var buttonHeaderStyle = {
@@ -65,7 +68,7 @@ class GroceryBuildList extends Component {
                     />
                 );
             case 'addFood':
-                return <FoodAddItem addToGrocery={true} history={this.props.history} />;
+                return <FoodAddItem addType={ADD_FOOD_GROCERY} history={this.props.history} />;
             default:
                 return <Generic type={filter} groceryAddList={this.props.groceryAddList} addGroceryItem={this.addGroceryItem} />;
         }

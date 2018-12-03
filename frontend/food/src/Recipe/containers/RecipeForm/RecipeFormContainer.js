@@ -15,7 +15,15 @@ import {
   getRecipeSections,
   changeDirectionSection,
   createNewRecipe,
+  uploadRecipeImage,
 } from "../../actions/actions";
+
+import {
+setRecipeFormField,
+resetRecipeFormField,
+resetRecipeForm,
+disableRecipeFormAddMode
+} from '../../actions/recipeFormActions.js';
 
 class RecipeFormContainer extends Component {
 
@@ -33,9 +41,15 @@ class RecipeFormContainer extends Component {
           resetDirections={this.props.resetDirections}
           sections={this.props.recipeOptions.sections}
           parsedIngredients={this.props.parsedIngredients}         
-          parsedDirections={this.props.parsedDirections}   
+          parsedDirections={this.props.parsedDirections}
+          recipeForm={this.props.recipeForm}
           onChangeDirectionSection={this.props.changeDirectionSection} 
           onCreateNewRecipe={this.props.createNewRecipe}
+          onUpload={this.props.uploadRecipeImage}
+          onSetRecipeFormField={this.props.setRecipeFormField}
+          onResetRecipeFormField={this.props.resetRecipeFormField}
+          onResetRecipeForm={this.props.resetRecipeForm}
+          onDisableRecipeFormAddMode={this.props.disableRecipeFormAddMode}
         />
       </div>
     );
@@ -47,6 +61,7 @@ const mapStateToProps = state => ({
   parsedDirections: state.parsedDirections,
   ingredientPicker: state.ingredientPicker,
   recipeOptions: state.recipeOptions,
+  recipeForm: state.recipeForm,
 });
 
 const mapDispatchToProps = {
@@ -61,6 +76,11 @@ const mapDispatchToProps = {
   getRecipeSections,
   changeDirectionSection,
   createNewRecipe,
+  uploadRecipeImage,
+  setRecipeFormField,
+  resetRecipeFormField,
+  resetRecipeForm,
+  disableRecipeFormAddMode
 };
 
 export default connect(

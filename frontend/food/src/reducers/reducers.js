@@ -7,7 +7,10 @@ import stores from './storeReducer.js';
 import { parsedIngredients } from '../Recipe/reducers/parsedIngredientsReducer';
 import { parsedDirections } from '../Recipe/reducers/parsedDirectionsReducer';
 import { ingredientPicker } from '../Recipe/reducers/ingredientPickerReducer';
+import { recipeForm } from '../Recipe/reducers/recipeFormReducer';
 import { recipeOptions } from '../Recipe/reducers/recipeOptions';
+import { recipeList } from '../Recipe/reducers/recipeListReducer';
+import { recipe } from '../Recipe/reducers/recipeReducer';
 import { foodOptions, food } from './foodReducer.js';
 import { groceryAddList, groceryBuildOptions } from './groceryBuildReducers.js';
 
@@ -24,4 +27,7 @@ export const reducers = combineReducers({
     parsedDirections,
     ingredientPicker,
     recipeOptions,
+    recipeList,
+    recipe,
+    recipeForm
 });

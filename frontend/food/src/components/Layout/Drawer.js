@@ -44,8 +44,11 @@ const SideDrawer = props => {
                     <ListItem button component={Link} to="/foodBrowser/">
                         <ListItemText primary="Food Manager" />
                     </ListItem>
-                    <ListItem button component={Link} to="/recipe/">
-                        <ListItemText primary="Recipes" />
+                    <ListItem button component={Link} to="/recipeGallery/">
+                        <ListItemText primary="Recipe Gallery" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/recipeCreate/">
+                        <ListItemText primary="Recipe Create" />
                     </ListItem>
                 </List>
             </div>

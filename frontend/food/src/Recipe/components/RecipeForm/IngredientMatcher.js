@@ -3,6 +3,7 @@ import IngredientMatcherItem from './IngredientMatcherItem';
 import IngredientPicker from './IngredientPicker';
 import { withStyles } from '@material-ui/core/styles';
 
+
 import Table from '@material-ui/core/Table';
 import TableBody from '@material-ui/core/TableBody';
 import TableCell from '@material-ui/core/TableCell';
@@ -94,12 +95,14 @@ class IngredientMatcher extends Component {
                                 onChangeMatch={this.props.onChangeMatch}
                                 openPicker={this.openPicker}
                                 sections={this.props.sections}
+                                onFoodCreate={this.props.onFoodCreate}
                             />
                         );
                     })}
                     </TableBody>
                 </Table>
                 </Paper>
+                
             </div>
         );
     }
