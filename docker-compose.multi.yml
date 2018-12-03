@@ -29,6 +29,7 @@ services:
     command: >
       sh -c "python manage.py collectstatic --noinput
       && cp -Rf /app/static/* /static
+      && cp -Rf /app/media/* /media
       && python manage.py migrate
       && python manage.py init_admin 
       && gunicorn -w 5 --bind 0.0.0.0:8000 app.wsgi:application"
@@ -38,6 +39,7 @@ services:
       - "8000"
     volumes:
       - ./www/static/:/static
+      - ./www/media/:/media
       - ./backend/foodrest:/app/
     depends_on:
       - food_db
