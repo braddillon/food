@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from rest_framework.parsers import MultiPartParser, FormParser
 from rest_framework import status
 import re
+from django.conf import settings
 
 
 from food.models import Food
@@ -107,13 +108,14 @@ def recipeCreate(request):
     print("tags" + request.data['tags'], flush=True)
     print("source" + request.data['source'], flush=True)
     #print("directions" + request.data['directions'], flush=True)
-    print(request.data, flush=True)
+    #print(request.data, flush=True)
     print("BRADLEYYYYYY", flush=True)
 
     # rebuild ingredients object from formData
     ingredients = {}
     # print("BEFORE", flush=True)
     for key in request.data:
+        print(key, flush=True)
         if ((key[:12] == 'ingredients[') and (not("potentialMatches" in key))):
             ings = re.findall(r'\[([^]]*)\]',key)
             if not ings[0] in ingredients:
@@ -129,14 +131,18 @@ def recipeCreate(request):
 
     #ingredients = request.data['ingredients']
     #print("bing" + ingredients, flush=True)
-    print("before");
-    print(request.data['file'], flush=True);
-    print(type(request.data['file']), flush=True);
+    #print("before", flush=True)
+    #print(request.data['file'], flush=True)
+    #print(type(request.data['file']), flush=True)
 
-    if request.data['file'] == 'null':
-        recipe = Recipe(name=request.data['name'], source=request.data['source'])
-    else:
+    #if request.data['file'] == 'null':
+    print(request.data)
+    if 'file' in request.data:
+        print("image found", flush=True)
         recipe = Recipe(name=request.data['name'], source=request.data['source'], image=request.data['file'])
+    else:
+        print("no image", flush=True)
+        recipe = Recipe(name=request.data['name'], source=request.data['source'])
     tags2 = re.split('[;, ]+',request.data['tags'])
     recipe.save()
  
@@ -224,7 +230,7 @@ def recipeCreate(request):
 #         serializer = RecipeListSerializer(queryset, many=True)
 #         return Response(serializer.data)
 
-
+#jumpto
 class RecipeList(generics.ListAPIView):
     queryset = Recipe.objects.all()
     serializer_class = RecipeListSerializer
@@ -271,7 +277,10 @@ def RecipeList(request):
         
         thumbs = x.thumbnail.all()
         if (len(thumbs) == 1) and (thumbs[0].media != ''):
-            tmpDict['thumbnail'] = request.build_absolute_uri(thumbs[0].media.url)
+            if settings.PRODUCTION_HOST is None:
+                tmpDict['thumbnail'] = request.build_absolute_uri(thumbs[0].media.url)
+            else:
+                tmpDict['thumbnail'] = settings.PRODUCTION_HOST + thumbs[0].media.url
         else:
             tmpDict['thumbnail'] = ''
         # tags = ','.join(map(str, x.tags.all()))
@@ -335,6 +344,72 @@ class RecipeDetail(generics.RetrieveAPIView):
     lookup_field = 'id'
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
+
+    # def get(self, request, *args, **kwargs):
+    #     queryset = self.filter_queryset(self.get_queryset())
+    #     serializer = self.get_serializer(queryset)
+    #     print(serializer.data, flush=True)
+    #     #data = {obj['id']: obj for obj in serializer.data}
+    #     return Response(serializer.data)
+    def retrieve(self, request, *args, **kwargs):
+        #queryset = self.filter_queryset(self.get_queryset())
+        queryset = self.get_object()
+        serializer = self.get_serializer(queryset)
+        #print(queryset)
+        # print("brad", flush=True)
+        # for obj in serializer.data:
+        #     print(obj, flush=True)
+        imageFile = str(queryset.image)
+        serialized_data = serializer.data
+        # Manipulate it as you wish
+        print(serialized_data['image'], flush=True)
+        if queryset.image == None:
+            serialized_data['image'] = ''
+        else:
+            if settings.PRODUCTION_HOST is None:
+                serialized_data['image'] = request.build_absolute_uri(serialized_data['image'])
+            else:
+                serialized_data['image'] = settings.PRODUCTION_HOST + serialized_data['image']   
+        
+        #serialized_data['image'] = imageFile
+
+
+        # if (len(thumbs) == 1) and (thumbs[0].media != ''):
+        #     if settings.PRODUCTION_HOST is None:
+        #         tmpDict['thumbnail'] = request.build_absolute_uri(thumbs[0].media.url)
+        #     else:
+        #         tmpDict['thumbnail'] = settings.PRODUCTION_HOST + thumbs[0].media.url
+        # else:
+        #     tmpDict['thumbnail'] = ''
+
+        
+        #data = {obj['id']: obj for obj in serializer.data}
+        # data2 = {}
+        # for obj in serializer.data:
+        #     tmpDict = {}
+        #     tmpDict['id'] = obj['id']
+        #     tmpDict['name'] = obj['name']
+        #     tmpDict['tags'] = obj['tags']
+        #     if (len(obj['thumbnail']) != 0):
+        #         print(obj['thumbnail'][0]['media'], flush=True)
+        #         #print(obj['thumbnail']['media'], flush=True)
+        #         if obj['thumbnail'][0]['media'] == None:
+        #             tmpDict['thumbnail'] = ''    
+        #         else:
+        #             tmpDict['thumbnail'] = obj['thumbnail'][0]['media']
+        #     else:
+        #         tmpDict['thumbnail'] = ''
+
+        #     print(tmpDict['tags'],flush=True)
+        #     # thumbnail = [d for d in obj['thumbnail'] if d['type'] == 'medium']
+        #     # if (len(thumbnail) > 0):
+        #     #     tmpDict['thumbnail'] = thumbnail[0]['media']
+        #     # else:
+        #     #     tmpDict['thumbnail'] = ''
+            
+        #     data2[obj['id']] = tmpDict
+        return Response(serialized_data)
+
 
 
 #https://blog.vivekshukla.xyz/uploading-file-using-api-django-rest-framework/

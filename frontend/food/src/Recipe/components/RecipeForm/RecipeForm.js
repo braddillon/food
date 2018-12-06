@@ -87,7 +87,6 @@ class RecipeForm extends Component {
     render() {
         const { classes } = this.props;
         const submitDisabled = !this.validateInputs();
-        console.log(this.props);
 
         return (
             <Fragment>

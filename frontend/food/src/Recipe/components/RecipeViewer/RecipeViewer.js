@@ -41,12 +41,9 @@ class RecipeViewer extends Component {
             <div className={classes.ingredients}>
             <Typography variant="h4">Ingredients</Typography>
             <Divider />
-            { ingredients.map( item => {
-                console.log(item);
-                return (
+            { ingredients.map( item => 
                 <div key={"ing" + item.id}>{item.amount} {item.units === 'per' ? '' : item.units} {item.name}{item.notes !== '' ? ', ' + item.notes : ''}</div>
-            )
-                })}
+                )}
             </div>
             
             <div className={classes.directions}>

@@ -20,7 +20,7 @@ import {
 
 import _ from 'lodash';
 
-import {ADD_FOOD_FOODBROWSER, ADD_FOOD_GROCERY, ADD_FOOD_RECIPE } from '../components/Food/AddFood'
+import { ADD_FOOD_GROCERY, ADD_FOOD_RECIPE } from '../components/Food/AddFood'
 
 axios.defaults.xsrfHeaderName = 'X-CSRFTOKEN';
 axios.defaults.xsrfCookieName = 'csrftoken';

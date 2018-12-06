@@ -1,7 +1,6 @@
 import axios from "axios";
 import objectToFormData from "object-to-formdata"
-//import moment from 'moment';
-//import { store } from '../store.js';
+
 import { push } from 'connected-react-router';
 
 
@@ -302,10 +301,13 @@ export const createNewRecipe = (name, tags, source, ingredients, directions, img
   return function(dispatch) {
 
     const formData = new FormData();
-    formData.append('file',imgFile)
+    
     formData.append('name',name)
     formData.append('tags',tags)
     formData.append('source',source)
+
+    if ("name" in imgFile)
+      formData.append('file',imgFile)
 
     let formData2 = objectToFormData(ingredients, {indices: false}, formData, 'ingredients')
     let formData3 = objectToFormData(directions, {indices: false}, formData2, 'directions')

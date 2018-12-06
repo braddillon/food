@@ -37,9 +37,9 @@ class AddFood extends Component {
 
     render() {
         let term = ""
-        if (this.props.addType == ADD_FOOD_GROCERY)
+        if (this.props.addType === ADD_FOOD_GROCERY)
             term = this.props.groceryBuildOptions.prevSearchTerm
-        else if (this.props.addType == ADD_FOOD_RECIPE)
+        else if (this.props.addType === ADD_FOOD_RECIPE)
             term = this.props.searchTerm
 
         let init = {

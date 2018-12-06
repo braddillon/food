@@ -41,6 +41,7 @@ DEBUG = os.environ.get('DEBUG', 'off') == 'on'
 # ALLOWED_HOSTS = [ os.environ.get('ALLOWED_HOSTS') ]
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
 
+PRODUCTION_HOST = os.environ.get('PRODUCTION_HOST', None)
 
 # Application definition
 
