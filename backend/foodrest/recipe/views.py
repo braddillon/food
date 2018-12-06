@@ -277,10 +277,10 @@ def RecipeList(request):
         
         thumbs = x.thumbnail.all()
         if (len(thumbs) == 1) and (thumbs[0].media != ''):
-            if settings.PRODUCTION_HOST is None:
-                tmpDict['thumbnail'] = request.build_absolute_uri(thumbs[0].media.url)
-            else:
-                tmpDict['thumbnail'] = settings.PRODUCTION_HOST + thumbs[0].media.url
+            #if settings.PRODUCTION_HOST is None:
+            tmpDict['thumbnail'] = request.build_absolute_uri(thumbs[0].media.url)
+            #else:
+            #    tmpDict['thumbnail'] = settings.PRODUCTION_HOST + thumbs[0].media.url
         else:
             tmpDict['thumbnail'] = ''
         # tags = ','.join(map(str, x.tags.all()))
@@ -351,26 +351,26 @@ class RecipeDetail(generics.RetrieveAPIView):
     #     print(serializer.data, flush=True)
     #     #data = {obj['id']: obj for obj in serializer.data}
     #     return Response(serializer.data)
-    def retrieve(self, request, *args, **kwargs):
+    #def retrieve(self, request, *args, **kwargs):
         #queryset = self.filter_queryset(self.get_queryset())
-        queryset = self.get_object()
-        serializer = self.get_serializer(queryset)
+        #queryset = self.get_object()
+        #serializer = self.get_serializer(queryset)
         #print(queryset)
         # print("brad", flush=True)
         # for obj in serializer.data:
         #     print(obj, flush=True)
-        imageFile = str(queryset.image)
-        serialized_data = serializer.data
+        #imageFile = str(queryset.image)
+        #serialized_data = serializer.data
         # Manipulate it as you wish
-        print(serialized_data['image'], flush=True)
-        if queryset.image == None:
-            serialized_data['image'] = ''
-        else:
-            if settings.PRODUCTION_HOST is None:
-                serialized_data['image'] = request.build_absolute_uri(serialized_data['image'])
-            else:
-                serialized_data['image'] = settings.PRODUCTION_HOST + serialized_data['image']   
-        
+        #print(serialized_data['image'], flush=True)
+        #if queryset.image == None:
+        #    serialized_data['image'] = ''
+        #else:
+        #    if settings.PRODUCTION_HOST is None:
+        #        serialized_data['image'] = request.build_absolute_uri(serialized_data['image'])
+        #    else:
+        #        serialized_data['image'] = settings.PRODUCTION_HOST + serialized_data['image']   
+        #
         #serialized_data['image'] = imageFile
 
 
@@ -381,8 +381,8 @@ class RecipeDetail(generics.RetrieveAPIView):
         #         tmpDict['thumbnail'] = settings.PRODUCTION_HOST + thumbs[0].media.url
         # else:
         #     tmpDict['thumbnail'] = ''
-
-        
+	#
+	#        
         #data = {obj['id']: obj for obj in serializer.data}
         # data2 = {}
         # for obj in serializer.data:
@@ -408,7 +408,7 @@ class RecipeDetail(generics.RetrieveAPIView):
         #     #     tmpDict['thumbnail'] = ''
             
         #     data2[obj['id']] = tmpDict
-        return Response(serialized_data)
+        #return Response(serialized_data)
 
 
 

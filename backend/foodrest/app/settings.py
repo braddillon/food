@@ -41,7 +41,7 @@ DEBUG = os.environ.get('DEBUG', 'off') == 'on'
 # ALLOWED_HOSTS = [ os.environ.get('ALLOWED_HOSTS') ]
 ALLOWED_HOSTS = os.environ.get('ALLOWED_HOSTS', 'localhost').split(',')
 
-PRODUCTION_HOST = os.environ.get('PRODUCTION_HOST', None)
+#PRODUCTION_HOST = os.environ.get('DJANGO_PRODUCTION_HOST', None)
 
 # Application definition
 
@@ -167,7 +167,8 @@ STATIC_ROOT = './static'
 #     os.path.join(BASE_DIR, 'assets'),
 # ]
 
-MEDIA_URL = '/media/'
+#MEDIA_URL = '/media/'
+MEDIA_URL = 'https://food.codesoldier.net/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 
