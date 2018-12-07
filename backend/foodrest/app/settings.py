@@ -206,3 +206,5 @@ CORS_ORIGIN_ALLOW_ALL = True
 #     'http://192.168.1.50:8000',
 #     'http://192.168.1.50:3000'
 # )
+
+FILE_UPLOAD_PERMISSIONS = 0o644
