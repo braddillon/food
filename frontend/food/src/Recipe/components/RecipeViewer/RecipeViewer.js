@@ -29,6 +29,7 @@ class RecipeViewer extends Component {
     render() {
         const { classes } = this.props;
         const { directions, ingredients, name, source, image } = this.props.recipe;
+        console.log(this.props);
         if (_.isEmpty(this.props.recipe)) {
             return <div>Loading</div>
         }

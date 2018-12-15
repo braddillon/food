@@ -168,7 +168,8 @@ STATIC_ROOT = './static'
 # ]
 
 #MEDIA_URL = '/media/'
-MEDIA_URL = 'https://food.codesoldier.net/media/'
+#MEDIA_URL = 'https://food.codesoldier.net/media/'
+MEDIA_URL = os.environ.get('MEDIA_URL', '/media/')
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 
 

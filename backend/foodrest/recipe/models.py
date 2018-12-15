@@ -5,6 +5,7 @@ from django.core.files import File
 from django.core.files.base import ContentFile
 from django.utils.text import slugify
 from django.dispatch import receiver
+import re
 
 from taggit.managers import TaggableManager
 from PIL import Image
@@ -49,6 +50,8 @@ class Recipe(models.Model):
 def thumbnail_location(instance, filename):
     	return "%s/%s" %(instance.recipe.slug, filename)
 
+
+
 class Thumbnail(models.Model):
 	recipe = models.ForeignKey(Recipe, on_delete=models.CASCADE, related_name='thumbnail')
 	height = models.CharField(max_length=20, null=True, blank=True)
@@ -70,6 +73,8 @@ class Thumbnail(models.Model):
 
 def create_new_thumb(media_path, instance, owner_slug, max_length, max_width):
 		filename = os.path.basename(media_path)
+		print("FILENAME", flush=True)
+		print(filename, flush=True)
 		idx = filename.index('.')
 		filename = filename[:idx] + '_thumb' + filename[idx:]
 
@@ -107,9 +112,8 @@ def auto_delete_file_on_delete(sender, instance, **kwargs):
 	Deletes file from filesystem
 	when corresponding `MediaFile` object is deleted.
 	"""
-	
 	if instance.image:
-		if os.path.isfile(instance.image.path):
+		if (os.path.isfile(instance.image.path) and ('.' in instance.image.path)):
 			idx = instance.image.path.index('.')
 			thumbFile = instance.image.path[:idx] + '_thumb' + instance.image.path[idx:]
 			print("recipe delete" + os.path.dirname(instance.image.path), flush=True)
@@ -144,15 +148,19 @@ post_save.connect(recipe_post_save_receiver, sender=Recipe)
 
 
 def create_slug(instance, new_slug=None):
-    slug = slugify(instance.name)
-    if new_slug is not None:
-        slug = new_slug
-    qs = Recipe.objects.filter(slug=slug).order_by("-id")
-    exists = qs.exists()
-    if exists:
-        new_slug = "%s-%s" %(slug, qs.first().id)
-        return create_slug(instance, new_slug=new_slug)
-    return slug
+	slug = slugify(instance.name)
+	if new_slug is not None:
+		slug = new_slug
+	qs = Recipe.objects.filter(slug__startswith=slug).order_by("-id")
+	exists = qs.exists()
+	if exists:
+		m = re.search(r'\d+$', qs.first().slug)
+		if m is not None:
+			new_slug = f"{slug}{int(m.group())+1}"
+		else:
+			new_slug = f"{slug}{2}"
+		return create_slug(instance, new_slug=new_slug)
+	return slug
 
 def pre_save_recipe_receiver(sender, instance, *args, **kwargs):
 	if not instance.slug:

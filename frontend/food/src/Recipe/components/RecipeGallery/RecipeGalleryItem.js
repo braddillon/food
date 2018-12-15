@@ -34,7 +34,7 @@ const RecipeGalleryItem = props => {
     const tags = tagArray.filter( item => (item !== '')).map( item => (<Chip label={item} color="secondary" className={classes.chip} key={props.id + item} />))
 
     return (
-      <Link to={`/recipe/${props.id}`}>
+      <Link to={`/recipe/${props.slug}`}>
         <Card className={classes.card}>
       <CardActionArea>
 

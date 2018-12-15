@@ -18,7 +18,7 @@ class RecipeListSerializer(serializers.ModelSerializer):
     
     class Meta:
         model = Recipe
-        fields = (['id', 'name', 'thumbnail', 'tags'])
+        fields = (['id', 'name', 'slug', 'thumbnail', 'tags'])
 
 class DirectionSerializer(serializers.ModelSerializer):
     class Meta:

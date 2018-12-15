@@ -106,7 +106,7 @@ class App extends Component {
                                     component={RequireAuth(RecipeGallery)}
                                 />
                                 <Route
-                                    path="/recipe/:_id"
+                                    path="/recipe/:_slug"
                                     component={RequireAuth(RecipeViewer)}
                                 />
                                 <Route

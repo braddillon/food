@@ -8,7 +8,7 @@ import { getRecipe, recipeReset } from '../../actions/actions';
 class RecipeViewerContainer extends Component {
     componentDidMount() {
         this.props.recipeReset();
-        this.props.getRecipe(this.props.match.params._id);
+        this.props.getRecipe(this.props.match.params._slug);
     }
 
     render() {

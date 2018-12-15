@@ -14,10 +14,11 @@ const styles = {
 class RecipeGallery extends Component {
     render() {
         const { classes, recipes } = this.props;
+        console.log(recipes);
         return (
             <div className={classes.root}>
                 { _.isEmpty(recipes) ? "Loading" : Object.keys(recipes).map(id => {
-                    return <RecipeGalleryItem name={recipes[id].name} id={id} thumbnail={recipes[id].thumbnail} key={id} tags={recipes[id].tags} />;
+                    return <RecipeGalleryItem name={recipes[id].name} id={id} slug={recipes[id].slug} thumbnail={recipes[id].thumbnail} key={id} tags={recipes[id].tags} />;
                 })}
             </div>
         );

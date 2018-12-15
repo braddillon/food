@@ -306,12 +306,22 @@ export const createNewRecipe = (name, tags, source, ingredients, directions, img
     formData.append('tags',tags)
     formData.append('source',source)
 
-    if ("name" in imgFile)
-      formData.append('file',imgFile)
+    // convert blob to file
+    let fileOfBlob = new File([imgFile], imgFile.name);
+    console.log(imgFile)
+    console.log(fileOfBlob)
+    if ("name" in imgFile) {
+      let fileOfBlob = new File([imgFile], imgFile.name);
+      formData.append("file", fileOfBlob);
+      //formData.append('file',imgFile)
+    }
 
     let formData2 = objectToFormData(ingredients, {indices: false}, formData, 'ingredients')
     let formData3 = objectToFormData(directions, {indices: false}, formData2, 'directions')
 
+    console.log("formData3")
+    console.log(formData3)
+    
     axios
       .post(
         `${ROOT_URL}/recipeCreate`,
