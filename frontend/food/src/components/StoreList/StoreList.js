@@ -45,7 +45,7 @@ class StoreList extends Component {
     constructor(props) {
         super(props);
         this.state = {
-            comboValue: 5,
+            comboValue: 4,
             locked: false
         };
 

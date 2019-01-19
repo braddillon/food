@@ -98,13 +98,14 @@ class App extends Component {
                                     component={RequireAuth(StoreList)}
                                 />
                                 <Route
+                                    path="/groceryBuild"
+                                    component={RequireAuth(GroceryBuild)}
+                                />
+                                <Route
                                     path="/recipeCreate"
                                     component={RequireAuth(RecipeForm)}
                                 />
-                                <Route
-                                    path="/recipeGallery"
-                                    component={RequireAuth(RecipeGallery)}
-                                />
+                                
                                 <Route
                                     path="/recipe/:_slug"
                                     component={RequireAuth(RecipeViewer)}
@@ -121,11 +122,12 @@ class App extends Component {
                                     path="/food/:_id"
                                     component={RequireAuth(EditFood)}
                                 />
-
                                 <Route
                                     path="/"
-                                    component={RequireAuth(GroceryBuild)}
+                                    component={RequireAuth(RecipeGallery)}
                                 />
+
+                                
                             </Switch>
                         </div>
                     </div>
@@ -138,7 +140,7 @@ class App extends Component {
 // signInForm =
 function mapStateToProps(state) {
     return {
-        authenticated: state.auth.authenticated
+        authenticated: state.auth.authenticated,
     };
 }
 

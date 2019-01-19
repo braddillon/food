@@ -58,6 +58,7 @@ class GroceryBuildSearch extends Component {
           label=""
           placeholder=""
           fullWidth
+          autoFocus
           margin="normal"
           variant="outlined"
           value={this.state.value}

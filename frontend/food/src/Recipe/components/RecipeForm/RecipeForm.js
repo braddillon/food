@@ -171,7 +171,7 @@ class RecipeForm extends Component {
                                     />
                                     
                                 ) : (
-                                    <img src={this.state.prevImage} height="200" width="200" onClick={()=> {
+                                    <img src={this.state.prevImage} alt={this.state.prevImage} height="200" width="200" onClick={()=> {
                                         this.setState({prevImage: null})
                                     }}
                                     />

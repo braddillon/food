@@ -26,6 +26,11 @@ const styles = {
 };
 
 class RecipeViewer extends Component {
+
+    componentDidMount() {
+        window.scrollTo(0, 0)
+      }
+      
     render() {
         const { classes } = this.props;
         const { directions, ingredients, name, source, image } = this.props.recipe;

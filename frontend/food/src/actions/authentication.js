@@ -1,7 +1,8 @@
 import axios from 'axios';
 import { push } from 'connected-react-router';
+import { store } from '../store.js';
 
-import { AUTH_USER, UNAUTH_USER, AUTH_ERROR } from './types';
+import { AUTH_USER, UNAUTH_USER, AUTH_ERROR, SET_REDIRECT } from './types';
 
 import { ROOT_URL } from './actions';
 
@@ -15,7 +16,11 @@ export function signInUser({ username, password }) {
             .then(response => {
                 dispatch({ type: AUTH_USER });
                 localStorage.setItem('token', response.data.token);
-                dispatch(push('/'));
+                console.log(store.getState().auth);
+                if (store.getState().auth.redirect !== '')
+                    dispatch(push(store.getState().auth.redirect));    
+                else
+                    dispatch(push('/'));
             })
             .catch(() => {
                 dispatch(authError('Bad Login Info'));
@@ -36,4 +41,10 @@ export function signoutUser() {
         dispatch({ type: UNAUTH_USER });
         dispatch(push('/'));
     };
+}
+
+export function setLoginRedirect(path) {
+    return function(dispatch) {
+        dispatch({ type: SET_REDIRECT, payload: path})
+    }
 }

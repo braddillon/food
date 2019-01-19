@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { connect } from 'react-redux';
 
+import { setLoginRedirect } from '../../actions/authentication';
+
 export default function(ComposedComponent) {
     class Authentication extends Component {
         static contextTypes = {
@@ -10,6 +12,8 @@ export default function(ComposedComponent) {
 
         componentWillMount() {
             if (!this.props.authenticated) {
+                console.log(this.props);
+                this.props.setLoginRedirect(this.props.location.pathname)
                 this.props.history.replace({ pathname: '/signin/' });
             }
         }
@@ -32,5 +36,5 @@ export default function(ComposedComponent) {
         };
     }
 
-    return connect(mapStateToProps)(Authentication);
+    return connect(mapStateToProps, { setLoginRedirect })(Authentication);
 }

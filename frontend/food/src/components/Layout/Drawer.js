@@ -35,7 +35,7 @@ const SideDrawer = props => {
         >
             <div className={classes.list}>
                 <List component="nav">
-                    <ListItem button component={Link} to="/">
+                    <ListItem button component={Link} to="/groceryBuild/">
                         <ListItemText primary="Build List" />
                     </ListItem>
                     <ListItem button component={Link} to="/store/">
@@ -44,7 +44,7 @@ const SideDrawer = props => {
                     <ListItem button component={Link} to="/foodBrowser/">
                         <ListItemText primary="Food Manager" />
                     </ListItem>
-                    <ListItem button component={Link} to="/recipeGallery/">
+                    <ListItem button component={Link} to="/">
                         <ListItemText primary="Recipe Gallery" />
                     </ListItem>
                     <ListItem button component={Link} to="/recipeCreate/">
@@ -74,7 +74,7 @@ const SideDrawer = props => {
                         {drawer}
                     </Drawer>
                 </Hidden>
-                <Hidden smDown implementation="css">
+                {/* <Hidden smDown implementation="css">
                     <Drawer
                         variant="permanent"
                         open
@@ -84,7 +84,7 @@ const SideDrawer = props => {
                     >
                         {drawer}
                     </Drawer>
-                </Hidden>
+                </Hidden> */}
             </div>
         );
     } else {

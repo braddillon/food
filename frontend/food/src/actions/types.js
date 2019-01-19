@@ -35,3 +35,6 @@ export const AUTH_ERROR = 'auth_error';
 
 // store.js
 export const SET_STORES = 'SET_STORES';
+
+// authentication.js
+export const SET_REDIRECT = 'SET_REDIRECT';
