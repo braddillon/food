@@ -20,6 +20,7 @@ import {
   RECIPE_PARSE_DIRECTIONS,
   RECIPE_RESET_DIRECTIONS,
   RECIPE_GET_LIST,
+  RECIPE_GET_TAGS,
   RECIPE_DETAIL,
   RECIPE_RESET,
 } from "./types";
@@ -225,6 +226,23 @@ export const getRecipeList = () => {
       .then(response => {
         dispatch({
           type: RECIPE_GET_LIST,
+          payload: response.data
+        });
+      });
+  };
+};
+
+export const getRecipeTags = () => {
+  return function(dispatch) {
+    axios
+      .get(`${ROOT_URL}/recipeTags`, {
+        headers: {
+          Authorization: "JWT " + localStorage.getItem("token")
+        }
+      })
+      .then(response => {
+        dispatch({
+          type: RECIPE_GET_TAGS,
           payload: response.data
         });
       });

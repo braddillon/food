@@ -13,6 +13,7 @@ import base64
 
 
 from food.models import Food
+from taggit.models import Tag
 
 from .models import RecipeSection, Recipe, Ingredient, Direction
 from .serializers import RecipeSectionSerializer, RecipeListSerializer, IngredientSerializer, DirectionSerializer, RecipeSerializer, FileSerializer
@@ -75,6 +76,18 @@ def parseIngredients(request):
 class recipeSectionList(generics.ListCreateAPIView):
     queryset = RecipeSection.objects.all()
     serializer_class = RecipeSectionSerializer
+
+@api_view(['GET']) 
+def RecipeTagList(request):
+    tags = Tag.objects.all()
+    data2 = {}
+    for x in tags:
+        tmpDict = {}
+        tmpDict['id'] = x.id
+        tmpDict['name'] = x.name
+        tmpDict['slug'] = x.slug
+        data2[x.id] = tmpDict
+    return Response(data2)
 
 
 @api_view(['POST']) 

@@ -19,7 +19,7 @@ const styles = theme => ({
     toolbar: {
         display: 'flex',
         justifyContent: 'flex-start',
-        flexDirection: 'row'
+        flexDirection: 'row',
     },
     flex: {
         flex: 1

@@ -9,6 +9,7 @@ app_name = 'recipe'
 urlpatterns = [
     url(r'^api/parseIngredients$', views.parseIngredients, name='parseIngredients'),
     url(r'^api/recipeSection$', views.recipeSectionList.as_view(), name='recipeSection'),
+    url(r'^api/recipeTags$', views.RecipeTagList, name='recipeTags'),
     url(r'^api/recipeCreate$', views.recipeCreate, name='recipeCreate'),
     url(r'^api/recipeList$', views.RecipeList, name='recipeList'),
     url(r'^api/ingredientList$', views.IngredientList.as_view(), name='ingredientList'),
