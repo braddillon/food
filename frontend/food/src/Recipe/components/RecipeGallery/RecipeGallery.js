@@ -38,6 +38,26 @@ class RecipeGallery extends Component {
         this.setState({searchTerm: term})
     }
 
+    componentDidMount() {
+        window.addEventListener('keydown', this.keyPressDetect);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('keydown', this.keyPressDetect);
+    }
+
+    keyPressDetect = (event) => {
+        switch (event.keyCode) {
+            case 27:
+                event.preventDefault();
+                this.setState({ searchTerm: '', activeTags: []})
+                // this.props.groceryAddListMoveNext();
+                break;
+            default:
+                break;
+        }
+    }
+
     render() {
         const { classes, recipes } = this.props;
         

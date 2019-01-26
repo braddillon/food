@@ -63,7 +63,7 @@ class RecipeGallerySideBarFilter2 extends Component {
                     margin="normal"
                 />
                 <div className={classes.tags}>
-                    <Typography variant="subheading">Tags</Typography>
+                    <Typography variant="subtitle1">Tags</Typography>
                     {tagFilters}
                 </div>
             </div>

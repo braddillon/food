@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from rest_framework.decorators import api_view
+from rest_framework.decorators import authentication_classes, permission_classes
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 import random
@@ -77,7 +78,9 @@ class recipeSectionList(generics.ListCreateAPIView):
     queryset = RecipeSection.objects.all()
     serializer_class = RecipeSectionSerializer
 
-@api_view(['GET']) 
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([]) 
 def RecipeTagList(request):
     tags = Tag.objects.all()
     data2 = {}
@@ -136,7 +139,9 @@ def recipeCreate(request):
 
     return Response({'status': 'success'})
 
-@api_view(['GET']) 
+@api_view(['GET'])
+@authentication_classes([])
+@permission_classes([])  
 def RecipeList(request):
     qry = Recipe.objects.all()
     data2 = {}
@@ -179,6 +184,8 @@ class DirectionList(generics.ListAPIView):
 
 class RecipeDetail(generics.RetrieveAPIView):
     lookup_field = 'slug'
+    permission_classes = []
+    authentication_classes = []
     queryset = Recipe.objects.all()
     serializer_class = RecipeSerializer
 

@@ -108,7 +108,7 @@ class App extends Component {
                                 
                                 <Route
                                     path="/recipe/:_slug"
-                                    component={RequireAuth(RecipeViewer)}
+                                    component={RecipeViewer}
                                 />
                                 <Route
                                     path="/foodBrowser"
@@ -124,7 +124,7 @@ class App extends Component {
                                 />
                                 <Route
                                     path="/"
-                                    component={RequireAuth(RecipeGallery)}
+                                    component={RecipeGallery}
                                 />
 
                                 

@@ -1,4 +1,4 @@
-import React, { Component } from 'react';
+import React, { Component, Fragment } from 'react';
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
@@ -11,21 +11,20 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Hidden from '@material-ui/core/Hidden';
 import { Link } from 'react-router-dom';
 
-
 const styles = theme => ({
     root: {
-        marginBottom: 20,
+        marginBottom: 20
     },
     toolbar: {
         display: 'flex',
         justifyContent: 'flex-start',
-        flexDirection: 'row',
+        flexDirection: 'row'
     },
     flex: {
         flex: 1
     },
     lastMenuItem: {
-        flex: 1,
+        flex: 1
     },
     title: {
         marginRight: 40
@@ -85,37 +84,52 @@ class Header extends Component {
                             Food
                         </Typography>
 
-                        <Hidden smDown>
-                            <Button color="inherit" aria-owns={anchorRecipe ? 'recipe-menu' : undefined} aria-haspopup="true" onClick={this.recipeClick}>
-                                Recipe
-                            </Button>
-                            <Menu id="recipe-menu" anchorEl={anchorRecipe} open={Boolean(anchorRecipe)} onClose={this.recipeClose}>
-                                <MenuItem component={Link} to="/" onClick={this.recipeClose}>Gallery</MenuItem>
-                                <MenuItem component={Link} to="/recipeCreate/"  onClick={this.recipeClose}>Create</MenuItem>
-                                <MenuItem component={Link} to="/recipeGallery/" onClick={this.recipeClose}>Random</MenuItem>
-                            </Menu>
-
-                            <Button color="inherit" aria-owns={anchorGrocery ? 'recipe-menu' : undefined} aria-haspopup="true" onClick={this.groceryClick}>
-                                Grocery
-                            </Button>
-                            <Menu id="recipe-menu" anchorEl={anchorGrocery} open={Boolean(anchorGrocery)} onClose={this.groceryClose}>
-                                <MenuItem component={Link} to="/groceryBuild/" onClick={this.groceryClose}>Build List</MenuItem>
-                                <MenuItem component={Link} to="/store/" onClick={this.groceryClose}>Store</MenuItem>
-                            </Menu>
-
-<div className={classes.lastMenuItem}>
-                        <Button color="inherit" component={Link} to="/foodBrowser/">Food</Button>
-                        </div>
-                            
-                        </Hidden>
-
-                        
-
                         {authenticated ? (
-                            <Button color="inherit" onClick={this.props.handleSignOut}>
-                                Logout
+                            <Fragment>
+                                <Hidden smDown>
+                                    <Button color="inherit" aria-owns={anchorRecipe ? 'recipe-menu' : undefined} aria-haspopup="true" onClick={this.recipeClick}>
+                                        Recipe
+                                    </Button>
+                                    <Menu id="recipe-menu" anchorEl={anchorRecipe} open={Boolean(anchorRecipe)} onClose={this.recipeClose}>
+                                        <MenuItem component={Link} to="/" onClick={this.recipeClose}>
+                                            Gallery
+                                        </MenuItem>
+                                        <MenuItem component={Link} to="/recipeCreate/" onClick={this.recipeClose}>
+                                            Create
+                                        </MenuItem>
+                                        <MenuItem component={Link} to="/recipeGallery/" onClick={this.recipeClose}>
+                                            Random
+                                        </MenuItem>
+                                    </Menu>
+
+                                    <Button color="inherit" aria-owns={anchorGrocery ? 'recipe-menu' : undefined} aria-haspopup="true" onClick={this.groceryClick}>
+                                        Grocery
+                                    </Button>
+                                    <Menu id="recipe-menu" anchorEl={anchorGrocery} open={Boolean(anchorGrocery)} onClose={this.groceryClose}>
+                                        <MenuItem component={Link} to="/groceryBuild/" onClick={this.groceryClose}>
+                                            Build List
+                                        </MenuItem>
+                                        <MenuItem component={Link} to="/store/" onClick={this.groceryClose}>
+                                            Store
+                                        </MenuItem>
+                                    </Menu>
+
+                                    <div className={classes.lastMenuItem}>
+                                        <Button color="inherit" component={Link} to="/foodBrowser/">
+                                            Food
+                                        </Button>
+                                    </div>
+                                </Hidden>
+
+                                <Button color="inherit" onClick={this.props.handleSignOut}>
+                                    Logout
+                                </Button>
+                            </Fragment>
+                        ) : (
+                            <Button color="inherit" component={Link} to="/signin">
+                                Login
                             </Button>
-                        ) : null}
+                        )}
                     </Toolbar>
                 </AppBar>
             </div>
