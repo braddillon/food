@@ -11,12 +11,14 @@ from rest_framework import status
 import re
 from django.conf import settings
 import base64
+import shutil
+import os
 
 
 from food.models import Food
 from taggit.models import Tag
 
-from .models import RecipeSection, Recipe, Ingredient, Direction
+from .models import RecipeSection, Recipe, Ingredient, Direction, Thumbnail
 from .serializers import RecipeSectionSerializer, RecipeListSerializer, IngredientSerializer, DirectionSerializer, RecipeSerializer, FileSerializer
 
 # Create your views here.
@@ -98,9 +100,46 @@ def recipeCreate(request):
 
     if (request.data['name'] == ''):
         return Response("Missing Recipe Name", status=status.HTTP_400_BAD_REQUEST)
+    
+    if (request.data['recipeId'] != '0'):
+        # EDIT Mode
+        recipe = Recipe.objects.get(pk=int(request.data['recipeId']))
+        recipe.name = request.data['name']
+        recipe.source = request.data['source']
+        recipe.tags.clear()
+        tags2 = re.split('[;, ]+',request.data['tags'])
+        for x in tags2:
+            if x != '':
+                recipe.tags.add(x)
+        if 'file' in request.data:
+        # new file exists.  need to get rid of old one and replace with new one.
+            if recipe.image:
+                if (os.path.isfile(recipe.image.path) and ('.' in recipe.image.path)):
+                    idx = recipe.image.path.index('.')
+                    thumbFile = recipe.image.path[:idx] + '_thumb' + recipe.image.path[idx:]
+                    os.remove(recipe.image.path)
+                    os.remove(thumbFile)
+                    thumbResults = Thumbnail.objects.filter(recipe=recipe)
+                    for thumb in thumbResults:
+                        thumb.delete()                    
+            recipe.image = request.data['file']
+        recipe.save()
+        # delete existing directions and ingredients
+        Ingredient.objects.filter(recipe=recipe).delete()
+        Direction.objects.filter(recipe=recipe).delete()
+    else:
+        if 'file' in request.data:
+            recipe = Recipe(name=request.data['name'], source=request.data['source'], image=request.data['file'])
+        else:
+            recipe = Recipe(name=request.data['name'], source=request.data['source'])
+        tags2 = re.split('[;, ]+',request.data['tags'])
+            
+        for x in tags2:
+            if x != '':
+                recipe.tags.add(x)
+        recipe.save()
 
     ingredients = {}
-
     for key in request.data:
         if ((key[:12] == 'ingredients[') and (not("potentialMatches" in key))):
             ings = re.findall(r'\[([^]]*)\]',key)
@@ -108,16 +147,6 @@ def recipeCreate(request):
                 ingredients[ings[0]] = {}
             ingredients[ings[0]][ings[1]] = request.data[key]
             
-    if 'file' in request.data:
-        recipe = Recipe(name=request.data['name'], source=request.data['source'], image=request.data['file'])
-    else:
-        recipe = Recipe(name=request.data['name'], source=request.data['source'])
-    tags2 = re.split('[;, ]+',request.data['tags'])
-    recipe.save()
- 
-    for x in tags2:
-        recipe.tags.add(x)
-
     for ingId in ingredients:
         x = ingredients[ingId]
         ing = Ingredient(name=x['name'], units=x['units'], amount=x['amount'], notes=x['notes'], food=Food.objects.get(id=x['selection']), recipe=recipe, section=RecipeSection.objects.get(id=x['section']))

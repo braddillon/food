@@ -16,7 +16,6 @@ export function signInUser({ username, password }) {
             .then(response => {
                 dispatch({ type: AUTH_USER });
                 localStorage.setItem('token', response.data.token);
-                console.log(store.getState().auth);
                 if (store.getState().auth.redirect !== '')
                     dispatch(push(store.getState().auth.redirect));    
                 else

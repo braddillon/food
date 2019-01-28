@@ -3,7 +3,8 @@ import { connect } from 'react-redux';
 
 import RecipeViewer from '../../components/RecipeViewer/RecipeViewer';
 
-import { getRecipe, recipeReset } from '../../actions/actions';
+import { getRecipe, recipeReset  } from '../../actions/actions';
+import { editRecipe } from '../../actions/recipeFormActions';
 
 class RecipeViewerContainer extends Component {
     componentDidMount() {
@@ -14,7 +15,7 @@ class RecipeViewerContainer extends Component {
     render() {
         return (
             <div>
-                <RecipeViewer recipe={this.props.recipe} />
+                <RecipeViewer recipe={this.props.recipe} onEdit={this.props.editRecipe} />
             </div>
         );
     }
@@ -26,7 +27,8 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
     getRecipe,
-    recipeReset
+    recipeReset,
+    editRecipe
 };
 
 export default connect(

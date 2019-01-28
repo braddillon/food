@@ -1,12 +1,9 @@
-FROM python:3.6
+FROM python:3.7
 
-RUN pip install pipenv
+WORKDIR /app/
+COPY ./foodrest/requirements.txt /app/
+RUN pip install --requirement /app/requirements.txt
 
 COPY ./foodrest /app
-WORKDIR /app/
-
-RUN pipenv run pip install pip==18.0
-RUN pipenv lock
-RUN pipenv install --system --deploy
 
 CMD [ "python", "manage.py", "runserver", "0.0.0.0:8000"]

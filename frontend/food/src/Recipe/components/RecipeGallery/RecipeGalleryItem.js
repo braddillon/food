@@ -48,10 +48,6 @@ const RecipeGalleryItem = props => {
             {props.name}
           </Typography>
           {tags}
-          {/* <Chip label="lunch" color="secondary" className={classes.chip} />
-          <Chip label="chinese" color="secondary" className={classes.chip} />
-          <Chip label="chicken" color="secondary" className={classes.chip} />
-          <Chip label="chicken" color="secondary" className={classes.chip} /> */}
         </CardContent>
       </CardActionArea>
     </Card>

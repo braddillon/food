@@ -30,14 +30,21 @@ class IngredientSerializer(serializers.ModelSerializer):
         model = Ingredient
         fields = ('id', 'name', 'units', 'amount', 'notes', 'food', 'recipe', 'section')
 
+class TagSerializerField(serializers.ListField):
+    child = serializers.CharField()
+
+    def to_representation(self, data):
+        return data.values_list('name', flat=True)
+
 class RecipeSerializer(serializers.ModelSerializer):
 
     directions = DirectionSerializer(many=True, read_only=True)
     ingredients = IngredientSerializer(many=True, read_only=True)
+    tags = TagSerializerField()
 
     class Meta:
         model = Recipe
-        fields = (['id', 'name', 'source', 'image', 'directions', 'ingredients'])
+        fields = (['id', 'name', 'source', 'tags', 'image', 'directions', 'ingredients'])
         
 class FileSerializer(serializers.ModelSerializer):
     class Meta:

@@ -315,7 +315,7 @@ export const uploadRecipeImage = (file) => {
   };
 };
 
-export const createNewRecipe = (name, tags, source, ingredients, directions, imgFile, onResetForm) => {
+export const createNewRecipe = (name, tags, source, ingredients, directions, imgFile, image, recipeId) => {
   return function(dispatch) {
 
     const formData = new FormData();
@@ -323,11 +323,11 @@ export const createNewRecipe = (name, tags, source, ingredients, directions, img
     formData.append('name',name)
     formData.append('tags',tags)
     formData.append('source',source)
+    formData.append('recipeId', recipeId)
+    formData.append('image', image)
 
     // convert blob to file
-    let fileOfBlob = new File([imgFile], imgFile.name);
-    console.log(imgFile)
-    console.log(fileOfBlob)
+    //let fileOfBlob = new File([imgFile], imgFile.name);
     if ("name" in imgFile) {
       let fileOfBlob = new File([imgFile], imgFile.name);
       formData.append("file", fileOfBlob);
@@ -337,9 +337,6 @@ export const createNewRecipe = (name, tags, source, ingredients, directions, img
     let formData2 = objectToFormData(ingredients, {indices: false}, formData, 'ingredients')
     let formData3 = objectToFormData(directions, {indices: false}, formData2, 'directions')
 
-    console.log("formData3")
-    console.log(formData3)
-    
     axios
       .post(
         `${ROOT_URL}/recipeCreate`,
@@ -355,7 +352,6 @@ export const createNewRecipe = (name, tags, source, ingredients, directions, img
         if (response.data.status === "success") {
           dispatch({type: RECIPE_RESET_INGREDIENTS})
           dispatch({type: RECIPE_RESET_DIRECTIONS})
-          //onResetForm();
           dispatch(resetRecipeForm());
           dispatch(push('/recipeGallery'));
       }});

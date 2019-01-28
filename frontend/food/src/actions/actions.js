@@ -93,7 +93,6 @@ export const getGroceryStores = () => {
             })
             .then(response => {
                 response.data.forEach(function(element) {
-                    //console.log(element)
                     element.sections = element.sections.reduce(
                         (obj, item) =>
                             Object.assign(obj, {

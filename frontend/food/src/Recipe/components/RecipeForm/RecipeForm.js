@@ -95,8 +95,6 @@ class RecipeForm extends Component {
     render() {
         const { classes } = this.props;
         const submitDisabled = !this.validateInputs();
-        console.log('state');
-        console.log(this.state);
         return (
             <Fragment>
                 {this.props.recipeForm.addMode === true ? (
@@ -143,8 +141,7 @@ class RecipeForm extends Component {
                             </div>
 
                             <div className={classes.inputGroup}>
-                            {console.log(this.state)}
-                                {this.state.prevImage === null ? (
+                                {this.props.recipeForm.image === null ? (
                                     <Dropzone
                                         accept="image/jpeg, image/png"
                                         multiple={false}
@@ -154,25 +151,23 @@ class RecipeForm extends Component {
                                             new Compressor(accepted[0], {
                                                 quality: 0.6,
                                                 success(result, extra) {
-                                                    console.log(result);
-                                                    console.log('this2');
                                                     const fileReader = new FileReader();
                                                     fileReader.addEventListener('load', () => {
-                                                        thisRecipeForm.setState({
-                                                            prevImage: fileReader.result
-                                                        });
+                                                        // thisRecipeForm.setState({
+                                                        //     prevImage: fileReader.result
+                                                        // });
+                                                        thisRecipeForm.props.onSetRecipeFormField('image', fileReader.result);
                                                     });
                                                     fileReader.readAsDataURL(result);
                                                     thisRecipeForm.props.onSetRecipeFormField('file', result);
                                                 }
                                             });
-                                            console.log(accepted);
                                         }}
                                     />
                                     
                                 ) : (
-                                    <img src={this.state.prevImage} alt={this.state.prevImage} height="200" width="200" onClick={()=> {
-                                        this.setState({prevImage: null})
+                                    <img src={this.props.recipeForm.image} alt={this.props.recipeForm.image} height="200" width="200" onClick={()=> {
+                                        this.props.onSetRecipeFormField('image', null);
                                     }}
                                     />
                                 )}
@@ -210,7 +205,8 @@ class RecipeForm extends Component {
                                             this.props.parsedIngredients,
                                             this.props.parsedDirections,
                                             this.props.recipeForm.file,
-                                            this.resetForm
+                                            this.props.recipeForm.image,
+                                            this.props.recipeForm.recipeId,
                                         )
                                     }
                                 >

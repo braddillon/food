@@ -1,4 +1,4 @@
-import { RECIPE_FORM_SET_FIELD, RECIPE_FORM_RESET_FIELD, RECIPE_FORM_RESET, RECIPE_FORM_ENABLE_ADD_MODE, RECIPE_FORM_DISABLE_ADD_MODE } from '../actions/types';
+import { RECIPE_FORM_EDIT_RECIPE, RECIPE_FORM_SET_FIELD, RECIPE_FORM_RESET_FIELD, RECIPE_FORM_RESET, RECIPE_FORM_ENABLE_ADD_MODE, RECIPE_FORM_DISABLE_ADD_MODE } from '../actions/types';
 
 const initialState = {
     name: '',
@@ -6,10 +6,12 @@ const initialState = {
     source: '',
     ingredientText: '',
     directionsText: '',
-    file: {},
+    image: null,
+    file: null,
     addMode: false,
     addModeItemId: 0,
-    addModeTerm: ''
+    addModeTerm: '',
+    recipeId: 0
 };
 
 export const recipeForm = (state = initialState, action) => {
@@ -24,6 +26,20 @@ export const recipeForm = (state = initialState, action) => {
                 ...state,
                 [action.payload]: ''
             };
+        case RECIPE_FORM_EDIT_RECIPE:
+            return {
+                name: action.payload.name,
+                tags: action.payload.tags,
+                source: action.payload.source,
+                ingredientText: action.payload.ingredientText,
+                directionsText: action.payload.directionsText,
+                image: action.payload.image,
+                file: {},
+                addMode: false,
+                addModeItemId: 0,
+                addModeTerm: '',
+                recipeId: action.payload.recipeId
+            }
         case RECIPE_FORM_RESET:
             return {
                 ...initialState
