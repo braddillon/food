@@ -28,15 +28,7 @@ export const setRecipeFormField = (field, value) => {
     };
 };
 
-export const editRecipe = (
-    name,
-    tags,
-    source,
-    image,
-    recipeId,
-    ingredients,
-    directions
-) => {
+export const editRecipe = (name, tags, source, image, recipeId, ingredients, directions) => {
     return function(dispatch) {
         let ingText = ingredients.reduce((str, item) => {
             str = str + item.amount + ' ' + item.units + ' ' + item.name;

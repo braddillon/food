@@ -118,11 +118,30 @@ def recipeCreate(request):
                     idx = recipe.image.path.index('.')
                     thumbFile = recipe.image.path[:idx] + '_thumb' + recipe.image.path[idx:]
                     os.remove(recipe.image.path)
-                    os.remove(thumbFile)
+                    try:
+                        os.remove(thumbFile)
+                    except OSError:
+                        pass
                     thumbResults = Thumbnail.objects.filter(recipe=recipe)
                     for thumb in thumbResults:
                         thumb.delete()                    
             recipe.image = request.data['file']
+        else:
+            if (request.data['image'] == 'null'):
+                if recipe.image:
+                    if (os.path.isfile(recipe.image.path) and ('.' in recipe.image.path)):
+                        idx = recipe.image.path.index('.')
+                        thumbFile = recipe.image.path[:idx] + '_thumb' + recipe.image.path[idx:]
+                        os.remove(recipe.image.path)
+                        #os.remove(thumbFile)
+                        try:
+                            os.remove(thumbFile)
+                        except OSError:
+                            pass
+                        thumbResults = Thumbnail.objects.filter(recipe=recipe)
+                        for thumb in thumbResults:
+                            thumb.delete()   
+                    recipe.image = None
         recipe.save()
         # delete existing directions and ingredients
         Ingredient.objects.filter(recipe=recipe).delete()
