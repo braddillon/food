@@ -317,7 +317,7 @@ export const uploadRecipeImage = (file) => {
 
 export const createNewRecipe = (name, tags, source, ingredients, directions, imgFile, image, recipeId) => {
   return function(dispatch) {
-    //test
+    //test2
     const formData = new FormData();
     
     formData.append('name',name)
