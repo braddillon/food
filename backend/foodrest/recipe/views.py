@@ -152,7 +152,8 @@ def recipeCreate(request):
         else:
             recipe = Recipe(name=request.data['name'], source=request.data['source'])
         tags2 = re.split('[;, ]+',request.data['tags'])
-            
+
+        recipe.save()  
         for x in tags2:
             if x != '':
                 recipe.tags.add(x)
