@@ -134,6 +134,7 @@ export const updateFoodItem = gItem => {
                 }
             )
             .then(response => {
+                console.log(response)
                 axios
                     .post(
                         `${ROOT_URL}/foodGrocerySectionDelete/${parseInt(

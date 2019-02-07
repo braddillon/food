@@ -327,11 +327,9 @@ export const createNewRecipe = (name, tags, source, ingredients, directions, img
     formData.append('image', image)
 
     // convert blob to file
-    //let fileOfBlob = new File([imgFile], imgFile.name);
-    if ("name" in imgFile) {
+    if (imgFile && ("name" in imgFile)) {
       let fileOfBlob = new File([imgFile], imgFile.name);
       formData.append("file", fileOfBlob);
-      //formData.append('file',imgFile)
     }
 
     let formData2 = objectToFormData(ingredients, {indices: false}, formData, 'ingredients')

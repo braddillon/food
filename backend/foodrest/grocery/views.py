@@ -203,7 +203,10 @@ class FoodGrocerySectionList(generics.ListCreateAPIView):
 @api_view(['POST']) 
 def foodGrocerySectionDelete(request, food):
     #print(food)
+    print("To delete", flush=True)
+    print(food, flush=True)
     grocerySections = FoodGrocerySection.objects.filter(food_id=food).delete()
+    print(grocerySections, flush=True)
     #GroceryList.objects.all().delete()
     return Response('')
 
