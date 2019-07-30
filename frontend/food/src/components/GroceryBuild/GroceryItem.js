@@ -2,6 +2,7 @@ import React, { PureComponent } from 'react';
 import ListItem from '@material-ui/core/ListItem';
 import { withStyles } from '@material-ui/core/styles';
 import IconDelete from '@material-ui/icons/Delete';
+import IconCheckFridge from '@material-ui/icons/Kitchen';
 import IconButton from '@material-ui/core/IconButton';
 
 
@@ -27,8 +28,19 @@ const styles = theme => ({
     },
     iconButton: {
         padding: 0,
-        marginLeft: 'auto',
         marginRight: 5,
+    },
+    checkFridgeActive: {
+        color: 'red'
+    },
+    checkFridgeInActive: {
+        color: 'grey'
+    },
+    iconGroup: {
+        display: 'flex',
+        flexDirection: 'row',
+        justifyContent: 'flex-end',
+        marginLeft: 'auto',
     }
   });
 
@@ -39,9 +51,14 @@ class GroceryItem extends PureComponent {
         return (
             <ListItem key={item.id} className={classes.listItem} >
                     {item.name}
+                    <div className={classes.iconGroup}>
+                    <IconButton variant="fab" aria-label="Edit" className={[classes.iconButton, classes.checkFridgeInActive].join(' ')} onClick={this.props.onDelete}>
+                        <IconCheckFridge>check_icon</IconCheckFridge>
+                    </IconButton>
                     <IconButton variant="fab" color="secondary" aria-label="Edit" className={classes.iconButton} onClick={this.props.onDelete}>
                         <IconDelete>edit_icon</IconDelete>
                     </IconButton>
+                    </div>
                   </ListItem>
         );
     }

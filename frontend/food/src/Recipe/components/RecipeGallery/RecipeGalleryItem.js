@@ -22,8 +22,11 @@ const styles = {
       marginBottom: 0
     },
     cardContent: {
-      minHeight: 50,
+      minHeight: 20,
       padding: 10
+    },
+    recipeName: {
+      marginBottom: 0
     }
  
   };
@@ -44,10 +47,10 @@ const RecipeGalleryItem = props => {
           title={props.name}
         />
         <CardContent className={classes.cardContent}>
-          <Typography gutterBottom variant="body1" component="h2">
+          <Typography gutterBottom variant="body1" component="h2" className={classes.recipeName}>
             {props.name}
           </Typography>
-          {tags}
+          {/* {tags} */}
         </CardContent>
       </CardActionArea>
     </Card>

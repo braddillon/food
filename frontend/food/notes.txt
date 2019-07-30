@@ -1,0 +1,13 @@
+Package                 Current  Wanted  Latest  Location
+@material-ui/core         3.9.3   3.9.3   4.2.0  test_react
+@material-ui/icons        3.0.2   3.0.2   4.2.1  test_react
+axios                    0.18.1  0.18.1  0.19.0  test_react
+compressorjs              1.0.2   1.0.2   1.0.5  test_react
+connected-react-router    4.5.0   4.5.0   6.5.0  test_react
+object-to-formdata        1.5.2   1.5.2   1.6.4  test_react
+react-dropzone            7.0.1   7.0.1  10.1.5  test_react
+react-redux               5.1.1   5.1.1   7.1.0  test_react
+react-router              4.3.1   4.3.1   5.0.1  test_react
+react-router-dom          4.3.1   4.3.1   5.0.1  test_react
+redux-form                7.4.2   7.4.2   8.2.4  test_react
+
