@@ -95,7 +95,7 @@ def listGroceries(request):
         for sec in section:
             # print(sec.section.id)
             mySecs[sec.section.store.id] = sec.section.id
-        groceryList[x.food.id] = {'id': x.food.id, 'name': x.food.name, 'deferred': x.deferred, 'foodtype': x.food.foodtype.id, 'grocerySections': mySecs}
+        groceryList[x.food.id] = {'id': x.food.id, 'name': x.food.name, 'deferred': x.deferred, 'check':x.check, 'foodtype': x.food.foodtype.id, 'grocerySections': mySecs}
     #     # print(x.food.id)
 
     return Response(groceryList)

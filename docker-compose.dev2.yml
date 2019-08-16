@@ -1,0 +1,39 @@
+version: '3'
+
+services:
+  probe:
+    image: trolleksii/ansible_db_probe
+    depends_on:
+      - food_db
+    environment:
+      - PROBE_HOST=food_db
+      - PROBE_PORT=5432
+
+  food_db:
+    image: postgres
+    container_name: food_db_dev
+    restart: always
+    env_file:
+      - ./food.env
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./db:/var/lib/postgresql/data/
+
+  food-backend:
+    build: './backend'
+    container_name: food_backend_dev
+    working_dir: /app
+    env_file:
+      - ./food.env
+    command: >
+      sh -c "python manage.py migrate
+      && python manage.py init_admin 
+      && python manage.py runserver 0.0.0.0:80"
+    ports:
+      - "80:80"
+    volumes:
+      - ./backend/foodrest:/app/
+      - ./media/:/app/media
+    depends_on:
+      - food_db

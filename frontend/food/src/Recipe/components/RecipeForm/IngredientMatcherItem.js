@@ -16,7 +16,7 @@ const styles = theme => ({
         display: 'flex'
     },
     matchButton: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         fontSize: 10,
         padding: 1
     },

@@ -1,23 +1,19 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import App from './components/App';
+import App from './App';
 import { Provider } from 'react-redux';
-import { store } from './store.js';
-import { history } from './history.js';
+import { store } from './Other/store.js';
+import { history } from './Other/history.js';
 import { ConnectedRouter } from 'connected-react-router';
-import { AUTH_USER } from './actions/types';
-import NetworkService from './actions/network-service';
-
+import { AUTH_USER } from './Other/Auth/actions/types';
 
 import './index.css';
 //import registerServiceWorker from './registerServiceWorker';
-import { unregister } from './registerServiceWorker';
+import { unregister } from './Other/registerServiceWorker';
 
 
 // ReactDOM.render(<App />, document.getElementById('root'));
-
-NetworkService.setupInterceptors(store);
 
 const token = localStorage.getItem('token');
 if (token) {

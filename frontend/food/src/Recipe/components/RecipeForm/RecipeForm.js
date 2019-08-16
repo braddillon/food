@@ -3,7 +3,7 @@ import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
-import FoodAddItem from '../../../components/Food/AddFood';
+
 import Dropzone from 'react-dropzone';
 import Compressor from 'compressorjs';
 
@@ -13,7 +13,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import RecipeFormIngredient from './RecipeFormIngredient';
 import RecipeFormDirection from './RecipeFormDirection';
 
-import { ADD_FOOD_RECIPE } from '../../../components/Food/AddFood';
+//import { ADD_FOOD_RECIPE } from '../../../components/Food/AddFood';
+import { ADD_FOOD_RECIPE } from '../../../Food/components/AddFood';
+import FoodAddItem from '../../../Food/components/AddFood';
 
 const styles = theme => ({
     root: {
@@ -48,7 +50,7 @@ const styles = theme => ({
         marginBottom: 30
     },
     formControl: {
-        margin: theme.spacing.unit,
+        margin: theme.spacing(1),
         minWidth: 120,
         maxWidth: 300
     },
@@ -57,7 +59,7 @@ const styles = theme => ({
         flexWrap: 'wrap'
     },
     chip: {
-        margin: theme.spacing.unit / 4
+        margin: theme.spacing(0.25)
     },
     textBox: {
         minWidth: 500

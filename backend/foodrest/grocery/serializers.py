@@ -6,7 +6,7 @@ from .models import GroceryList, FoodTypeDefaultSection, GroceryStore, GrocerySe
 class groceryListSerializer(serializers.ModelSerializer):
     class Meta:
         model = GroceryList
-        fields = ('food', 'deferred')
+        fields = ('food', 'deferred', 'check')
 
 class GroceryStoreSectionSerializer(serializers.ModelSerializer):
     class Meta:

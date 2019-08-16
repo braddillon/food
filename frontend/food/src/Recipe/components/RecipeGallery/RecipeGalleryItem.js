@@ -5,7 +5,7 @@ import CardActionArea from '@material-ui/core/CardActionArea';
 import CardContent from '@material-ui/core/CardContent';
 import CardMedia from '@material-ui/core/CardMedia';
 import Typography from '@material-ui/core/Typography';
-import Chip from '@material-ui/core/Chip';
+//import Chip from '@material-ui/core/Chip';
 import { Link } from 'react-router-dom';
 
 const styles = {
@@ -33,8 +33,8 @@ const styles = {
 
 const RecipeGalleryItem = props => {
     const { classes } = props;
-    let tagArray = props.tags.split(',');
-    const tags = tagArray.filter( item => (item !== '')).map( item => (<Chip label={item} color="secondary" className={classes.chip} key={props.id + item} />))
+    //let tagArray = props.tags.split(',');
+    //const tags = tagArray.filter( item => (item !== '')).map( item => (<Chip label={item} color="secondary" className={classes.chip} key={props.id + item} />))
 
     return (
       <Link to={`/recipe/${props.slug}`}>

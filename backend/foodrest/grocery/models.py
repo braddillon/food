@@ -7,6 +7,7 @@ from food.models import Food, FoodType
 class GroceryList(models.Model):
     food = models.OneToOneField(Food, primary_key=True, on_delete=models.CASCADE)
     deferred = models.BooleanField(default=False)
+    check = models.BooleanField(default=False)
 
     def __str__(self):
         return self.food.name

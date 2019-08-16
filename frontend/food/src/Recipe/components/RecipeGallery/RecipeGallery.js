@@ -83,7 +83,7 @@ class RecipeGallery extends Component {
 
         return (
             <div className={classes.root}>
-                <Grid container spacing={24}>
+                <Grid container spacing={4}>
                     <Grid item sm={2} lg={1}>
                         <RecipeGallerySideBarFilter term={this.state.searchTerm} onSearch={this.updateSearch} onToggleTag={this.toggleTag} tags={this.props.tags} activeTags={this.state.activeTags} />
                     </Grid>

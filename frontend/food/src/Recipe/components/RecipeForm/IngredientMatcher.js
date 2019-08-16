@@ -16,7 +16,7 @@ const styles = theme => ({
     root: {
       width: '100%',
       maxWidth: 1000,
-      marginTop: theme.spacing.unit,
+      marginTop: theme.spacing(1),
       overflowX: 'auto',
     },
     header: {
