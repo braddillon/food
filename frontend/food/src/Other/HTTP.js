@@ -3,7 +3,7 @@ import { store } from "./store";
 import { UNAUTH_USER } from "./Auth/actions/types";
 
 export const HTTP = axios.create({
-  baseURL: "http://127.0.1.1/api/",
+  baseURL: process.env.REACT_APP_HOST + "/api/",
   timeout: 1000,
   headers: {
     Authorization: "JWT " + localStorage.getItem("token")
@@ -13,7 +13,6 @@ export const HTTP = axios.create({
 // Alter defaults after instance has been created
 HTTP.defaults.xsrfHeaderName = "X-CSRFTOKEN";
 HTTP.defaults.xsrfCookieName = "csrftoken";
-
 
 HTTP.interceptors.response.use(
   function(response) {

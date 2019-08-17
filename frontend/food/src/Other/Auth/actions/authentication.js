@@ -9,10 +9,9 @@ export function signInUser({ username, password }) {
         HTTP
             .post(`auth/token/`, { username, password })
             .then(response => {
-                console.log("auth attempt");
-                console.log(response);
                 dispatch({ type: AUTH_USER });
                 localStorage.setItem('token', response.data.token);
+                HTTP.defaults.headers.Authorization = "JWT " + response.data.token;
                 if (store.getState().auth.redirect !== '')
                     dispatch(push(store.getState().auth.redirect));    
                 else
