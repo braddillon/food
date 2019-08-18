@@ -7,6 +7,7 @@ food.env
 letsEncrypt.env
 
 backend/foodrest/media/
+backend/foodrest/static/
 media/
 
 nginx/conf.d/default.conf

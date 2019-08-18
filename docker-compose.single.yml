@@ -37,8 +37,8 @@ services:
       - "8000"
     volumes:
       - ./www/static/:/static
-      - ./www/media/:/media
       - ./backend/foodrest:/app/
+      - ./media/:/app/media
     depends_on:
       - food_db
 
