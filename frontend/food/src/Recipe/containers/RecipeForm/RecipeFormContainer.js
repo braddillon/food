@@ -39,7 +39,7 @@ class RecipeFormContainer extends Component {
           resetIngredients={this.props.resetIngredients}
           parseDirections={this.props.parseDirections}
           resetDirections={this.props.resetDirections}
-          sections={this.props.recipeOptions.sections}
+          sections={this.props.recipeSections}
           parsedIngredients={this.props.parsedIngredients}         
           parsedDirections={this.props.parsedDirections}
           recipeForm={this.props.recipeForm}
@@ -60,7 +60,7 @@ const mapStateToProps = state => ({
   parsedIngredients: state.parsedIngredients,
   parsedDirections: state.parsedDirections,
   ingredientPicker: state.ingredientPicker,
-  recipeOptions: state.recipeOptions,
+  recipeSections: state.recipeSections,
   recipeForm: state.recipeForm,
 });
 

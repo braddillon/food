@@ -13,12 +13,18 @@ class GroceryStoreSectionSerializer(serializers.ModelSerializer):
         model = GrocerySection
         fields = ('id', 'sectionName', 'order')
 
-class GroceryStoreSerializer(serializers.ModelSerializer):
+class GroceryStoreWithSectionSerializer(serializers.ModelSerializer):
     sections = GroceryStoreSectionSerializer(many=True, read_only=True)
 
     class Meta:
         model = GroceryStore
         fields = ('id', 'name', 'sections')
+
+class GroceryStoreSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = GroceryStore
+        fields = ('id', 'name')
 
 class FoodGrocerySectionSerializer(serializers.ModelSerializer):
     class Meta:

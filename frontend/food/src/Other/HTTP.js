@@ -4,7 +4,8 @@ import { UNAUTH_USER } from "./Auth/actions/types";
 
 export const HTTP = axios.create({
   baseURL: process.env.REACT_APP_HOST + "/api/",
-  timeout: 1000,
+  //timeout: 3000,
+  timeout: 0,
   headers: {
     Authorization: "JWT " + localStorage.getItem("token")
   }

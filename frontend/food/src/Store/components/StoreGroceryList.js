@@ -3,9 +3,8 @@ import { connect } from 'react-redux';
 
 import _ from 'lodash';
 
-import { groceryList_populate, deleteGroceryItem } from '../../Grocery/actions/actions';
-import { getGroceryStores2 } from '../../Grocery/actions/store';
-import StoreSection from './StoreSection.js';
+import { groceryList_populate, deleteGroceryItem, getGroceryStores } from '../../Grocery/actions/actions';
+import StoreGrocerySection from './StoreGrocerySection.js';
 
 import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
@@ -13,8 +12,6 @@ import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
-
-//import classes from './StoreList.module.css';
 
 const styles = theme => ({
     formControl: {
@@ -41,7 +38,7 @@ const styles = theme => ({
     }
 });
 
-class StoreList extends Component {
+class StoreGroceryList extends Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -54,16 +51,16 @@ class StoreList extends Component {
     }
 
     componentDidMount() {
-        this.props.getGroceryStores2();
+        this.props.getGroceryStores();
         this.props.groceryList_populate();
     }
 
     deleteCheckedItems(e) {
-        let itemsToDelete = _.pickBy(this.props.groceries, function(value, key) {
+        let itemsToDelete = _.pickBy(this.props.groceries, function (value, key) {
             return value.checked === true;
         });
         let delItem = this.props.deleteGroceryItem;
-        _.forOwn(itemsToDelete, function(value, key) {
+        _.forOwn(itemsToDelete, function (value, key) {
             delItem(key);
         });
     }
@@ -76,7 +73,7 @@ class StoreList extends Component {
         //var result = '';
         if (!_.isEmpty(this.props.stores))
             return _.map(this.props.stores[this.state.comboValue].sections, section => (
-                <StoreSection key={section.id} id={section.id} name={section.sectionName} storeId={this.state.comboValue} locked={this.state.locked} />
+                <StoreGrocerySection key={section.id} id={section.id} name={section.sectionName} storeId={this.state.comboValue} locked={this.state.locked} />
             ));
         else return 'empty';
     }
@@ -88,6 +85,9 @@ class StoreList extends Component {
         if (this.state.locked) {
             lockedClasses = [classes.button, classes.locked].join(' ');
         }
+
+        if (_.isEmpty(this.props.stores))
+            return <div></div>
 
         return (
             <div className={classes.storeList}>
@@ -110,8 +110,8 @@ class StoreList extends Component {
                     </Select>
                 </FormControl>
 
-                
-                <Button variant="contained" color="secondary" className={classes.button}  onClick={this.deleteCheckedItems} disabled={this.state.locked}>
+
+                <Button variant="contained" color="secondary" className={classes.button} onClick={this.deleteCheckedItems} disabled={this.state.locked}>
                     Remove Item
                 </Button>
                 <Button variant="contained" color="secondary" className={lockedClasses} onClick={() => this.setState(prevState => ({ locked: !prevState.locked }))}>
@@ -130,13 +130,13 @@ const mapStateToProps = (state, props) => ({
 });
 
 const mapDispatchToProps = {
-    getGroceryStores2,
+    getGroceryStores,
     groceryList_populate,
     deleteGroceryItem
 };
 
-const StoreListContainer = connect(
+const StoreGroceryListContainer = connect(
     mapStateToProps,
     mapDispatchToProps
-)(StoreList);
-export default withStyles(styles)(StoreListContainer);
+)(StoreGroceryList);
+export default withStyles(styles)(StoreGroceryListContainer);

@@ -39,14 +39,17 @@ const styles = theme => ({
 
 const IngredientMatcherItem = props => {
     const { classes } = props;
+    let sel = props.selection
 
+    if (sel === 0)
+        sel = ''
     return (
         <TableRow>
             <TableCell className={classes.label}>{props.name}</TableCell>
             <TableCell className={classes.cell}>
                 {!_.isEmpty(props.potentialMatches) ? (
                     <Select
-                        value={String(props.selection)}
+                        value={String(sel)}
                         onChange={e =>
                             props.onChangeMatch(props.tmpId, e.target.value)
                         }

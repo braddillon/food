@@ -116,7 +116,7 @@ class FoodBrowser extends Component {
                 <FoodSideBar
                     open={this.state.filterDrawerOpen}
                     closeSide={() => this.setState({ filterDrawerOpen: false })}
-                    foodTypes={this.props.foodOptions.foodTypes}
+                    foodTypes={this.props.foodTypes}
                     foodListPopulate={this.props.foodListPopulate}
                 />
 
@@ -171,17 +171,23 @@ class FoodBrowser extends Component {
                     </Button>
                 </div>
                 <div className={classes.foodBrowser}>
-                    {_.map(this.props.food, food => (
-                        <FoodBrowserItem
-                            name={food.name}
-                            id={food.id}
-                            key={'fbi' + food.id}
-                            value={this.state.checkBoxes[food.id]}
-                            staple={food.staple}
-                            ignore={food.ignore}
-                            checked={this.handleCheckChange}
-                        />
-                    ))}
+                    {_.map(this.props.food, food => {
+                        if (_.has(this.state.checkBoxes, food.id)) {
+                            return (
+                            <FoodBrowserItem
+                                name={food.name}
+                                id={food.id}
+                                key={'fbi' + food.id}
+                                value={this.state.checkBoxes[food.id]}
+                                staple={food.staple}
+                                ignore={food.ignore}
+                                checked={this.handleCheckChange}
+                            />
+                            )
+                        }
+                        else
+                            return null
+                        })}
                 </div>
             </div>
         );

@@ -43,7 +43,8 @@ const styles = theme => ({
 class Header extends Component {
     state = {
         anchorRecipe: null,
-        anchorGrocery: null
+        anchorGrocery: null,
+        anchorAdmin: null,
     };
 
     recipeClick = event => {
@@ -62,9 +63,17 @@ class Header extends Component {
         this.setState({ anchorGrocery: null });
     };
 
+    adminClick = event => {
+        this.setState({ anchorAdmin: event.currentTarget });
+    };
+
+    adminClose = () => {
+        this.setState({ anchorAdmin: null });
+    };
+
     render() {
         const { classes, sidebar, authenticated } = this.props;
-        const { anchorRecipe, anchorGrocery } = this.state;
+        const { anchorRecipe, anchorGrocery, anchorAdmin } = this.state;
 
         let toolbarButton = null;
         if (!sidebar && authenticated) {
@@ -109,16 +118,25 @@ class Header extends Component {
                                         <MenuItem component={Link} to="/groceryBuild/" onClick={this.groceryClose}>
                                             Build List
                                         </MenuItem>
-                                        <MenuItem component={Link} to="/store/" onClick={this.groceryClose}>
+                                        <MenuItem component={Link} to="/store/groceryList" onClick={this.groceryClose}>
                                             Store
                                         </MenuItem>
                                     </Menu>
 
                                     <div className={classes.lastMenuItem}>
-                                        <Button color="inherit" component={Link} to="/foodBrowser/">
+                                    <Button color="inherit" aria-owns={anchorAdmin ? 'admin-menu' : undefined} aria-haspopup="true" onClick={this.adminClick}>
+                                        Admin
+                                    </Button>
+                                    <Menu id="admin-menu" anchorEl={anchorAdmin} open={Boolean(anchorAdmin)} onClose={this.adminClose}>
+                                        <MenuItem component={Link} to="/store/manager" onClick={this.adminClose}>
+                                            Store
+                                        </MenuItem>
+                                        <MenuItem component={Link} to="/foodBrowser/" onClick={this.adminClose}>
                                             Food
-                                        </Button>
+                                        </MenuItem>
+                                    </Menu>
                                     </div>
+
                                 </Hidden>
 
                                 <Button color="inherit" onClick={this.props.handleSignOut}>

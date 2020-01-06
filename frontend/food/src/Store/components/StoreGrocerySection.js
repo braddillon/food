@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import StoreItem from './StoreItem.js';
+import StoreGroceryItem from './StoreGroceryItem';
 import _ from 'lodash';
 
 import { withStyles } from '@material-ui/core/styles';
@@ -20,7 +20,7 @@ import { withStyles } from '@material-ui/core/styles';
 });
 
 
-class StoreSection extends Component {
+class StoreGrocerySection extends Component {
 
     render() {
         const { classes } = this.props;
@@ -29,7 +29,7 @@ class StoreSection extends Component {
         const section = this.props.id;
         const storeId = this.props.storeId;
         let renderText = '';
-
+        // console.log(this.props);
         var filteredObject = Object.keys(myObject).reduce(function(r, e) {
             if (myObject[e].grocerySections[storeId] === section)
                 r[e] = myObject[e];
@@ -44,7 +44,7 @@ class StoreSection extends Component {
                         {this.props.name}
                     </div>
                     {_.map(sortedObjects, g => (
-                        <StoreItem grocery={g} key={g.id} locked={this.props.locked} />
+                        <StoreGroceryItem grocery={g} key={g.id} locked={this.props.locked} />
                     ))}
                 </div>
             );
@@ -58,5 +58,5 @@ const mapStateToProps = (state) => ({
     groceries: state.groceries
 });
 
-const StoreSectionContainer = connect(mapStateToProps, null)(StoreSection);
-export default withStyles(styles)(StoreSectionContainer);
+const StoreGrocerySectionContainer = connect(mapStateToProps, null)(StoreGrocerySection);
+export default withStyles(styles)(StoreGrocerySectionContainer);

@@ -19,7 +19,7 @@ class FoodBrowserContainer extends Component {
     render() {
         return (
             <FoodBrowser
-                foodOptions={this.props.foodOptions}
+                foodTypes={this.props.foodTypes}
                 food={this.props.food}
                 foodListPopulate={this.props.foodListPopulate}
                 foodModifyAttribute={this.props.foodModifyAttribute}
@@ -30,7 +30,7 @@ class FoodBrowserContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-    foodOptions: state.foodOptions,
+    foodTypes: state.foodTypes,
     food: state.food
 });
 

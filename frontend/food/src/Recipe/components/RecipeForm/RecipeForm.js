@@ -105,122 +105,132 @@ class RecipeForm extends Component {
                         <FoodAddItem addType={ADD_FOOD_RECIPE} onDisableAddMode={this.props.onDisableRecipeFormAddMode} searchTerm={this.props.recipeForm.addModeTerm} />
                     </Fragment>
                 ) : (
-                    <form>
-                        <div className={classes.root}>
-                            <div className={classes.inputGroup}>
-                                <InputLabel className={classes.label}>Name</InputLabel>
-                                <TextField
-                                    name="name"
-                                    value={this.props.recipeForm.name}
-                                    type="text"
-                                    autoComplete="off"
-                                    className={classes.textBox}
-                                    onChange={e => this.props.onSetRecipeFormField('name', e.target.value)}
-                                />
-                            </div>
-                            <div className={classes.inputGroup}>
-                                <InputLabel className={classes.label}>Tags</InputLabel>
-                                <TextField
-                                    name="tags"
-                                    value={this.props.recipeForm.tags}
-                                    type="text"
-                                    autoComplete="off"
-                                    className={classes.textBox}
-                                    onChange={e => this.props.onSetRecipeFormField('tags', e.target.value)}
-                                />
-                            </div>
-
-                            <div className={classes.inputGroup}>
-                                <InputLabel className={classes.label}>Source</InputLabel>
-                                <TextField
-                                    name="source"
-                                    value={this.props.recipeForm.source}
-                                    type="text"
-                                    autoComplete="false"
-                                    className={classes.textBox}
-                                    onChange={e => this.props.onSetRecipeFormField('source', e.target.value)}
-                                />
-                            </div>
-
-                            <div className={classes.inputGroup}>
-                                {this.props.recipeForm.image === null ? (
-                                    <Dropzone
-                                        accept="image/jpeg, image/png"
-                                        multiple={false}
-                                        onDrop={(accepted, rejected) => {
-                                            const thisRecipeForm = this;
-
-                                            new Compressor(accepted[0], {
-                                                quality: 0.6,
-                                                success(result, extra) {
-                                                    const fileReader = new FileReader();
-                                                    fileReader.addEventListener('load', () => {
-                                                        // thisRecipeForm.setState({
-                                                        //     prevImage: fileReader.result
-                                                        // });
-                                                        thisRecipeForm.props.onSetRecipeFormField('image', fileReader.result);
-                                                    });
-                                                    fileReader.readAsDataURL(result);
-                                                    thisRecipeForm.props.onSetRecipeFormField('file', result);
-                                                }
-                                            });
-                                        }}
+                        <form>
+                            <div className={classes.root}>
+                                <div className={classes.inputGroup}>
+                                    <InputLabel className={classes.label}>Name</InputLabel>
+                                    <TextField
+                                        name="name"
+                                        value={this.props.recipeForm.name}
+                                        type="text"
+                                        autoComplete="off"
+                                        className={classes.textBox}
+                                        onChange={e => this.props.onSetRecipeFormField('name', e.target.value)}
                                     />
-                                    
-                                ) : (
-                                    <img src={this.props.recipeForm.image} alt={this.props.recipeForm.image} height="200" width="200" onClick={()=> {
-                                        this.props.onSetRecipeFormField('image', null);
-                                    }}
+                                </div>
+                                <div className={classes.inputGroup}>
+                                    <InputLabel className={classes.label}>Tags</InputLabel>
+                                    <TextField
+                                        name="tags"
+                                        value={this.props.recipeForm.tags}
+                                        type="text"
+                                        autoComplete="off"
+                                        className={classes.textBox}
+                                        onChange={e => this.props.onSetRecipeFormField('tags', e.target.value)}
                                     />
-                                )}
-                            </div>
-                            <RecipeFormIngredient
-                                ingredientText={this.props.recipeForm.ingredientText}
-                                parsedIngredients={this.props.parsedIngredients}
-                                onSet={text => this.props.onSetRecipeFormField('ingredientText', text)}
-                                onParse={() => this.props.parseIngredients(this.props.recipeForm.ingredientText)}
-                                onReset={this.props.resetIngredients}
-                                sections={this.props.sections}
-                            />
+                                </div>
 
-                            <RecipeFormDirection
-                                directionText={this.props.recipeForm.directionsText}
-                                onSet={text => this.props.onSetRecipeFormField('directionsText', text)}
-                                parsedDirections={this.props.parsedDirections}
-                                onParse={() => this.props.parseDirections(this.props.recipeForm.directionsText, this.props.sections)}
-                                onChangeDirectionSection={this.props.onChangeDirectionSection}
-                                onReset={this.props.resetDirections}
-                                sections={this.props.sections}
-                            />
+                                <div className={classes.inputGroup}>
+                                    <InputLabel className={classes.label}>Source</InputLabel>
+                                    <TextField
+                                        name="source"
+                                        value={this.props.recipeForm.source}
+                                        type="text"
+                                        autoComplete="false"
+                                        className={classes.textBox}
+                                        onChange={e => this.props.onSetRecipeFormField('source', e.target.value)}
+                                    />
+                                </div>
 
-                            <div className={classes.formGroup}>
-                                <Button
-                                    variant="contained"
-                                    color="secondary"
-                                    className={classes.button}
-                                    disabled={submitDisabled}
-                                    onClick={() =>
-                                        this.props.onCreateNewRecipe(
-                                            this.props.recipeForm.name,
-                                            this.props.recipeForm.tags,
-                                            this.props.recipeForm.source,
-                                            this.props.parsedIngredients,
-                                            this.props.parsedDirections,
-                                            this.props.recipeForm.file,
-                                            this.props.recipeForm.image,
-                                            this.props.recipeForm.recipeId,
-                                        )
-                                    }
-                                >
-                                    Submit
+                                <div className={classes.inputGroup}>
+                                    {this.props.recipeForm.image === null ? (
+                                        <Dropzone
+                                            accept="image/jpeg, image/png"
+                                            multiple={false}
+                                            onDrop={(accepted, rejected) => {
+                                                const thisRecipeForm = this;
+
+                                                new Compressor(accepted[0], {
+                                                    quality: 0.6,
+                                                    success(result, extra) {
+                                                        const fileReader = new FileReader();
+                                                        fileReader.addEventListener('load', () => {
+                                                            // thisRecipeForm.setState({
+                                                            //     prevImage: fileReader.result
+                                                            // });
+                                                            thisRecipeForm.props.onSetRecipeFormField('image', fileReader.result);
+                                                        });
+                                                        fileReader.readAsDataURL(result);
+                                                        thisRecipeForm.props.onSetRecipeFormField('file', result);
+                                                    }
+                                                });
+                                            }}
+                                        >
+                                            {({ getRootProps, getInputProps }) => (
+                                                <section>
+                                                    <div {...getRootProps()}>
+                                                        <input {...getInputProps()} />
+                                                        <p>Drag 'n' drop some files here, or click to select files</p>
+                                                    </div>
+                                                </section>
+                                            )}
+                                        </Dropzone>
+
+                                    ) : (
+                                            <img src={this.props.recipeForm.image} alt={this.props.recipeForm.image} height="200" width="200" onClick={() => {
+                                                this.props.onSetRecipeFormField('image', null);
+                                            }}
+                                            />
+                                        )}
+                                </div>
+
+                                <RecipeFormIngredient
+                                    ingredientText={this.props.recipeForm.ingredientText}
+                                    parsedIngredients={this.props.parsedIngredients}
+                                    onSet={text => this.props.onSetRecipeFormField('ingredientText', text)}
+                                    onParse={() => this.props.parseIngredients(this.props.recipeForm.ingredientText)}
+                                    onReset={this.props.resetIngredients}
+                                    sections={this.props.sections}
+                                />
+
+                                <RecipeFormDirection
+                                    directionText={this.props.recipeForm.directionsText}
+                                    onSet={text => this.props.onSetRecipeFormField('directionsText', text)}
+                                    parsedDirections={this.props.parsedDirections}
+                                    onParse={() => this.props.parseDirections(this.props.recipeForm.directionsText, this.props.sections)}
+                                    onChangeDirectionSection={this.props.onChangeDirectionSection}
+                                    onReset={this.props.resetDirections}
+                                    sections={this.props.sections}
+                                />
+
+                                <div className={classes.formGroup}>
+                                    <Button
+                                        variant="contained"
+                                        color="secondary"
+                                        className={classes.button}
+                                        disabled={submitDisabled}
+                                        onClick={() =>
+                                            this.props.onCreateNewRecipe(
+                                                this.props.recipeForm.name,
+                                                this.props.recipeForm.tags,
+                                                this.props.recipeForm.source,
+                                                this.props.parsedIngredients,
+                                                this.props.parsedDirections,
+                                                this.props.recipeForm.file,
+                                                this.props.recipeForm.image,
+                                                this.props.recipeForm.recipeId,
+                                            )
+                                        }
+                                    >
+                                        Submit
                                 </Button>
-                                <Button variant="contained" color="secondary" autoComplete="off" className={classes.button} onClick={this.props.onResetRecipeForm}>
-                                    Cancel
+                                    <Button variant="contained" color="secondary" autoComplete="off" className={classes.button} onClick={this.props.onResetRecipeForm}>
+                                        Cancel
                                 </Button>
+                                </div>
                             </div>
-                        </div>
-                    </form>
-                )}
+                        </form>
+                    )}
             </Fragment>
         );
     }

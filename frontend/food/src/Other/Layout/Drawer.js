@@ -38,7 +38,7 @@ const SideDrawer = props => {
                     <ListItem button component={Link} to="/groceryBuild/">
                         <ListItemText primary="Build List" />
                     </ListItem>
-                    <ListItem button component={Link} to="/store/">
+                    <ListItem button component={Link} to="/store/groceryList">
                         <ListItemText primary="Store" />
                     </ListItem>
                     <ListItem button component={Link} to="/foodBrowser/">

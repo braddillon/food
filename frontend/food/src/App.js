@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 
-import StoreList from './Store/components/StoreList.js';
+import StoreGroceryList from './Store/components/StoreGroceryList.js';
 import EditFood from './Food/components/EditFood.js';
 import AddFood from './Food/components/AddFood.js';
 import FoodBrowser from './Food/components/FoodBrowserContainer.js';
@@ -11,6 +11,7 @@ import RecipeForm from './Recipe/containers/RecipeForm/RecipeFormContainer';
 import RecipeGallery from './Recipe/containers/RecipeGallery/RecipeGalleryContainer';
 import RecipeViewer from './Recipe/containers/RecipeViewer/RecipeViewerContainer';
 import GroceryBuild from './Grocery/containers/GroceryBuild.js';
+import StoreManager from './Store/containers/StoreManager.js';
 
 import Signin from './Other/Auth/containers/Signin';
 import Signout from './Other/Auth/containers/signout';
@@ -41,7 +42,7 @@ const theme = createMuiTheme({
     },
     typography: {
         useNextVariants: true,
-      },
+    },
 });
 
 class App extends Component {
@@ -81,8 +82,8 @@ class App extends Component {
                             toggleDrawer={this.toggleDrawer}
                             sidebar={this.state.mobileSideDrawerOpen}
                             authenticated={true}
-                            // authenticated={this.props.authenticated}
-                            //account={this.props.account}
+                        // authenticated={this.props.authenticated}
+                        //account={this.props.account}
                         />
                         <div
                             style={{
@@ -96,8 +97,8 @@ class App extends Component {
                                 <Route path="/signin" component={Signin} />
                                 <Route path="/signout" component={Signout} />
                                 <Route
-                                    path="/store"
-                                    component={RequireAuth(StoreList)}
+                                    path="/store/groceryList"
+                                    component={RequireAuth(StoreGroceryList)}
                                 />
                                 <Route
                                     path="/groceryBuild"
@@ -107,7 +108,7 @@ class App extends Component {
                                     path="/recipeCreate"
                                     component={RequireAuth(RecipeForm)}
                                 />
-                                
+
                                 <Route
                                     path="/recipe/:_slug"
                                     component={RecipeViewer}
@@ -125,11 +126,15 @@ class App extends Component {
                                     component={RequireAuth(EditFood)}
                                 />
                                 <Route
+                                    path="/store/manager"
+                                    component={RequireAuth(StoreManager)}
+                                />
+                                <Route
                                     path="/"
                                     component={RecipeGallery}
                                 />
 
-                                
+
                             </Switch>
                         </div>
                     </div>

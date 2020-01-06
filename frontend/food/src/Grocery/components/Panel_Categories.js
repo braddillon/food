@@ -29,7 +29,7 @@ class Categories extends Component {
     render() {
         const { classes } = this.props;
 
-        let foodTypes = this.props.foodOptions.foodTypes;
+        let foodTypes = this.props.foodTypes;
         return (
             <div>
                 <FormControl className={classes.formControl}>

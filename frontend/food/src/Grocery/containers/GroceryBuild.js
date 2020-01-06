@@ -64,7 +64,7 @@ class GroceryBuildList extends Component {
                     <Categories
                         addGroceryItem={this.addGroceryItem}
                         buildOptions={this.props.groceryBuildOptions}
-                        foodOptions={this.props.foodOptions}
+                        foodTypes={this.props.foodTypes}
                         setFoodTypeCurrent={this.props.setFoodTypeCurrent}
                         groceryPopulateAddList={this.props.groceryPopulateAddList}
                         groceryAddList={this.props.groceryAddList}
@@ -100,7 +100,7 @@ class GroceryBuildList extends Component {
 
     moveCategory(forward) {
         let ind = parseInt(this.props.groceryBuildOptions.foodTypeCurrent, 10);
-        let maxCats = Object.keys(this.props.foodOptions.foodTypes).length;
+        let maxCats = Object.keys(this.props.foodTypes).length;
         let newCat = 0;
         if (forward === true) {
             if (ind === maxCats) {
@@ -198,7 +198,7 @@ class GroceryBuildList extends Component {
 const mapStateToProps = state => ({
     groceryBuildOptions: state.groceryBuildOptions,
     groceryAddList: state.groceryAddList,
-    foodOptions: state.foodOptions,
+    foodTypes: state.foodTypes,
     groceries: state.groceries
 });
 

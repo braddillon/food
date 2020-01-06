@@ -9,10 +9,11 @@ import { parsedIngredients } from './Recipe/reducers/parsedIngredientsReducer';
 import { parsedDirections } from './Recipe/reducers/parsedDirectionsReducer';
 import { ingredientPicker } from './Recipe/reducers/ingredientPickerReducer';
 import { recipeForm } from './Recipe/reducers/recipeFormReducer';
-import { recipeOptions } from './Recipe/reducers/recipeOptions';
-import { recipeList } from './Recipe/reducers/recipeListReducer';
+import { recipeTags } from './Recipe/reducers/recipeTags';
+import { recipeSections } from './Recipe/reducers/recipeSections';
+import { recipes } from './Recipe/reducers/recipesReducer';
 import { recipe } from './Recipe/reducers/recipeReducer';
-import { foodOptions, food } from './Food/reducers/foodReducer';
+import { foodTypes, food } from './Food/reducers/foodReducer';
 import { groceryAddList, groceryBuildOptions } from './Grocery/reducers/groceryBuildReducers.js';
 
 //export const reducers = combineReducers({
@@ -24,13 +25,14 @@ export default (history) => combineReducers({
     groceryBuildOptions,
     groceries,
     stores,
-    foodOptions,
+    foodTypes,
     food,
     parsedIngredients,
     parsedDirections,
     ingredientPicker,
-    recipeOptions,
-    recipeList,
+    recipeSections,
+    recipeTags,
+    recipes,
     recipe,
     recipeForm
 });

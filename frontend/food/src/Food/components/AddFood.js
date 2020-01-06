@@ -1,98 +1,90 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React, { useEffect } from 'react';
+import { useSelector, useDispatch } from 'react-redux'
 import FoodForm from './FoodForm.js';
+import _ from 'lodash';
 
 
 import { getFoodTypes, addFoodItem, resetGroceryBuildFilter } from '../actions/actions';
-
-
-import { setFilter } from '../../Grocery/actions/actions';
-import { getGroceryStores2 } from '../../Grocery/actions/store';
-
-
-
+import { getGroceryStores } from '../../Grocery/actions/actions';
 
 export const ADD_FOOD_FOODBROWSER = 0;
 export const ADD_FOOD_GROCERY = 1;
 export const ADD_FOOD_RECIPE = 2;
 
-class AddFood extends Component {
-    constructor(props) {
-        super(props);
-        this.state = { addToGrocery: this.props.addToGrocery};
-    }
+export default function AddFood(props) {
+    const dispatch = useDispatch()
+    const stores = useSelector(state => state.stores)
+    const foodTypes = useSelector(state => state.foodTypes)
+    const groceryBuildOptions = useSelector(state => state.groceryBuildOptions)
 
-    componentDidMount() {
-        this.props.getFoodTypes();
-        this.props.getGroceryStores2();
-    }
+    useEffect(() => {
+        dispatch(getGroceryStores());
+        dispatch(getFoodTypes());
+    }, [dispatch])
 
-    handleSubmit(data) {
+    const handleSubmit = data => {
         if (data.button === 'submit') {
-            this.props.addFoodItem(data, this.props.addType);
+            dispatch(addFoodItem(data, props.addType));
         } else {
-            if (this.props.addType === ADD_FOOD_GROCERY)
-                this.props.resetGroceryBuildFilter()
-            else if (this.props.addType === ADD_FOOD_RECIPE)
-                this.props.onDisableAddMode()
+            if (props.addType === ADD_FOOD_GROCERY)
+                dispatch(resetGroceryBuildFilter())
+            else if (props.addType === ADD_FOOD_RECIPE)
+                props.onDisableAddMode()
             else
-                this.props.history.push('/foodBrowser/')
+                props.history.push('/foodBrowser/')
         }
     }
 
-    render() {
-        let term = ""
-        if (this.props.addType === ADD_FOOD_GROCERY)
-            term = this.props.groceryBuildOptions.prevSearchTerm
-        else if (this.props.addType === ADD_FOOD_RECIPE)
-            term = this.props.searchTerm
+    let term = ""
+    if (props.addType === ADD_FOOD_GROCERY)
+        term = groceryBuildOptions.prevSearchTerm
+    else if (props.addType === ADD_FOOD_RECIPE)
+        term = props.searchTerm
 
-        let init = {
-            ...this.props.groceryBuildOptions.addFoodDefaults,
-            foodName: term,
-            staple: false
-        };
+    // let init = {
+    //     ...groceryBuildOptions.addFoodDefaults,
+    //     food: term,
+    //     foodType: 6,
+    //     staple: false,
+    //     sections: {}
+    // };
 
-        
+    let object = {
+        food: term,
+        foodtype: 6,
+        staple: false,
+        sections: {}
+    }
 
-        Object.keys(this.props.stores).forEach(key => {
-            init['section' + this.props.stores[key].name] = String(this.props.stores[
-                key
-            ].defaultSection);
-        });
 
+
+    // Object.keys(stores).forEach(key => {
+    //     init['section' + stores[key].name] = String(stores[
+    //         key
+    //     ].defaultSection);
+    // });
+
+    //console.log(init)
+
+
+
+    if ((stores === undefined) || (_.isEmpty(stores)))
+        return <div>Loading Stores</div>
+    else if ((foodTypes === undefined) || (_.isEmpty(foodTypes)))
+        return <div>Loading FoodTypes</div>
+    else {
         return (
             <div>
                 <FoodForm
-                    initialValues={init}
+                    object={object}
                     enableReinitialize={true}
-                    buildOptions={this.props.groceryBuildOptions}
-                    stores={this.props.stores}
-                    foodTypes={this.props.foodOptions.foodTypes}
-                    onSubmit={this.handleSubmit.bind(this)}
+                    buildOptions={groceryBuildOptions}
+                    stores={stores}
+                    foodTypes={foodTypes}
+                    onSubmit={handleSubmit}
                 />
-                {/* <FoodForm2 foodTypes={this.props.foodOptions.foodTypes} /> */}
             </div>
         );
     }
 }
 
-const mapStateToProps = (state) => ({
-    groceries: state.groceries,
-    groceryBuildOptions: state.groceryBuildOptions,
-    stores: state.stores,
-    foodOptions: state.foodOptions
-});
-
-const mapDispatchToProps = {
-    getGroceryStores2,
-    setFilter,
-    addFoodItem,
-    resetGroceryBuildFilter,
-    getFoodTypes,
-
-};
-
-const AddFoodContainer = connect(mapStateToProps, mapDispatchToProps)(AddFood);
-
-export default AddFoodContainer;

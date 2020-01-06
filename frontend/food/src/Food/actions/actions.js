@@ -20,6 +20,7 @@ import {
     GET_FOOD_LIST,
     MODIFY_FOOD_ATTRIBUTE,
     DELETE_FOOD_ITEMS,
+    UPDATE_FOODTYPE_SECTION_DEFAULTS
 } from './types';
 
 
@@ -28,9 +29,11 @@ const ADD_FOOD_GROCERY = 1;
 const ADD_FOOD_RECIPE = 2;
 
 export const addFoodItem = (gItem, addType) => {
+    console.log('addFoodItem0')
     return function(dispatch) {
         let myId = 0
         let myName = ''
+        console.log('addFoodItem1')
         HTTP
             .post(
                 `foodCreate`,
@@ -43,17 +46,17 @@ export const addFoodItem = (gItem, addType) => {
             .then(response => {
                 myId=response.data.id
                 myName=response.data.name
-                var defaultSections = _.pickBy(gItem, function(value, key) {
-                    return _.startsWith(key, 'section');
-                });
+                // var defaultSections = _.pickBy(gItem, function(value, key) {
+                //     return _.startsWith(key, 'section');
+                // });
 
-                _.forEach(defaultSections, function(value) {
+                gItem.overrides.forEach(item => {
                     HTTP
                         .post(
                             `foodGrocerySection`,
                             {
                                 food: parseInt(response.data.id, 10),
-                                section: parseInt(value, 10)
+                                section: parseInt(item.sectionId, 10)
                             }
                         )
                         .then(response => {
@@ -102,8 +105,6 @@ export const resetGroceryBuildFilter = () => {
 
 export const updateFoodItem = gItem => {
     return function(dispatch) {
-        console.log(gItem);
-        console.log('UPDATE POST');
         HTTP
             .put(
                 `foodDetail/${gItem.id}/`,
@@ -114,7 +115,6 @@ export const updateFoodItem = gItem => {
                 }
             )
             .then(response => {
-                console.log(response)
                 HTTP
                     .post(
                         `foodGrocerySectionDelete/${parseInt(
@@ -124,21 +124,14 @@ export const updateFoodItem = gItem => {
                     )
                     .then(() => {
                         console.log('food delete section success');
-                        var defaultSections = _.pickBy(gItem, function(
-                            value,
-                            key
-                        ) {
-                            return _.startsWith(key, 'section');
-                        });
-                        console.log(defaultSections);
 
-                        _.forEach(defaultSections, value => {
+                        gItem.overrides.forEach(item => {
                             HTTP
                                 .post(
                                     `foodGrocerySection`,
                                     {
                                         food: parseInt(gItem.id, 10),
-                                        section: parseInt(value, 10)
+                                        section: parseInt(item.sectionId, 10)
                                     }
                                 )
                                 .then(() => {
@@ -167,6 +160,59 @@ export const updateFoodItem = gItem => {
             });
     };
 };
+
+export const updateFoodTypeSectionDefaults = (foodTypes, storeId) => {
+    return function(dispatch) {
+        let newDefaults = Object.keys(foodTypes).reduce((obj, key) => {
+            if (_.has(foodTypes[key].defaultSection, storeId)) {
+                obj[key] = foodTypes[key].defaultSection[storeId].section;
+            }
+            return obj;
+        }, {});
+        console.log(newDefaults)
+
+        HTTP
+            .put(
+                `storeFoodDefaultSectionUpdate/${storeId}/`,
+                {
+                    defaults: newDefaults,
+                }
+            )
+            // .then(response => {
+            //     console.log(response)
+            //     //dispatch({ type: STORE_UPDATE_SECTION_ORDER, payload: store });
+            // })
+            .catch(err => {
+                console.log('storeFoodDefaultSectionUpdate error');
+                console.log(err);
+            });        
+        
+        
+        
+        dispatch({ type: UPDATE_FOODTYPE_SECTION_DEFAULTS, payload: foodTypes });
+    }
+    
+}
+
+// export const updateStoreSectionOrder = (store) => {
+//     return function (dispatch) {
+//         HTTP
+//             .put(
+//                 `storeSectionOrderUpdate/${store.id}/`,
+//                 {
+//                     sections: store.sections,
+//                 }
+//             )
+//             .then(response => {
+//                 dispatch({ type: STORE_UPDATE_SECTION_ORDER, payload: store });
+//             })
+//             .catch(err => {
+//                 console.log('grocery store section order error');
+//                 console.log(err);
+//             });
+//     };
+// };
+
 
 export const getFoodTypes = () => {
     return function(dispatch) {

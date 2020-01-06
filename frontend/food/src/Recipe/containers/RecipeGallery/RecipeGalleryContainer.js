@@ -19,7 +19,7 @@ class RecipeGalleryContainer extends Component {
     return (
       <div>
         <RecipeGallery
-          recipes={this.props.recipeList}
+          recipes={this.props.recipes}
           tags={this.props.tags}
         />
       </div>
@@ -28,8 +28,8 @@ class RecipeGalleryContainer extends Component {
 }
 
 const mapStateToProps = state => ({
-  recipeList: state.recipeList,
-  tags: state.recipeOptions.tags
+  recipes: state.recipes,
+  tags: state.recipeTags
 });
 
 const mapDispatchToProps = {

@@ -24,7 +24,7 @@ class IngredientMatcherContainer extends Component {
         <IngredientMatcher
           parsedIngredients={this.props.parsedIngredients}
           possibleIngredients={this.props.ingredientPicker}
-          sections={this.props.recipeOptions.sections}
+          sections={this.props.recipeSections}
 
           onPickPossibleIngredients={this.props.pickPossibleIngredients}
           onResetPossibleIngredients={this.props.resetPossibleIngredients}
@@ -42,7 +42,7 @@ class IngredientMatcherContainer extends Component {
 const mapStateToProps = state => ({
   parsedIngredients: state.parsedIngredients,
   ingredientPicker: state.ingredientPicker,
-  recipeOptions: state.recipeOptions,
+  recipeSections: state.recipeSections,
 });
 
 const mapDispatchToProps = {

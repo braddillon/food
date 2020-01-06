@@ -7,13 +7,11 @@ import {
     CLEAR_MATCH_GROCERY,
     SET_FILTER,
     SET_PREV_SEARCH,
-    SET_GROCERYSTORES,
     SET_FOODTYPE_CURRENT
 } from './types';
 import {
     GROCERY_POPULATE_ADDLIST,
     GROCERY_LIST_POPULATE,
-    SET_STORESECTION_DEFAULT,
     SET_STORELIST_CHECKED
 } from './types';
 import {
@@ -22,14 +20,18 @@ import {
     ADD_GROCERY,
     DELETE_GROCERY,
     UPDATE_GROCERY_CHECK,
-    GROCERY_ADDLIST_SET_ALL_VISIBLE
+    GROCERY_ADDLIST_SET_ALL_VISIBLE,
 } from './types';
+
+import {
+    SET_STORES
+} from '../../Grocery/actions/types';
 
 //import { ROOT_URL } from './actions';
 
 
 export const matchGroceryItem = g => {
-    return function(dispatch) {
+    return function (dispatch) {
         HTTP
             .get(`food?term=${g}`)
             .then(response => {
@@ -50,78 +52,78 @@ export const matchGroceryItem = g => {
 };
 
 export const setStoreListChecked = g => {
-    return function(dispatch) {
+    return function (dispatch) {
         dispatch({ type: SET_STORELIST_CHECKED, payload: g });
     };
 };
 
-export const getGroceryStores = () => {
-    return function(dispatch) {
-        HTTP
-            .get(`groceryStoreList`)
-            .then(response => {
-                response.data.forEach(function(element) {
-                    element.sections = element.sections.reduce(
-                        (obj, item) =>
-                            Object.assign(obj, {
-                                [item.id]: {
-                                    id: item.id,
-                                    sectionName: item.sectionName,
-                                    order: item.order
-                                }
-                            }),
-                        {}
-                    );
-                });
+// export const getGroceryStores = () => {
+//     return function(dispatch) {
+//         HTTP
+//             .get(`groceryStoreList`)
+//             .then(response => {
+//                 response.data.forEach(function(element) {
+//                     element.sections = element.sections.reduce(
+//                         (obj, item) =>
+//                             Object.assign(obj, {
+//                                 [item.id]: {
+//                                     id: item.id,
+//                                     sectionName: item.sectionName,
+//                                     order: item.order
+//                                 }
+//                             }),
+//                         {}
+//                     );
+//                 });
 
-                let tmp = response.data.reduce(
-                    (obj, item) =>
-                        Object.assign(obj, {
-                            [item.id]: {
-                                id: item.id,
-                                name: item.name,
-                                sections: item.sections
-                            }
-                        }),
-                    {}
-                );
+//                 let tmp = response.data.reduce(
+//                     (obj, item) =>
+//                         Object.assign(obj, {
+//                             [item.id]: {
+//                                 id: item.id,
+//                                 name: item.name,
+//                                 sections: item.sections
+//                             }
+//                         }),
+//                     {}
+//                 );
 
-                let defaultStoreSection = {};
+//                 let defaultStoreSection = {};
 
-                _.forEach(tmp, function(value) {
-                    let tmpDefaultStoreSection = _.pickBy(
-                        value.sections,
-                        function(value2) {
-                            return value2.sectionName === 'Vegetables';
-                        }
-                    );
+//                 _.forEach(tmp, function(value) {
+//                     let tmpDefaultStoreSection = _.pickBy(
+//                         value.sections,
+//                         function(value2) {
+//                             return value2.sectionName === 'Vegetables';
+//                         }
+//                     );
 
-                    if (_.isEmpty(tmpDefaultStoreSection))
-                        defaultStoreSection['section' + value.name] = parseInt(
-                            Object.keys(value.sections)[0], 10
-                        );
-                    else
-                        defaultStoreSection['section' + value.name] = parseInt(
-                            Object.keys(tmpDefaultStoreSection)[0], 10
-                        );
-                });
-                dispatch({ type: SET_GROCERYSTORES, payload: tmp });
-                dispatch({
-                    type: SET_STORESECTION_DEFAULT,
-                    payload: defaultStoreSection
-                });
-            });
-    };
-};
+//                     if (_.isEmpty(tmpDefaultStoreSection))
+//                         defaultStoreSection['section' + value.name] = parseInt(
+//                             Object.keys(value.sections)[0], 10
+//                         );
+//                     else
+//                         defaultStoreSection['section' + value.name] = parseInt(
+//                             Object.keys(tmpDefaultStoreSection)[0], 10
+//                         );
+//                 });
+//                 dispatch({ type: SET_STORES, payload: tmp });
+//                 dispatch({
+//                     type: SET_STORESECTION_DEFAULT,
+//                     payload: defaultStoreSection
+//                 });
+//             });
+//     };
+// };
 
 export const setFoodTypeCurrent = g => {
-    return function(dispatch) {
+    return function (dispatch) {
         dispatch({ type: SET_FOODTYPE_CURRENT, payload: g });
     };
 };
 
 export const groceryAddListMoveNext = () => {
-    return function(dispatch) {
+    return function (dispatch) {
         let groceryAddList = store.getState().groceryAddList;
         let activeId = groceryAddList
             .map(e => {
@@ -152,7 +154,7 @@ export const groceryAddListMoveNext = () => {
 };
 
 export const groceryAddListMovePrev = () => {
-    return function(dispatch) {
+    return function (dispatch) {
         let groceryAddList = store.getState().groceryAddList;
         let activeId = groceryAddList
             .map(e => {
@@ -207,9 +209,9 @@ export const groceryAddListMovePrev = () => {
 // };
 
 export const groceryAddListAddActive = () => {
-    return function(dispatch) {
+    return function (dispatch) {
         //let groceryAddList = store.getState().groceryAddList;
-        const activeItem= store.getState().groceryAddList.find(item => item.active);
+        const activeItem = store.getState().groceryAddList.find(item => item.active);
 
         HTTP
             .post(
@@ -244,7 +246,7 @@ export const groceryPopulateAddList = type => {
 
     switch (type) {
         case 'search':
-            return function(dispatch) {
+            return function (dispatch) {
                 dispatch({ type: CLEAR_MATCH_GROCERY });
             };
         case 'staples':
@@ -256,13 +258,13 @@ export const groceryPopulateAddList = type => {
         case 'categories':
             endpoint = `food?type=${
                 store.getState().groceryBuildOptions.foodTypeCurrent
-            }`;
+                }`;
             break;
         default:
             break;
     }
 
-    return function(dispatch) {
+    return function (dispatch) {
         HTTP
             .get(endpoint)
             .then(response => {
@@ -291,7 +293,7 @@ export const clearMatchGroceryList = () => {
 };
 
 export const addGroceryItem = gItem => {
-    return function(dispatch) {
+    return function (dispatch) {
         HTTP
             .post(
                 `groceryCreate`,
@@ -311,14 +313,14 @@ export const addGroceryItem = gItem => {
 };
 
 export const updateGroceryItem = gItem => {
-    return function(dispatch) {
+    return function (dispatch) {
         HTTP
             .put(`groceryDetail/${gItem.id}/`,
-            { food: gItem.id, deferred: gItem.deferred, check: gItem.check }
+                { food: gItem.id, deferred: gItem.deferred, check: gItem.check }
             )
             .then((response) => {
                 dispatch({ type: UPDATE_GROCERY_CHECK, payload: response.data });
-                
+
             });
     };
 };
@@ -326,7 +328,7 @@ export const updateGroceryItem = gItem => {
 
 
 export const deleteGroceryItem = gId => {
-    return function(dispatch) {
+    return function (dispatch) {
         HTTP
             .delete(`groceryDetail/${gId}/`)
             .then(() => {
@@ -345,7 +347,7 @@ export const deleteGroceryItem = gId => {
 
 
 export const deleteGroceryAll = () => {
-    return function(dispatch) {
+    return function (dispatch) {
         HTTP
             .post(
                 `wipeGrocery`,
@@ -362,11 +364,11 @@ export const deleteGroceryAll = () => {
 };
 
 export const groceryList_populate = () => {
-    return function(dispatch) {
+    return function (dispatch) {
         HTTP
             .get(`groceryList`)
             .then(response => {
-                Object.keys(response.data).forEach(function(key) {
+                Object.keys(response.data).forEach(function (key) {
                     response.data[key].checked = false;
                 });
                 dispatch({
@@ -390,3 +392,67 @@ export const setPrevSearchTerm = prevSearch => {
         payload: prevSearch
     };
 };
+
+export const getGroceryStores = () => {
+    return function (dispatch) {
+        HTTP
+            .get(`groceryStoreList`)
+            .then(response => {
+                response.data.forEach(function (element) {
+                    element.sections = element.sections.reduce(
+                        (obj, item) =>
+                            Object.assign(obj, {
+                                [item.id]: {
+                                    id: item.id,
+                                    sectionName: item.sectionName,
+                                    order: item.order
+                                }
+                            }),
+                        {}
+                    );
+                });
+
+                let tmp = response.data.reduce(
+                    (obj, item) =>
+                        Object.assign(obj, {
+                            [item.id]: {
+                                id: item.id,
+                                name: item.name,
+                                sections: item.sections
+                            }
+                        }),
+                    {}
+                );
+
+                let defaultStoreSection = {};
+
+                _.forEach(tmp, function (value, key) {
+                    let tmpDefaultStoreSection = _.pickBy(
+                        value.sections,
+                        (value2) => value2.sectionName === 'Uncategorized'
+                    );
+
+                    if (_.isEmpty(tmpDefaultStoreSection))
+                        defaultStoreSection['section' + value.name] = parseInt(
+                            Object.keys(value.sections)[0], 10
+                        );
+                    else
+                        defaultStoreSection['section' + value.name] = parseInt(
+                            Object.keys(tmpDefaultStoreSection)[0], 10
+                        );
+
+                    if (_.isEmpty(tmpDefaultStoreSection))
+                        tmp[key]['defaultSection'] = parseInt(
+                            Object.keys(value.sections)[0], 10
+                        );
+                    else
+                        tmp[key]['defaultSection'] = parseInt(
+                            Object.keys(tmpDefaultStoreSection)[0], 10
+                        );
+                });
+                dispatch({ type: SET_STORES, payload: tmp });
+            });
+    };
+};
+
+

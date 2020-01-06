@@ -34,7 +34,7 @@ const styles = theme => ({
     }
 });
 
-class StoreItem extends Component {
+class StoreGroceryItem extends Component {
     constructor(props) {
         super(props);
         this.state = { checked: this.props.grocery.checked };
@@ -89,8 +89,8 @@ const mapDispatchToProps = {
     setStoreListChecked
 };
 
-const StoreItemContainer = connect(
+const StoreGroceryItemContainer = connect(
     null,
     mapDispatchToProps
-)(StoreItem);
-export default withStyles(styles)(StoreItemContainer);
+)(StoreGroceryItem);
+export default withStyles(styles)(StoreGroceryItemContainer);

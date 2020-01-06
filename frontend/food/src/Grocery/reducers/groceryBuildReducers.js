@@ -6,15 +6,10 @@ import {
     GROCERY_ADDLIST_SET_ALL_VISIBLE,
     SET_FILTER,
     SET_PREV_SEARCH,
-    SET_GROCERYSTORES,
     SET_FOODTYPE_CURRENT,
     SET_FOODTYPE_DEFAULT,
     SET_STORESECTION_DEFAULT
 } from '../actions/types';
-
-import {
-    SET_FOODTYPES
-} from '../../Food/actions/types'
 
 export const groceryAddList = (state = [], action) => {
     let newState = [];
@@ -58,10 +53,6 @@ export const groceryBuildOptions = (
             return { ...state, filter: action.payload };
         case SET_PREV_SEARCH:
             return { ...state, prevSearchTerm: action.payload };
-        case SET_FOODTYPES:
-            return { ...state, foodTypes: action.payload };
-        case SET_GROCERYSTORES:
-            return { ...state, groceryStores: action.payload };
         case SET_FOODTYPE_CURRENT:
             return { ...state, foodTypeCurrent: action.payload };
         case SET_FOODTYPE_DEFAULT:
