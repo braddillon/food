@@ -70,11 +70,14 @@ class StoreGroceryList extends Component {
     }
 
     buildList() {
-        //var result = '';
+        const sections = this.props.stores[this.state.comboValue].sections;
+
         if (!_.isEmpty(this.props.stores))
-            return _.map(this.props.stores[this.state.comboValue].sections, section => (
-                <StoreGrocerySection key={section.id} id={section.id} name={section.sectionName} storeId={this.state.comboValue} locked={this.state.locked} />
-            ));
+            return Object.keys(this.props.stores[this.state.comboValue].sections)
+                .sort((a, b) => sections[a].order - sections[b].order)
+                .map(section => (
+                    <StoreGrocerySection key={sections[section].id} id={sections[section].id} name={sections[section].sectionName} storeId={this.state.comboValue} locked={this.state.locked} />
+                ));
         else return 'empty';
     }
 
