@@ -20,6 +20,12 @@ const styles = theme => ({
         [theme.breakpoints.up('md')]: {
             position: 'relative'
         }
+    },
+    adminTitle: {
+        fontWeight: 'bold',
+        textDecoration: 'underline',
+        marginLeft: '15px',
+        marginTop: '15px'
     }
 });
 
@@ -41,14 +47,18 @@ const SideDrawer = props => {
                     <ListItem button component={Link} to="/store/groceryList">
                         <ListItemText primary="Store" />
                     </ListItem>
-                    <ListItem button component={Link} to="/foodBrowser/">
-                        <ListItemText primary="Food Manager" />
-                    </ListItem>
                     <ListItem button component={Link} to="/">
                         <ListItemText primary="Recipe Gallery" />
                     </ListItem>
                     <ListItem button component={Link} to="/recipeCreate/">
                         <ListItemText primary="Recipe Create" />
+                    </ListItem>
+                    <div className={classes.adminTitle}>Admin Tools</div>
+                    <ListItem button component={Link} to="/store/manager/">
+                        <ListItemText primary="Store" />
+                    </ListItem>
+                    <ListItem button component={Link} to="/foodBrowser/">
+                        <ListItemText primary="Food" />
                     </ListItem>
                 </List>
             </div>
