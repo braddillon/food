@@ -3,6 +3,7 @@ import _ from 'lodash';
 import { withStyles } from '@material-ui/core/styles';
 import TextField from '@material-ui/core/TextField';
 import Typography from '@material-ui/core/Typography';
+import PhotoCameraIcon from '@material-ui/icons/PhotoCamera';
 
 import Dropzone from 'react-dropzone';
 import Compressor from 'compressorjs';
@@ -48,6 +49,21 @@ const styles = theme => ({
     },
     inputGroup: {
         marginBottom: 30
+    },
+    fileUpload: {
+        borderStyle: 'dotted',
+        borderWidth: 'medium',
+        width: '150px',
+        height: '150px',
+        textAlign: 'center'
+    },
+    cameraIcon: {
+        width: 110,
+        height: 110,
+        color: 'grey'
+    },
+    addPhotoText: {
+        margin: 0,
     },
     formControl: {
         margin: theme.spacing(1),
@@ -142,7 +158,7 @@ class RecipeForm extends Component {
                                     />
                                 </div>
 
-                                <div className={classes.inputGroup}>
+                                <div>
                                     {this.props.recipeForm.image === null ? (
                                         <Dropzone
                                             accept="image/jpeg, image/png"
@@ -168,16 +184,17 @@ class RecipeForm extends Component {
                                         >
                                             {({ getRootProps, getInputProps }) => (
                                                 <section>
-                                                    <div {...getRootProps()}>
+                                                    <div {...getRootProps()} className={classes.fileUpload}>
                                                         <input {...getInputProps()} />
-                                                        <p>Drag 'n' drop some files here, or click to select files</p>
+                                                        <PhotoCameraIcon className={classes.cameraIcon} />
+                                                        <p className={classes.addPhotoText}>Add a photo</p>
                                                     </div>
                                                 </section>
                                             )}
                                         </Dropzone>
 
                                     ) : (
-                                            <img src={this.props.recipeForm.image} alt={this.props.recipeForm.image} height="200" width="200" onClick={() => {
+                                            <img src={this.props.recipeForm.image} alt={this.props.recipeForm.image} height="150" width="150" onClick={() => {
                                                 this.props.onSetRecipeFormField('image', null);
                                             }}
                                             />
