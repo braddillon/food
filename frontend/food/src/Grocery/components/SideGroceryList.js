@@ -18,7 +18,7 @@ const styles = theme => ({
         color: 'grey',
     },
     fridgePadding: {
-        paddingLeft: 20
+        marginLeft: 20
     }
   });
 

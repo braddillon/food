@@ -27,8 +27,9 @@ const styles = theme => ({
         color: '#fff'
     },
     iconButton: {
-        padding: '0px 0px 0px 20px',
+        padding: 0,
         marginRight: 5,
+        marginLeft: 20
     },
     checkFridgeActive: {
         color: 'red'
