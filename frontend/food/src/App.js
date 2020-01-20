@@ -133,10 +133,7 @@ class App extends Component {
                                     path="/"
                                     component={RecipeGallery}
                                 />
-
-
                             </Switch>
-                            brad
                         </div>
                     </div>
                 </div>

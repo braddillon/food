@@ -96,18 +96,11 @@ def listGroceries(request):
     def_sections = {}
     for ftype in FoodType.objects.all().values_list('id', flat=True):
         def_sections[ftype] = copy.deepcopy(uncatDict)
-    print(def_sections, flush=True)
     
-    #{5: 24, 48: 106, 49: 113, 50: 116}
-
     defaultSections = FoodTypeDefaultSection.objects.all()
     for item in defaultSections:
-        print(str(item.foodType.id) + ',' + str(item.store.id), flush=True)
         def_sections[item.foodType.id][item.store.id] = item.section.id
 
-    print(def_sections, flush=True)
-
-    
     # section = models.ForeignKey(GrocerySection, on_delete=models.CASCADE)
     # store = models.ForeignKey(GroceryStore, on_delete=models.CASCADE)
     # foodType = models.ForeignKey(FoodType, related_name='defaultSection', on_delete=models.CASCADE)
