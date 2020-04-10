@@ -1,4 +1,4 @@
-import objectToFormData from "object-to-formdata";
+import { objectToFormData } from 'object-to-formdata';
 import { push } from "connected-react-router";
 import { resetRecipeForm } from "./recipeFormActions";
 import { HTTP } from "../../Other/HTTP";
