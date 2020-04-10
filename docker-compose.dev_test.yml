@@ -1,14 +1,6 @@
 version: '3'
 
 services:
-  probe:
-    image: trolleksii/ansible_db_probe
-    depends_on:
-      - food_db
-    environment:
-      - PROBE_HOST=food_db
-      - PROBE_PORT=5432
-
   food_db:
     image: postgres
     container_name: food_db_dev
@@ -37,3 +29,17 @@ services:
       - ./media/:/app/media
     depends_on:
       - food_db
+
+  food_frontend:
+    build: './frontend'
+    container_name: food_frontend_dev
+    working_dir: /app
+    command: >
+      sh -c "npm run start"
+    volumes:
+       - ./frontend/food/src:/app/src/
+       - ./frontend/food/public:/app/public/
+    ports:
+      - "3000:3000"
+    depends_on:
+      - food-backend
