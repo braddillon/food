@@ -7,6 +7,10 @@ import {
     SET_STORELIST_CHECKED
 } from '../actions/types';
 
+import { 
+    UPDATE_FOOD_GROCERY_ITEM
+} from '../../Food/actions/types';
+
 import _ from 'lodash';
 
 export default function(state = {}, action) {
@@ -20,6 +24,13 @@ export default function(state = {}, action) {
                         check: action.payload.check    
                     }
                 }
+        case UPDATE_FOOD_GROCERY_ITEM:
+            return { ...state,
+                    [action.payload.id]: {
+                        ...state[action.payload.id],
+                        name: action.payload.foodName,
+                        grocerySections: {...state[action.payload.id].grocerySections, ...action.payload.grocerySections}
+                    }};
         case DELETE_GROCERY:
             return _.omit(state, action.payload);
         case WIPE_GROCERY:

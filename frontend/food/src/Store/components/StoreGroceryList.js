@@ -1,5 +1,8 @@
-import React, { Component } from 'react';
-import { connect } from 'react-redux';
+import React from 'react';
+import { useDispatch } from 'react-redux'
+import { makeStyles } from '@material-ui/styles';
+import { useEffect } from 'react'
+import { useSelector } from 'react-redux'
 
 import _ from 'lodash';
 
@@ -10,10 +13,9 @@ import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
-import { withStyles } from '@material-ui/core/styles';
 import Button from '@material-ui/core/Button';
 
-const styles = theme => ({
+const useStyles = makeStyles(theme => ({
     formControl: {
         margin: theme.spacing(1),
         minWidth: 120,
@@ -36,76 +38,70 @@ const styles = theme => ({
         textAlign: 'left',
         marginLeft: '1em',
     }
-});
+}));
 
-class StoreGroceryList extends Component {
-    constructor(props) {
-        super(props);
-        this.state = {
-            comboValue: 4,
-            locked: false
-        };
+const StoreGroceryList = (props) => {
+    const classes = useStyles(props);
+    const dispatch = useDispatch();
+    const stores = useSelector(state => state.stores)
 
-        this.deleteCheckedItems = this.deleteCheckedItems.bind(this);
-        this.comboChange = this.comboChange.bind(this);
-    }
+    const [locked, setLocked] = React.useState(false);
+    const [comboValue, setComboValue] = React.useState(4);
 
-    componentDidMount() {
-        this.props.getGroceryStores();
-        this.props.groceryList_populate();
-    }
+    useEffect(() => {
+        dispatch(getGroceryStores());
+        dispatch(groceryList_populate());
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [])
 
-    deleteCheckedItems(e) {
-        let itemsToDelete = _.pickBy(this.props.groceries, function (value, key) {
+    function deleteCheckedItems(e) {
+        let itemsToDelete = _.pickBy(props.groceries, function (value, key) {
             return value.checked === true;
         });
-        let delItem = this.props.deleteGroceryItem;
+        //let delItem = deleteGroceryItem;
         _.forOwn(itemsToDelete, function (value, key) {
-            delItem(key);
+            dispatch(deleteGroceryItem(key));
         });
     }
 
-    comboChange(e) {
-        this.setState({ comboValue: e.target.value });
+    function comboChange(e) {
+        setComboValue(e.target.value);
     }
 
-    buildList() {
-        const sections = this.props.stores[this.state.comboValue].sections;
+    function buildList() {
+        const sections = stores[comboValue].sections;
 
-        if (!_.isEmpty(this.props.stores))
-            return Object.keys(this.props.stores[this.state.comboValue].sections)
+        if (!_.isEmpty(stores))
+            return Object.keys(stores[comboValue].sections)
                 .sort((a, b) => sections[a].order - sections[b].order)
                 .map(section => (
-                    <StoreGrocerySection key={sections[section].id} id={sections[section].id} name={sections[section].sectionName} storeId={this.state.comboValue} locked={this.state.locked} />
+                    <StoreGrocerySection key={sections[section].id} id={sections[section].id} name={sections[section].sectionName} storeId={comboValue} locked={locked} />
                 ));
         else return 'empty';
     }
 
-    render() {
-        const { classes } = this.props;
+    let lockedClasses = classes.button;
+    if (locked) {
+        lockedClasses = [classes.button, classes.locked].join(' ');
+    }
 
-        let lockedClasses = classes.button;
-        if (this.state.locked) {
-            lockedClasses = [classes.button, classes.locked].join(' ');
-        }
-
-        if (_.isEmpty(this.props.stores))
-            return <div></div>
-
+    if (_.isEmpty(stores))
+        return <div></div>
+    else
         return (
             <div className={classes.storeList}>
                 <FormControl className={classes.formControl}>
                     <InputLabel htmlFor="stores">Store:</InputLabel>
                     <Select
-                        value={this.state.comboValue}
-                        onChange={this.comboChange}
-                        disabled={this.state.locked}
+                        value={comboValue}
+                        onChange={comboChange}
+                        disabled={locked}
                         inputProps={{
                             name: 'stores',
                             id: 'stores'
                         }}
                     >
-                        {_.map(this.props.stores, store => (
+                        {_.map(stores, store => (
                             <MenuItem value={store.id} key={store.id}>
                                 {store.name}
                             </MenuItem>
@@ -114,32 +110,30 @@ class StoreGroceryList extends Component {
                 </FormControl>
 
 
-                <Button variant="contained" color="secondary" className={classes.button} onClick={this.deleteCheckedItems} disabled={this.state.locked}>
+                <Button variant="contained" color="secondary" className={classes.button} onClick={deleteCheckedItems} disabled={locked}>
                     Remove Item
                 </Button>
-                <Button variant="contained" color="secondary" className={lockedClasses} onClick={() => this.setState(prevState => ({ locked: !prevState.locked }))}>
+                <Button variant="contained" color="secondary" className={lockedClasses} onClick={() => setLocked(prevState => !prevState)}>
                     Lock
                 </Button>
-                {this.buildList()}
+                {buildList()}
             </div>
-        );
-    }
+    );
+
+
 }
 
-const mapStateToProps = (state, props) => ({
-    groceryBuildOptions: state.groceryBuildOptions,
-    groceries: state.groceries,
-    stores: state.stores
-});
 
-const mapDispatchToProps = {
-    getGroceryStores,
-    groceryList_populate,
-    deleteGroceryItem
-};
 
-const StoreGroceryListContainer = connect(
-    mapStateToProps,
-    mapDispatchToProps
-)(StoreGroceryList);
-export default withStyles(styles)(StoreGroceryListContainer);
+// const mapDispatchToProps = {
+//     getGroceryStores,
+//     groceryList_populate,
+//     deleteGroceryItem
+// };
+
+// const StoreGroceryListContainer = connect(
+//     mapStateToProps,
+//     mapDispatchToProps
+// )(StoreGroceryList);
+// export default withStyles(styles)(StoreGroceryListContainer);
+export default StoreGroceryList

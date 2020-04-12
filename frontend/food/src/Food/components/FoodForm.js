@@ -165,7 +165,7 @@ const FoodForm = (props) => {
                                 <div className={classes.formGroup}>
                                     <InputLabel className={classes.label}>Staple</InputLabel>
                                     <div className={classes.input}>
-                                        <Field name="staple" component={Checkbox} />
+                                        <Field name="staple" type="checkbox" component={Checkbox} />
                                         <ErrorMessage name="staple" />
                                     </div>
                                 </div>

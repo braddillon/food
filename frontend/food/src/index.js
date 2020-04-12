@@ -12,7 +12,6 @@ import './index.css';
 //import registerServiceWorker from './registerServiceWorker';
 import { unregister } from './Other/registerServiceWorker';
 
-
 // ReactDOM.render(<App />, document.getElementById('root'));
 
 const token = localStorage.getItem('token');

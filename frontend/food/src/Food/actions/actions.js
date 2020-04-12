@@ -20,7 +20,8 @@ import {
     GET_FOOD_LIST,
     MODIFY_FOOD_ATTRIBUTE,
     DELETE_FOOD_ITEMS,
-    UPDATE_FOODTYPE_SECTION_DEFAULTS
+    UPDATE_FOODTYPE_SECTION_DEFAULTS,
+    UPDATE_FOOD_GROCERY_ITEM
 } from './types';
 
 
@@ -103,7 +104,8 @@ export const resetGroceryBuildFilter = () => {
     }
 }
 
-export const updateFoodItem = gItem => {
+export const updateFoodItem = (gItem, props) => {
+    // console.log(gItem);
     return function(dispatch) {
         HTTP
             .put(
@@ -123,8 +125,6 @@ export const updateFoodItem = gItem => {
                         {}
                     )
                     .then(() => {
-                        console.log('food delete section success');
-
                         gItem.overrides.forEach(item => {
                             HTTP
                                 .post(
@@ -135,7 +135,6 @@ export const updateFoodItem = gItem => {
                                     }
                                 )
                                 .then(() => {
-                                    console.log('food default section success');
                                 })
                                 .catch(err => {
                                     console.log(
@@ -144,9 +143,18 @@ export const updateFoodItem = gItem => {
                                     console.log(err);
                                 });
                         });
-                        // dispatch(addGroceryItem({ id: response.data.id, name: gItem.foodName,
-                        // deferred: false, checked: false }));
+
+                        let grocSecs = gItem.overrides.reduce((obj, item) => {
+                            return {
+                                ...obj,
+                                [item['storeId']]: parseInt(item['sectionId'], 10)
+                            };
+                        }, {})
+                        gItem['grocerySections'] = grocSecs;
+
                         dispatch({ type: SET_FILTER, payload: 'search' });
+                        dispatch({ type: UPDATE_FOOD_GROCERY_ITEM, payload: gItem});
+                        props.history.goBack();
                     })
                     .catch(err => {
                         console.log('food default section add error');
