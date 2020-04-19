@@ -33,6 +33,55 @@ export default function (state = {}, action) {
 }
 
 // Selector
+export const selectGroceryByPrintGroups = (state, storeId) => {
+    const { groceries } = state
+    if (!storeId) {
+        return []
+    }
+
+    if (_.isEmpty(state.stores)) {
+        return []
+    }
+
+    let target_items = Object.keys(groceries).length / 2
+    if (target_items > 45)
+        target_items = 45
+    let pages = []
+    pages.push([])
+    pages[0].push([])
+
+    let colNum = 0
+    const sections = state.stores[storeId].sections;
+    Object.keys(sections).sort((a, b) => sections[a].order - sections[b].order).reduce((total, item) => {
+        let item_int = parseInt(item, 10)
+        let section_length = Object.keys(groceries).filter(key => groceries[key].grocerySections[storeId] === item_int).length
+        if (section_length > 0) {
+            if ((total <= target_items)) {
+                pages[pages.length - 1][colNum].push(item_int)
+            } else {
+                if (colNum === 1) {
+                    pages.push([])
+                    pages[pages.length - 1].push([])
+                    colNum = 0
+                    pages[pages.length - 1][colNum].push(item_int)
+                }
+                else {
+                    colNum = colNum + 1
+                    pages[pages.length - 1].push([])
+                    pages[pages.length - 1][colNum].push(item_int)
+                }
+                total = 0
+            }
+        }
+        return total + section_length
+    }, 0)
+
+    return pages;
+}
+
+
+
+// Selector
 // export const selectFirstStore = state => {
 //     console.log("selector")
 //     console.log(state)

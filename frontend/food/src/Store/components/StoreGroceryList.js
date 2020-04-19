@@ -1,5 +1,4 @@
-import React, { useRef } from 'react';
-import ReactToPrint from 'react-to-print';
+import React from 'react';
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/styles';
 import { useEffect } from 'react'
@@ -18,6 +17,7 @@ import Button from '@material-ui/core/Button';
 
 import ShopplingListPDF from './StorePrintedList';
 import { PDFDownloadLink } from "@react-pdf/renderer";
+import { selectGroceryByPrintGroups } from '../reducers/reducers';
 
 
 const useStyles = makeStyles(theme => ({
@@ -33,6 +33,10 @@ const useStyles = makeStyles(theme => ({
         margin: 2,
         textTransform: 'none'
     },
+    pdf_button: {
+        marginLeft: '20px',
+        textTransform: 'none'
+    },
     locked: {
         backgroundColor: 'red',
         hover: {
@@ -46,7 +50,6 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const StoreGroceryList = (props) => {
-    const componentRef = useRef();
     const classes = useStyles(props);
     const dispatch = useDispatch();
     const stores = useSelector(state => state.stores)
@@ -54,6 +57,8 @@ const StoreGroceryList = (props) => {
 
     const [locked, setLocked] = React.useState(false);
     const [comboValue, setComboValue] = React.useState(4);
+
+    const groceries_by_page = useSelector(state => selectGroceryByPrintGroups(state, comboValue))
 
     useEffect(() => {
         dispatch(getGroceryStores());
@@ -92,44 +97,9 @@ const StoreGroceryList = (props) => {
         lockedClasses = [classes.button, classes.locked].join(' ');
     }
 
-
-
     if (_.isEmpty(stores))
         return <div></div>
     else {
-        // Split into 2 lists
-        let target_items = Object.keys(groceries).length / 2
-        if (target_items > 45)
-            target_items = 45
-        let pages = []
-        pages.push([])
-        pages[0].push([])
-
-        let colNum = 0
-        const sections = stores[comboValue].sections;
-        Object.keys(sections).sort((a, b) => sections[a].order - sections[b].order).reduce((total, item) => {
-            let section_length = Object.keys(groceries).filter(key => groceries[key].grocerySections[comboValue] == item).length
-            if (section_length > 0) {
-                if ((total <= target_items)) {
-                    pages[pages.length - 1][colNum].push(item)
-                } else {
-                    if (colNum === 1) {
-                        pages.push([])
-                        pages[pages.length - 1].push([])
-                        colNum = 0
-                        pages[pages.length - 1][colNum].push(item)
-                    }
-                    else {
-                        colNum = colNum + 1
-                        pages[pages.length - 1].push([])
-                        pages[pages.length - 1][colNum].push(item)
-                    }
-                    total = 0
-                }
-            }
-            return total + section_length
-        }, 0)
-
         return (
             <div className={classes.storeList}>
                 <FormControl className={classes.formControl}>
@@ -158,8 +128,10 @@ const StoreGroceryList = (props) => {
                 <Button variant="contained" color="secondary" className={lockedClasses} onClick={() => setLocked(prevState => !prevState)}>
                     Lock
                 </Button>
-                <PDFDownloadLink document={<ShopplingListPDF store={comboValue} sections={stores[comboValue].sections} groceries={groceries} pages={pages} />} fileName="shopping_list.pdf">
-                    Download PDF
+                <PDFDownloadLink document={<ShopplingListPDF store={comboValue} sections={stores[comboValue].sections} groceries={groceries} pages={groceries_by_page} />} fileName="shopping_list.pdf">
+                    <Button variant="contained" color="secondary" className={classes.pdf_button} disabled={locked}>
+                        PDF
+                </Button>
                 </PDFDownloadLink >
                 {buildList()}
             </div>
@@ -168,17 +140,4 @@ const StoreGroceryList = (props) => {
     }
 }
 
-
-
-// const mapDispatchToProps = {
-//     getGroceryStores,
-//     groceryList_populate,
-//     deleteGroceryItem
-// };
-
-// const StoreGroceryListContainer = connect(
-//     mapStateToProps,
-//     mapDispatchToProps
-// )(StoreGroceryList);
-// export default withStyles(styles)(StoreGroceryListContainer);
 export default StoreGroceryList
