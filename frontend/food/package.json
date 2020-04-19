@@ -5,6 +5,7 @@
   "dependencies": {
     "@material-ui/core": "^4.9.9",
     "@material-ui/icons": "^4.9.1",
+    "@react-pdf/renderer": "^1.6.8",
     "axios": "^0.19.2",
     "compressorjs": "^1.0.6",
     "connected-react-router": "^6.8.0",
@@ -28,7 +29,7 @@
     "yup": "^0.28.3"
   },
   "scripts": {
-    "start": "REACT_APP_HOST=http://192.168.1.75 react-scripts start",
+    "start": "REACT_APP_HOST=http://192.168.1.60 react-scripts start",
     "build": "REACT_APP_HOST=https://food.codesoldier.net react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"

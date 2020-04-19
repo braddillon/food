@@ -1,4 +1,5 @@
-import React from 'react';
+import React, { useRef } from 'react';
+import ReactToPrint from 'react-to-print';
 import { useDispatch } from 'react-redux'
 import { makeStyles } from '@material-ui/styles';
 import { useEffect } from 'react'
@@ -14,6 +15,10 @@ import MenuItem from '@material-ui/core/MenuItem';
 import Select from '@material-ui/core/Select';
 import FormControl from '@material-ui/core/FormControl';
 import Button from '@material-ui/core/Button';
+
+import ShopplingListPDF from './StorePrintedList';
+import { PDFDownloadLink } from "@react-pdf/renderer";
+
 
 const useStyles = makeStyles(theme => ({
     formControl: {
@@ -41,9 +46,11 @@ const useStyles = makeStyles(theme => ({
 }));
 
 const StoreGroceryList = (props) => {
+    const componentRef = useRef();
     const classes = useStyles(props);
     const dispatch = useDispatch();
     const stores = useSelector(state => state.stores)
+    const groceries = useSelector(state => state.groceries)
 
     const [locked, setLocked] = React.useState(false);
     const [comboValue, setComboValue] = React.useState(4);
@@ -85,9 +92,44 @@ const StoreGroceryList = (props) => {
         lockedClasses = [classes.button, classes.locked].join(' ');
     }
 
+
+
     if (_.isEmpty(stores))
         return <div></div>
-    else
+    else {
+        // Split into 2 lists
+        let target_items = Object.keys(groceries).length / 2
+        if (target_items > 45)
+            target_items = 45
+        let pages = []
+        pages.push([])
+        pages[0].push([])
+
+        let colNum = 0
+        const sections = stores[comboValue].sections;
+        Object.keys(sections).sort((a, b) => sections[a].order - sections[b].order).reduce((total, item) => {
+            let section_length = Object.keys(groceries).filter(key => groceries[key].grocerySections[comboValue] == item).length
+            if (section_length > 0) {
+                if ((total <= target_items)) {
+                    pages[pages.length - 1][colNum].push(item)
+                } else {
+                    if (colNum === 1) {
+                        pages.push([])
+                        pages[pages.length - 1].push([])
+                        colNum = 0
+                        pages[pages.length - 1][colNum].push(item)
+                    }
+                    else {
+                        colNum = colNum + 1
+                        pages[pages.length - 1].push([])
+                        pages[pages.length - 1][colNum].push(item)
+                    }
+                    total = 0
+                }
+            }
+            return total + section_length
+        }, 0)
+
         return (
             <div className={classes.storeList}>
                 <FormControl className={classes.formControl}>
@@ -116,11 +158,14 @@ const StoreGroceryList = (props) => {
                 <Button variant="contained" color="secondary" className={lockedClasses} onClick={() => setLocked(prevState => !prevState)}>
                     Lock
                 </Button>
+                <PDFDownloadLink document={<ShopplingListPDF store={comboValue} sections={stores[comboValue].sections} groceries={groceries} pages={pages} />} fileName="shopping_list.pdf">
+                    Download PDF
+                </PDFDownloadLink >
                 {buildList()}
             </div>
-    );
+        );
 
-
+    }
 }
 
 
