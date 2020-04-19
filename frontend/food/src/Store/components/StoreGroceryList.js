@@ -33,8 +33,13 @@ const useStyles = makeStyles(theme => ({
         margin: 2,
         textTransform: 'none'
     },
-    pdf_button: {
-        marginLeft: '20px',
+    pdf_button_download: {
+        marginLeft: '10px',
+        backgroundColor: 'red',
+        textTransform: 'none'
+    },
+    pdf_button_generate: {
+        marginLeft: '10px',
         textTransform: 'none'
     },
     locked: {
@@ -56,6 +61,7 @@ const StoreGroceryList = (props) => {
     const groceries = useSelector(state => state.groceries)
 
     const [locked, setLocked] = React.useState(false);
+    const [pdf_generated, set_pdf_generated] = React.useState(false);
     const [comboValue, setComboValue] = React.useState(4);
 
     const groceries_by_page = useSelector(state => selectGroceryByPrintGroups(state, comboValue))
@@ -67,7 +73,8 @@ const StoreGroceryList = (props) => {
     }, [])
 
     function deleteCheckedItems(e) {
-        let itemsToDelete = _.pickBy(props.groceries, function (value, key) {
+        set_pdf_generated(false)
+        let itemsToDelete = _.pickBy(groceries, function (value, key) {
             return value.checked === true;
         });
         //let delItem = deleteGroceryItem;
@@ -128,11 +135,11 @@ const StoreGroceryList = (props) => {
                 <Button variant="contained" color="secondary" className={lockedClasses} onClick={() => setLocked(prevState => !prevState)}>
                     Lock
                 </Button>
-                <PDFDownloadLink document={<ShopplingListPDF store={comboValue} sections={stores[comboValue].sections} groceries={groceries} pages={groceries_by_page} />} fileName="shopping_list.pdf">
-                    <Button variant="contained" color="secondary" className={classes.pdf_button} disabled={locked}>
+                {pdf_generated ? <PDFDownloadLink document={<ShopplingListPDF store={comboValue} sections={stores[comboValue].sections} groceries={groceries} pages={groceries_by_page} />} fileName="shopping_list.pdf">
+                    <Button variant="contained" color="secondary" className={classes.pdf_button_download} onClick={() => set_pdf_generated(false)} disabled={locked}>
                         PDF
                 </Button>
-                </PDFDownloadLink >
+                </PDFDownloadLink > : <Button variant="contained" color="secondary" className={classes.pdf_button_generate} disabled={locked} onClick={() => set_pdf_generated(true)}>Generate PDF</Button>}
                 {buildList()}
             </div>
         );
