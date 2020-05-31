@@ -1,7 +1,7 @@
 from django.shortcuts import render
 
 from .models import Food, FoodType
-from grocery.models import FoodGrocerySection, GrocerySection
+from grocery.models import FoodGrocerySection, GrocerySection, FoodTypeDefaultSection
 from .serializers import foodSerializer, foodTypeSerializer
 from rest_framework import viewsets
 from rest_framework.response import Response
@@ -54,6 +54,41 @@ class FoodList(generics.ListAPIView):
             queryset = queryset.filter(updated__gte=date)
         return queryset
 
+@api_view()
+def foodListWithGrocerySections(request):
+    food = Food.objects.all()
+    food_grocery_section = FoodGrocerySection.objects.all()
+    food_default_sections = FoodTypeDefaultSection.objects.all()
+    
+    # build defaults
+    defaults = {}
+    for ftp in food_default_sections:
+        #print(ftp.foodType.id, ftp.foodType.name, flush=True)
+        if ftp.foodType.id not in defaults.keys():
+            defaults[ftp.foodType.id] = {}
+        if (ftp.foodType.id == 4):
+            print(ftp.store.id, ftp.section.id, flush=True)
+        defaults[ftp.foodType.id][ftp.store.id] = ftp.section.id
+    print(defaults, flush=True)
+
+    item_list = {}
+    for f in food:
+        item = {}
+        item['id'] = f.id
+        item['name'] = f.name
+        item['foodtype'] = f.foodtype.id
+        item['staple'] = f.staple
+        item['ignore'] = f.ignore
+        item['sections'] = defaults[f.foodtype.id].copy()
+        item_list[str(f.id)] = item
+
+    print(item_list['609'], flush=True)
+    for fgs in food_grocery_section:
+        #(fgs.food.name, fgs.food.id, fgs.section.sectionName, fgs.section.id,fgs.section.store.id, flush=True)
+        item_list[str(fgs.food.id)]['sections'][fgs.section.store.id] = fgs.section.id
+    print(item_list['609'], flush=True)
+
+    return Response(item_list)
 
 
 

@@ -3,7 +3,8 @@ import React, { Component } from 'react';
 import StoreGroceryList from './Store/components/StoreGroceryList.js';
 import EditFood from './Food/components/EditFood.js';
 import AddFood from './Food/components/AddFood.js';
-import FoodBrowser from './Food/components/FoodBrowserContainer.js';
+import FoodBrowserOld from './Food/components/FoodBrowserOldContainer.js';
+import FoodBrowser from './Food/components/FoodBrowser.js';
 //import RequireAuth from './auth/require_auth';
 import RequireAuth from './Other/Auth/containers/require_auth';
 // import RecipeGallery from '../Recipe/components/RecipeGallery';
@@ -112,6 +113,10 @@ class App extends Component {
                                 <Route
                                     path="/recipe/:_slug"
                                     component={RecipeViewer}
+                                />
+                                <Route
+                                    path="/foodBrowserOld"
+                                    component={RequireAuth(FoodBrowserOld)}
                                 />
                                 <Route
                                     path="/foodBrowser"

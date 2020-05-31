@@ -19,6 +19,7 @@ urlpatterns = [
     url(r'^api/foodDeleteItems$', views.foodDeleteItems),
     url(r'^api/foodDetailWithGrocerySection/(?P<id>[0-9]+)/$', views.foodDetailWithGrocerySection),
     url(r'^api/food$', views.FoodList.as_view()),
+    url(r'^api/foodListWithGrocerySections$', views.foodListWithGrocerySections),
     url(r'^api/foodType$', views.FoodTypeList.as_view()),
     url(r'^api/staples$', views.StapleList.as_view()),
     url(r'^api/foodCreate$', views.foodCreate.as_view()),

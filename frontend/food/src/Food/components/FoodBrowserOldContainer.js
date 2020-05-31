@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
-import FoodBrowser from './FoodBrowser';
+import FoodBrowser from './FoodBrowserOld';
 
 import {
     getFoodTypes,

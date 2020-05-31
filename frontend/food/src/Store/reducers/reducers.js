@@ -1,3 +1,5 @@
+import { createSelector } from 'reselect';
+
 import { SET_STORES } from '../../Grocery/actions/types';
 import { STORE_UPDATE_SECTION_ORDER, EDIT_STORE, ADD_STORE, REMOVE_STORE, ADD_STORE_SECTION, EDIT_STORE_SECTION, REMOVE_STORE_SECTION } from '../actions/types';
 
@@ -32,7 +34,28 @@ export default function (state = {}, action) {
     }
 }
 
-// Selector
+export const selectGrocerySections = createSelector(
+    state => state.stores,
+    (_, storeId) => storeId,
+    (stores, storeId) => {
+        if (!storeId) {
+            return {}
+        }
+
+        if (_.isEmpty(stores)) {
+            return {}
+        }
+
+        let sections = Object.keys(stores[storeId].sections).reduce((obj, key) => {
+            obj[key] = stores[storeId].sections[key].sectionName
+            return obj
+        }, {})
+        
+        return sections;
+    }
+  );
+
+
 export const selectGroceryByPrintGroups = (state, storeId) => {
     const { groceries } = state
     if (!storeId) {
@@ -42,6 +65,7 @@ export const selectGroceryByPrintGroups = (state, storeId) => {
     if (_.isEmpty(state.stores)) {
         return []
     }
+
 
     let target_items = Object.keys(groceries).length / 2
     if (target_items > 45)

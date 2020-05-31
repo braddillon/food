@@ -23,6 +23,7 @@ export default function AddFood(props) {
     }, [dispatch])
 
     const handleSubmit = data => {
+        console.log("submit")
         if (data.button === 'submit') {
             dispatch(addFoodItem(data, props.addType));
         } else {
@@ -31,7 +32,7 @@ export default function AddFood(props) {
             else if (props.addType === ADD_FOOD_RECIPE)
                 props.onDisableAddMode()
             else
-                props.history.push('/foodBrowser/')
+                props.history.push('/foodBrowser2/')
         }
     }
 

@@ -106,9 +106,6 @@ class Header extends Component {
                                         <MenuItem component={Link} to="/recipeCreate/" onClick={this.recipeClose}>
                                             Create
                                         </MenuItem>
-                                        <MenuItem component={Link} to="/recipeGallery/" onClick={this.recipeClose}>
-                                            Random
-                                        </MenuItem>
                                     </Menu>
 
                                     <Button color="inherit" aria-owns={anchorGrocery ? 'recipe-menu' : undefined} aria-haspopup="true" onClick={this.groceryClick}>

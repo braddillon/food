@@ -12,7 +12,7 @@ import { setAdhocIngredientMatch } from '../../Recipe/actions/actions';
 
 import {
     SET_FOODTYPE_DEFAULT,
-    SET_FILTER
+    SET_FILTER,
 } from '../../Grocery/actions/types';
 
 import {
@@ -21,7 +21,8 @@ import {
     MODIFY_FOOD_ATTRIBUTE,
     DELETE_FOOD_ITEMS,
     UPDATE_FOODTYPE_SECTION_DEFAULTS,
-    UPDATE_FOOD_GROCERY_ITEM
+    UPDATE_FOOD_GROCERY_ITEM,
+    UPDATE_FOOD
 } from './types';
 
 
@@ -30,11 +31,9 @@ const ADD_FOOD_GROCERY = 1;
 const ADD_FOOD_RECIPE = 2;
 
 export const addFoodItem = (gItem, addType) => {
-    console.log('addFoodItem0')
     return function(dispatch) {
         let myId = 0
         let myName = ''
-        console.log('addFoodItem1')
         HTTP
             .post(
                 `foodCreate`,
@@ -87,7 +86,7 @@ export const addFoodItem = (gItem, addType) => {
                     dispatch(disableRecipeFormAddMode())
                 }
                 else {
-                    dispatch(push('/foodBrowser'));
+                    dispatch(push('/foodBrowser2'));
                 }
             })
             .catch(err => {
@@ -104,8 +103,9 @@ export const resetGroceryBuildFilter = () => {
     }
 }
 
-export const updateFoodItem = (gItem, props) => {
-    // console.log(gItem);
+export const updateFoodItem = (gItem, props, callback) => {
+    console.log(gItem);
+
     return function(dispatch) {
         HTTP
             .put(
@@ -114,6 +114,7 @@ export const updateFoodItem = (gItem, props) => {
                     name: gItem.foodName,
                     foodtype: parseInt(gItem.foodTypeId, 10),
                     staple: gItem.staple
+                    //overrides [{}]
                 }
             )
             .then(response => {
@@ -151,10 +152,22 @@ export const updateFoodItem = (gItem, props) => {
                             };
                         }, {})
                         gItem['grocerySections'] = grocSecs;
-
                         dispatch({ type: SET_FILTER, payload: 'search' });
-                        dispatch({ type: UPDATE_FOOD_GROCERY_ITEM, payload: gItem});
-                        props.history.goBack();
+
+                        console.log("brad");
+                        let groc_list = {...store.getState().groceries} 
+                        if (!_.isEmpty(groc_list)) {
+                            if (groc_list.hasOwnProperty(gItem.id))
+                                dispatch({ type: UPDATE_FOOD_GROCERY_ITEM, payload: gItem});
+                        }
+                        let food_list = {...store.getState().food}
+                        if (!_.isEmpty(food_list)) {
+                            dispatch({ type: UPDATE_FOOD, payload: gItem});
+                        }
+                        if (_.isFunction(callback))
+                            callback()
+                        else
+                            props.history.goBack();
                     })
                     .catch(err => {
                         console.log('food default section add error');
@@ -315,6 +328,18 @@ export const foodListPopulate = (
     };
 };
 
+
+export const foodListPopulate2 = () => {
+    
+    return function(dispatch) {
+        HTTP
+            .get(`foodListWithGrocerySections`)
+            .then(response => {
+                dispatch({ type: GET_FOOD_LIST, payload: response.data });
+            });
+    };
+};
+
 export const foodModifyAttribute = (type, ids) => {
     let mIds = '';
     //let ten_days_ago=(new Date()).setDate((new Date()).getDate()-30);
@@ -327,6 +352,7 @@ export const foodModifyAttribute = (type, ids) => {
     // if (staple === true)
     //     mStaple = '&staple=1';
 
+    console.log(ids)
     return function(dispatch) {
         HTTP
             .get(`foodModifyAttribute?type=${type}${mIds}`)
@@ -339,10 +365,13 @@ export const foodModifyAttribute = (type, ids) => {
                         return obj;
                     }, {});
 
-                if (type==='staple')
+                if (type==='staple') {
+
                     Object.keys(filtered).forEach(function(key) {
                         filtered[key].staple = !filtered[key].staple;
                     });
+                    
+                }
                 else if(type==='ignore')
                     Object.keys(filtered).forEach(function(key) {
                         filtered[key].ignore = !filtered[key].ignore;

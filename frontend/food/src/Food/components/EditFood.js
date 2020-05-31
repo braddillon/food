@@ -36,7 +36,7 @@ const EditFood = (props) => {
   function handleSubmit(data) {
     if (data.button === "submit") {
       data["id"] = props.match.params._id;
-      dispatch(updateFoodItem(data, props));
+      dispatch(updateFoodItem(data, props, "main"));
     }
     else
       props.history.goBack();
