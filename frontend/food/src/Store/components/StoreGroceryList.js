@@ -62,7 +62,7 @@ const StoreGroceryList = (props) => {
 
     const [locked, setLocked] = React.useState(false);
     const [pdf_generated, set_pdf_generated] = React.useState(false);
-    const [comboValue, setComboValue] = React.useState(4);
+    const [comboValue, setComboValue] = React.useState('');
 
     const groceries_by_page = useSelector(state => selectGroceryByPrintGroups(state, comboValue))
 
@@ -71,6 +71,11 @@ const StoreGroceryList = (props) => {
         dispatch(groceryList_populate());
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [])
+
+    useEffect(() => {
+        if (Object.keys(stores).length > 0)
+            setComboValue(Object.keys(stores)[0])
+    }, [stores])
 
     function deleteCheckedItems(e) {
         set_pdf_generated(false)
@@ -104,6 +109,8 @@ const StoreGroceryList = (props) => {
         lockedClasses = [classes.button, classes.locked].join(' ');
     }
 
+    if (comboValue === '')
+        return <div></div>
     if (_.isEmpty(stores))
         return <div></div>
     else {

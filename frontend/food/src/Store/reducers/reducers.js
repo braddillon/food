@@ -76,6 +76,7 @@ export const selectGroceryByPrintGroups = (state, storeId) => {
 
     let colNum = 0
     const sections = state.stores[storeId].sections;
+
     Object.keys(sections).sort((a, b) => sections[a].order - sections[b].order).reduce((total, item) => {
         let item_int = parseInt(item, 10)
         let section_length = Object.keys(groceries).filter(key => groceries[key].grocerySections[storeId] === item_int).length

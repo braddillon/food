@@ -33,19 +33,22 @@ import {
 export const matchGroceryItem = g => {
     return function (dispatch) {
         HTTP
-            .get(`food?term=${g}`)
+            .get(`foodListWithGrocerySections?term=${g}`)
             .then(response => {
                 let groceries = store.getState().groceries;
 
-                response.data.forEach(value => {
+                // returns keyed object, but need array of objects
+                let items = Object.keys(response.data).map(key => response.data[key])
+
+                items.forEach(value => {
                     value.active = false;
                     if (value.id in groceries) value.visible = false;
                     else value.visible = true;
                 });
 
-                if (response.data.length !== 0) {
-                    response.data[0].active = true;
-                    dispatch({ type: MATCH_GROCERY, payload: response.data });
+                if (items.length !== 0) {
+                    items[0].active = true;
+                    dispatch({ type: MATCH_GROCERY, payload: items });
                 } else dispatch({ type: SET_FILTER, payload: 'addFood' });
             });
     };
@@ -184,29 +187,54 @@ export const groceryAddListMovePrev = () => {
     };
 };
 
-// export const groceryAddListMovePrev = () => {
-//     let groceryAddList = store.getState().groceryAddList
-//     let setActiveId = [];
-//     let setInactiveId = [];
+export const groceryPopulateAddList = type => {
+    var endpoint = '';
 
-//     for (var i = 0; i < groceryAddList.length; i++) {
-//         if (groceryAddList[i].active === true) {
-//             setInactiveId.push(groceryAddList[i].id)
-//             if (i===0) {
-//                 setActiveId.push(groceryAddList[groceryAddList.length-1].id)
-//             }
-//             else {
-//                 setActiveId.push(groceryAddList[i-1].id)
-//             }
-//         break;
-//         }
-//     }
+    switch (type) {
+        case 'search':
+            return function (dispatch) {
+                dispatch({ type: CLEAR_MATCH_GROCERY });
+            };
+        case 'staples':
+            endpoint = `foodListWithGrocerySections?staple=1`;
+            break;
+        case 'categories':
+            endpoint = `foodListWithGrocerySections?type=${
+                store.getState().groceryBuildOptions.foodTypeCurrent
+                }`;
+            break;
+        default:
+            break;
+    }
 
-//     return ({
-//         type: GROCERY_ADDLIST_TOGGLE_ACTIVE,
-//         payload: {activeId: setActiveId, inactiveId: setInactiveId}
-//     })
-// };
+    return function (dispatch) {
+        HTTP
+            .get(endpoint)
+            .then(response => {
+                let groceries = store.getState().groceries;
+
+                let items = Object.keys(response.data).map(key => response.data[key])
+                items.forEach(value => {
+                    value.active = false;
+                    if (value.id in groceries) value.visible = false;
+                    else value.visible = true;
+                });
+
+                if (items.length !== 0) items[0].active = true;
+
+                dispatch({
+                    type: GROCERY_POPULATE_ADDLIST,
+                    payload: items
+                });
+            });
+    };
+};
+
+export const clearMatchGroceryList = () => {
+    return {
+        type: CLEAR_MATCH_GROCERY
+    };
+};
 
 export const groceryAddListAddActive = () => {
     return function (dispatch) {
@@ -229,66 +257,20 @@ export const groceryAddListAddActive = () => {
 
                 dispatch({
                     type: ADD_GROCERY,
+                    // payload: {
+                    //     id: activeItem.id,
+                    //     name: activeItem.name,
+                    //     deferred: false
+                    // }
                     payload: {
-                        id: activeItem.id,
-                        name: activeItem.name,
+                        ...activeItem,
+                        grocerySections: activeItem.sections,
                         deferred: false
                     }
                 });
 
                 dispatch(groceryAddListMoveNext());
             });
-    };
-};
-
-export const groceryPopulateAddList = type => {
-    var endpoint = '';
-
-    switch (type) {
-        case 'search':
-            return function (dispatch) {
-                dispatch({ type: CLEAR_MATCH_GROCERY });
-            };
-        case 'staples':
-            endpoint = `staples`;
-            break;
-        case 'fruit':
-            endpoint = `staples`;
-            break;
-        case 'categories':
-            endpoint = `food?type=${
-                store.getState().groceryBuildOptions.foodTypeCurrent
-                }`;
-            break;
-        default:
-            break;
-    }
-
-    return function (dispatch) {
-        HTTP
-            .get(endpoint)
-            .then(response => {
-                let groceries = store.getState().groceries;
-
-                response.data.forEach(value => {
-                    value.active = false;
-                    if (value.id in groceries) value.visible = false;
-                    else value.visible = true;
-                });
-
-                if (response.data.length !== 0) response.data[0].active = true;
-
-                dispatch({
-                    type: GROCERY_POPULATE_ADDLIST,
-                    payload: response.data
-                });
-            });
-    };
-};
-
-export const clearMatchGroceryList = () => {
-    return {
-        type: CLEAR_MATCH_GROCERY
     };
 };
 

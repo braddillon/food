@@ -60,6 +60,20 @@ def foodListWithGrocerySections(request):
     food_grocery_section = FoodGrocerySection.objects.all()
     food_default_sections = FoodTypeDefaultSection.objects.all()
     
+    term = request.query_params.get('term', None)
+    mtype = request.query_params.get('type', None)
+    staple = request.query_params.get('staple', None)
+    if mtype is not None:
+        mtypes = [int(x) for x in mtype.split(',')]
+
+    print(term, flush=True)
+    if term is not None:
+        food = food.filter(name__icontains=term)
+    if mtype is not None:
+        food = food.filter(foodtype__id__in=mtypes)
+    if staple is not None:
+        food = food.filter(staple=True)
+
     # build defaults
     defaults = {}
     for ftp in food_default_sections:
@@ -82,11 +96,13 @@ def foodListWithGrocerySections(request):
         item['sections'] = defaults[f.foodtype.id].copy()
         item_list[str(f.id)] = item
 
-    print(item_list['609'], flush=True)
+    print(item_list, flush=True)
+    #print(item_list['609'], flush=True)
     for fgs in food_grocery_section:
         #(fgs.food.name, fgs.food.id, fgs.section.sectionName, fgs.section.id,fgs.section.store.id, flush=True)
-        item_list[str(fgs.food.id)]['sections'][fgs.section.store.id] = fgs.section.id
-    print(item_list['609'], flush=True)
+        if str(fgs.food.id) in item_list:
+            item_list[str(fgs.food.id)]['sections'][fgs.section.store.id] = fgs.section.id
+    #print(item_list['609'], flush=True)
 
     return Response(item_list)
 
